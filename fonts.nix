@@ -6,6 +6,8 @@
       font-awesome_5
       source-code-pro
       overpass
+      fira-code
+      fira-code-symbols
     ];
   };
 }

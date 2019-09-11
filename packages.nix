@@ -14,7 +14,7 @@ in {
   nixpkgs = {
     config.allowUnfree = true;
     config.chromium = {
-      enablePepperFlash = true; 
+      # enablePepperFlash = true; 
     };
     # To use the pinned channel, the original package set is thrown
     # away in the overrides:
