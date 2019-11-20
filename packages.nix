@@ -8,14 +8,13 @@ let
   unstableTarball =
     fetchTarball
       https://github.com/NixOS/nixpkgs-channels/archive/nixos-unstable.tar.gz;
-
+  emacsOverlay =
+    fetchTarball
+      https://github.com/nix-community/emacs-overlay/archive/master.tar.gz;
 in {
   # Configure the Nix package manager
   nixpkgs = {
     config.allowUnfree = true;
-    config.chromium = {
-      # enablePepperFlash = true; 
-    };
     # To use the pinned channel, the original package set is thrown
     # away in the overrides:
     config.packageOverrides = pkgs: {
@@ -23,43 +22,64 @@ in {
         config = config.nixpkgs.config;
       };
     };
-
+    # overlays = [];
+    overlays = [
+      (import emacsOverlay)
+    ];
   };
 
   # ... and declare packages to be installed.
   environment.systemPackages = with pkgs; [
-    unstable.i3status-rust
     alacritty
-    unstable.chromium
+    cachix
+    cmake
     curl
-    evince
     feh
     file
     flameshot
+    gcc
     gimp
-    iw 
     git
     gnome3.nautilus
+    gnumake
+    gtk3
+    gvfs
     htop
+    ispell
+    jupyter
+    kbdd
+    libtool
+    # libvterm
     manpages
     ntfs3g
     numix-cursor-theme
     numix-icon-theme
     numix-solarized-gtk-theme
+    okular
     openjdk
-    pavucontrol
+    pulseaudio-ctl
+    python
     spotify
     sqlite
     tdesktop
     transmission
     tree
+    unstable.chromium
+    unstable.nodejs
+    unstable.tdlib
     unzip
     vlc
     wget
+    xclip
+    xfce.xfce4-panel
+    xfce.xfce4-datetime-plugin
     xkblayout-state
-    unstable.nodejs
+    
+    # Haskell packages
     ghc
     hlint
     stack
-    ];
+    # stack2nix  --package is broken
+    haskellPackages.stylish-haskell
+  ];
 }

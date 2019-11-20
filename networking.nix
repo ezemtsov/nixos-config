@@ -14,4 +14,5 @@
     };
   };
   hardware.bluetooth.enable = true;
+  programs.nm-applet.enable = true;
 }

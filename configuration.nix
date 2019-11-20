@@ -7,12 +7,13 @@
 {
   imports =
     [
-    ./hardware-configuration.nix
-    ./users.nix
-    ./networking.nix
-    ./fonts.nix
-    ./desktop.nix
-    ./packages.nix
+      ./hardware-configuration.nix
+      ./users.nix
+      ./networking.nix
+      ./fonts.nix
+      ./desktop.nix
+      ./packages.nix
+      ./services.nix
     ];
 
   # Use the systemd-boot EFI boot loader.
@@ -35,14 +36,12 @@
   # Set your time zone.
   time.timeZone = "Europe/Oslo";
 
+  # Sounds
   hardware.pulseaudio.enable = true;
   sound.enable = true;
-
-  services.emacs = {
-    install = true;
-    defaultEditor = true;
-    enable = false;
-  };
+  
+  # Enable docker
+  virtualisation.docker.enable = true;
 
   # This value determines the NixOS release with which your system is to be
   # compatible, in order to avoid breaking some software such as database

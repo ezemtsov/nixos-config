@@ -1,71 +1,65 @@
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
+with lib;
 let
-    slim-theme = pkgs.fetchFromGitHub {
-      owner = "ezemtsov";
-      repo = "slim-theme";
-      rev = "aa29ec80b550c709e3c5be14066e9c25948adf38";
-      sha256 = "13xx75fcaqvwi5r3cb1cr928wh79h95cx606xmrmsvjb3bqjwwd2";
-   };
-   
-in
-{
-
-  environment = {
-    etc = {
-      "X11/Xresources"            .source = ./dotfiles/Xresources.conf;
-    };
-    variables.MONITOR_PRIMARY = "eDP1";
-    variables.MONITOR_EXTERNAL = "HDMI2";
+  slim-theme = pkgs.fetchFromGitHub {
+    owner = "ezemtsov";
+    repo = "slim-theme";
+    rev = "aa29ec80b550c709e3c5be14066e9c25948adf38";
+    sha256 = "13xx75fcaqvwi5r3cb1cr928wh79h95cx606xmrmsvjb3bqjwwd2";
   };
-
+in {
+  environment = {
+    variables = {
+      MONITOR_PRIMARY = "eDP1";
+      MONITOR_EXTERNAL = "HDMI2";
+      XMODIFIERS="@im=exwm-xim";
+      GTK_IM_MODULE="xim";
+      QT_IM_MODULE="xim";
+      CLUTTER_IM_MODULE="xim";
+    };
+  };
 
   services = {
     xserver = {
       enable = true;
-      desktopManager = {
-        xterm.enable = false;
-      };
-      windowManager = {
-        i3 = {
-          enable     = true;
-          package = pkgs.i3-gaps;
-          extraPackages = with pkgs; [
-            i3lock-color
-            i3-easyfocus
-            rofi
-            compton
-            ];
-            
-         extraSessionCommands = ''
-           ${pkgs.xlibs.xrdb}/bin/xrdb -load /etc/X11/Xresources
-         '';
+      videoDrivers = [ "intel" ];
+
+      displayManager = {
+        # Give EXWM permission to control the session
+        sessionCommands =
+          "${pkgs.xorg.xhost}/bin/xhost +SI:localuser:$USER";
+        # Enable default user for login
+        slim = {
+          enable      = true;
+          autoLogin   = false;
+          theme       = slim-theme;
+          defaultUser = "ezemtsov";
         };
-        default = "i3";
       };
-      displayManager.slim = {
-        enable      = true;
-        autoLogin   = true;
-        theme       = slim-theme;
-        defaultUser = "ezemtsov";
+      # Configure desktop environment:
+      windowManager.session = singleton {
+        name = "exwm";
+        start = ''
+          ${pkgs.emacsGit}/bin/emacs -- eval '(progn (server-start) (exwm-enable))'
+        '';
       };
-      videoDrivers = [ "intel" ];      
-      dpi = 125;
 
       # Keyboard options
       layout = "us,ru";
       xkbOptions = "grp:caps_toggle";
       libinput = {
-        enable           = true;	# touchpad
+        enable           = true;
         naturalScrolling = true;
         accelSpeed       = "0.3";
         tapping          = false;
       };
+      dpi = 125;
     };
     compton = {
       enable = true;
       backend = "xrender";
-      vSync = "opengl";
+      vSync = true;
     };
   };
 }
