@@ -22,10 +22,7 @@ in {
         config = config.nixpkgs.config;
       };
     };
-    # overlays = [];
-    overlays = [
-      (import emacsOverlay)
-    ];
+    overlays = [ (import emacsOverlay) ];
   };
 
   # ... and declare packages to be installed.
@@ -45,11 +42,11 @@ in {
     gtk3
     gvfs
     htop
+    i3lock
     ispell
     jupyter
     kbdd
     libtool
-    # libvterm
     manpages
     ntfs3g
     numix-cursor-theme
@@ -58,7 +55,7 @@ in {
     okular
     openjdk
     pulseaudio-ctl
-    python
+    python3
     spotify
     sqlite
     tdesktop
@@ -66,14 +63,9 @@ in {
     tree
     unstable.chromium
     unstable.nodejs
-    unstable.tdlib
     unzip
     vlc
     wget
-    xclip
-    xfce.xfce4-panel
-    xfce.xfce4-datetime-plugin
-    xkblayout-state
     
     # Haskell packages
     ghc

@@ -40,6 +40,13 @@
   hardware.pulseaudio.enable = true;
   sound.enable = true;
   
+  # Emacs
+  services.emacs = {
+    install = true;
+    defaultEditor = true;
+    package = import ./emacs.nix { inherit pkgs; };
+  };
+  
   # Enable docker
   virtualisation.docker.enable = true;
 
