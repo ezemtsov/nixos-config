@@ -4,20 +4,23 @@ let
   # status-bar = pkgs.writeShellScriptBin
   #   "status-bar" ./scripts/status-bar.sh;
 in {
-  services.postgresql = {
-    enable = true;
-    package = pkgs.postgresql_11;
-    enableTCPIP = true;
-    authentication = pkgs.lib.mkOverride 10 ''
-      local all all trust
-      host all all ::1/128 trust
-    '';
-    initialScript = pkgs.writeText "backend-initScript" ''
-      CREATE ROLE ezemtsov WITH LOGIN PASSWORD 'database' CREATEDB;
-      CREATE DATABASE ezemtsov;
-      GRANT ALL PRIVILEGES ON DATABASE ezemtsov TO ezemtsov;
-    '';
-  };
+  services.udev.extraRules = ''
+    SUBSYSTEM=="usb",ATTR{idVendor}=="2982",ATTR{idProduct}=="1967",MODE="0660",GROUP="audio"
+  '';
+  # services.postgresql = {
+  #   enable = true;
+  #   package = pkgs.postgresql_11;
+  #   enableTCPIP = true;
+  #   authentication = pkgs.lib.mkOverride 10 ''
+  #     local all all trust
+  #     host all all ::1/128 trust
+  #   '';
+  #   initialScript = pkgs.writeText "backend-initScript" ''
+  #     CREATE ROLE ezemtsov WITH LOGIN PASSWORD 'database' CREATEDB;
+  #     CREATE DATABASE ezemtsov;
+  #     GRANT ALL PRIVILEGES ON DATABASE ezemtsov TO ezemtsov;
+  #   '';
+  # };
 
   # # Enable status bar on start
   # environment.systemPackages = [ status-bar ];
@@ -41,8 +44,9 @@ in {
   systemd.user.services = {
     clipit = {
       description = "Clipboard manager";
-      after = [ "graphical-session-pre.target" ];
-      partOf = [ "graphical-session.target" ];
+      after       = [ "graphical-session-pre.target" ];
+      partOf      = [ "graphical-session.target" ];
+      wantedBy    = [ "graphical-session.target" ];
       serviceConfig = {
         Type = "simple";
         ExecStart = pkgs.writeScript "clipit" ''
@@ -54,19 +58,41 @@ in {
         RestartSec = 3;
         Restart = "always";
       };
-      wantedBy = [ "graphical-session.target" ];
     };
-    feh = {
-      description = "Set background";
-      after = [ "graphical-session-pre.target" ];
-      partOf = [ "graphical-session.target" ];
+    # feh = {
+    #   description = "Set background";
+    #   after = [ "graphical-session-pre.target" ];
+    #   partOf = [ "graphical-session.target" ];
+    #   serviceConfig = {
+    #     Type = "simple";
+    #     ExecStart = "${pkgs.feh}/feh --bg-color black";
+    #     RestartSec = 3;
+    #     Restart = "always";
+    #   };
+    #   wantedBy = [ "graphical-session.target" ];
+    # };
+
+    kbdd = {
+      description = "Kbdd service";
+      after       = [ "graphical-session-pre.target" ];
+      partOf      = [ "graphical-session.target" ];
+      wantedBy    = [ "graphical-session.target" ];
       serviceConfig = {
-        Type = "simple";
-        ExecStart = "${pkgs.feh}/bin/feh --bg-scale /etc/nixos/resources/desktop.png";
-        RestartSec = 3;
+        Type = "forking";
         Restart = "always";
+        RestartSec = 2;
+        ExecStart = "${pkgs.kbdd}/bin/kbdd";
       };
-      wantedBy = [ "graphical-session.target" ];
+    };
+
+    dunst = {
+      description = "Notification service";
+      after       = [ "graphical-session-pre.target" ];
+      partOf      = [ "graphical-session.target" ];
+      wantedBy    = [ "graphical-session.target" ];
+      serviceConfig = {
+        ExecStart = "${pkgs.dunst}/bin/dunst";
+      };
     };
   };
 }

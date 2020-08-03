@@ -1,0 +1,3 @@
+[submodule "musnix"]
+	path = musnix
+	url = https://github.com/ezemtsov/musnix.git

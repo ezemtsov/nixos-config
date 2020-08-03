@@ -14,6 +14,7 @@
       ./desktop.nix
       ./packages.nix
       ./services.nix
+      ./musnix
     ];
 
   # Use the systemd-boot EFI boot loader.
@@ -24,8 +25,14 @@
   hardware.cpu.intel.updateMicrocode = true;
 
   # Graphics
-  hardware.opengl.enable = true;
-  hardware.opengl.driSupport32Bit = true;
+  hardware.opengl = {
+      enable = true;
+      driSupport = true;
+  };
+
+  location.latitude = 59.91;
+  location.longitude = 10.75;
+  services.redshift.enable = true;
 
   # Enable power control.
   powerManagement.enable = true;
@@ -36,24 +43,50 @@
   # Set your time zone.
   time.timeZone = "Europe/Oslo";
 
-  # Sounds
-  hardware.pulseaudio.enable = true;
-  sound.enable = true;
-  
+  # Audio
+  hardware.pulseaudio = {
+    enable = true;
+    package = pkgs.pulseaudioFull;
+  };
+  boot.kernelModules = [ "snd-seq" "snd-rawmidi" ];
+
   # Emacs
   services.emacs = {
     install = true;
     defaultEditor = true;
     package = import ./emacs.nix { inherit pkgs; };
   };
-  
+
+  musnix = {
+    enable = true;
+    kernel = {
+      optimize = true;
+      realtime = true;
+      packages = pkgs.linuxPackages_5_6_rt;
+    };
+    rtirq = {
+      enable = true;
+      nameList = "rtc xhci snd";
+      prioHigh = 90;
+      prioDecr = 5;
+      prioLow = 51;
+    };
+  };
+
+  services.openssh.enable = true;
+  programs.ssh.startAgent = true;
+
   # Enable docker
-  virtualisation.docker.enable = true;
+  virtualisation = {
+    docker.enable = true;
+    virtualbox.host.enable = true;
+    virtualbox.host.enableExtensionPack = true;
+  };
 
   # This value determines the NixOS release with which your system is to be
   # compatible, in order to avoid breaking some software such as database
   # servers. You should change this only after NixOS release notes say you
   # should.
-  system.stateVersion = "18.03";
+  system.stateVersion = "20.03";
 
 }

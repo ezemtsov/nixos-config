@@ -1,12 +1,13 @@
 { pkgs }:
-let
-  emacsPackage = pkgs.emacs;
-  emacsWithPackages =
-    (pkgs.emacsPackagesGen emacsPackage).emacsWithPackages;
-in emacsWithPackages (epkgs:
-  (with epkgs.melpaPackages; [
-    # vterm
-    # vterm-toggle
-    # telega
-  ])
-)
+
+with pkgs; with emacsPackagesNg;
+  let
+    emacsWithPackages = (emacsPackagesNgGen emacsGit).emacsWithPackages;
+
+  in emacsWithPackages (epkgs:
+    (with epkgs.melpaPackages; [
+      # lsp-mode-pinned
+      # vterm
+      # vterm-toggle
+      # telega
+    ]))
