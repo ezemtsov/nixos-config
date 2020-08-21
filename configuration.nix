@@ -24,6 +24,13 @@
   # Update Intel microcode
   hardware.cpu.intel.updateMicrocode = true;
 
+  # Emacs
+  services.emacs = {
+    install = true;
+    defaultEditor = true;
+    package = import ./emacs.nix { inherit pkgs; };
+  };
+
   # Graphics
   hardware.opengl = {
       enable = true;
@@ -34,27 +41,23 @@
   location.longitude = 10.75;
   services.redshift.enable = true;
 
+  # Set your time zone.
+  time.timeZone = "Europe/Oslo";
+
   # Enable power control.
-  powerManagement.enable = true;
+  powerManagement = {
+    enable = true;
+    cpuFreqGovernor = "performance";
+  };
 
   # Enable backlight control.
   programs.light.enable = true;
 
-  # Set your time zone.
-  time.timeZone = "Europe/Oslo";
-
   # Audio
+  sound.enable = true;
   hardware.pulseaudio = {
     enable = true;
     package = pkgs.pulseaudioFull;
-  };
-  boot.kernelModules = [ "snd-seq" "snd-rawmidi" ];
-
-  # Emacs
-  services.emacs = {
-    install = true;
-    defaultEditor = true;
-    package = import ./emacs.nix { inherit pkgs; };
   };
 
   musnix = {
@@ -66,9 +69,9 @@
     };
     rtirq = {
       enable = true;
-      nameList = "rtc xhci snd";
-      prioHigh = 90;
-      prioDecr = 5;
+      nameList = "xhci";
+      prioHigh = 88;
+      prioDecr = 2;
       prioLow = 51;
     };
   };
@@ -79,8 +82,8 @@
   # Enable docker
   virtualisation = {
     docker.enable = true;
-    virtualbox.host.enable = true;
-    virtualbox.host.enableExtensionPack = true;
+  #   virtualbox.host.enable = true;
+  #   virtualbox.host.enableExtensionPack = true;
   };
 
   # This value determines the NixOS release with which your system is to be

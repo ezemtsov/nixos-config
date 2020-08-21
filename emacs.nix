@@ -2,7 +2,8 @@
 
 with pkgs; with emacsPackagesNg;
   let
-    emacsWithPackages = (emacsPackagesNgGen emacsGit).emacsWithPackages;
+    unstable = import <unstable> {};
+    emacsWithPackages = (emacsPackagesNgGen unstable.emacs).emacsWithPackages;
 
   in emacsWithPackages (epkgs:
     (with epkgs.melpaPackages; [

@@ -61,7 +61,6 @@ in {
     okular
     openjdk
     postgresql
-    pulseaudio-ctl
     slack
     spotify
     sqlite
