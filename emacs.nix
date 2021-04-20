@@ -1,14 +1,20 @@
 { pkgs }:
 
-with pkgs; with emacsPackagesNg;
-  let
-    unstable = import <unstable> {};
-    emacsWithPackages = (emacsPackagesNgGen unstable.emacs).emacsWithPackages;
+with pkgs;
+with emacsPackagesNg;
 
-  in emacsWithPackages (epkgs:
-    (with epkgs.melpaPackages; [
-      # lsp-mode-pinned
-      # vterm
-      # vterm-toggle
-      # telega
-    ]))
+let
+  emacsWithPackages = (emacsPackagesNgGen emacsGcc).emacsWithPackages;
+
+in emacsWithPackages (epkgs:
+  (with epkgs.elpaPackages; [
+    #xelb
+  ]) ++
+
+  (with epkgs.melpaPackages; [
+    # lsp-mode-pinned
+    # exwm
+    # vterm
+    # vterm-toggle
+    # telega
+  ]))

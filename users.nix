@@ -7,6 +7,7 @@
     extraGroups = [ "wheel"
                     "vboxusers"
                     "networkmanager"
+                    "wireshark"
                     "docker"
                     "audio"
                     "jackaudio" ];
