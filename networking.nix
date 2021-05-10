@@ -13,6 +13,8 @@
     };
     extraHosts =
       ''
+        127.0.0.1 postgresql
+        127.0.0.1 redis
         192.168.167.51 internal.resoptima.net
         172.16.1.2 akerbp.resoptima.net a21-p1-app151 argocd-akerbp.resoptima.net
         192.168.167.54 spirit-energy-internal-1.resoptima.net
@@ -20,6 +22,7 @@
         127.0.0.1 reg-test-1.resoptima.net
         127.0.0.1 azu-test-1.resoptima.net
         51.13.88.74 eze-azure-3.resoptima.net
+        51.13.74.244 eze-azure-4.resoptima.net
       '';
   };
   hardware.bluetooth.enable = false;

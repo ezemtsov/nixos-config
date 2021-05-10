@@ -21,6 +21,7 @@
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.cleanTmpDir = true;
 
   # This is required for dotnet to run correctly
   boot.kernel.sysctl."fs.inotify.max_user_instances" = 524288;

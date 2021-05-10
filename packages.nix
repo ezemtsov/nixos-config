@@ -54,6 +54,7 @@ in {
     gitFull
     gnome3.nautilus
     gnumake
+    quasselClient
     gtk3
     gvfs
     hsetroot
@@ -141,7 +142,7 @@ in {
     (dotnetCorePackages.combinePackages
       [
         myDotnet
-        unstable.dotnetCorePackages.sdk_5_0
+        # unstable.dotnetCorePackages.sdk_5_0
         dotnetPackages.Fantomas
       ]
     )

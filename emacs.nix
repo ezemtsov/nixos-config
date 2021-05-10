@@ -14,7 +14,7 @@ in emacsWithPackages (epkgs:
   (with epkgs.melpaPackages; [
     # lsp-mode-pinned
     # exwm
-    # vterm
+    vterm
     # vterm-toggle
     # telega
   ]))

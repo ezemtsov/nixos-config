@@ -38,6 +38,8 @@ in {
   #   wantedBy = [ "graphical-session.target" ];
   # };
 
+  services.quassel.enable = true;
+
   systemd.user.services = {
     # feh = {
     #   description = "Set background";
