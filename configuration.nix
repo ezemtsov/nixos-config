@@ -14,7 +14,7 @@
       ./packages.nix
       ./services.nix
       ./audio.nix
-      ./musnix
+      # ./musnix
       ./cachix.nix
     ];
 

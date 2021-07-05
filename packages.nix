@@ -142,7 +142,7 @@ in {
     (dotnetCorePackages.combinePackages
       [
         myDotnet
-        # unstable.dotnetCorePackages.sdk_5_0
+        unstable.dotnetCorePackages.sdk_5_0
         dotnetPackages.Fantomas
       ]
     )
@@ -150,20 +150,9 @@ in {
 
     # Python packages
     python3
-    python37Packages.pip
-    unstable.python-language-server
-    python37Packages.pytest
-    (with python37Packages;
-      buildPythonPackage {
-      name = "parquet-cli";
-      src = fetchFromGitHub {
-        owner = "chhantyal";
-        repo = "parquet-cli";
-        rev = "588b738a3f1661cba62b11e6a1ac6fd6d709f0eb";
-        sha256 = "0m0zsk3d56fmiwnqqq6qfkcf5zk63ydqz53qn9ykjcvkkmdgbrd1";
-      };
-      propagatedBuildInputs = [ pandas pyarrow ];
-    })
+    python3Packages.pip
+    python-language-server
+    python3Packages.pytest
   ];
 
 }

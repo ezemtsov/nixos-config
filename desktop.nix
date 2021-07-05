@@ -40,9 +40,13 @@ in {
   # };
 
   services = {
+    picom = {
+      enable = true;
+      vSync = true;
+      backend = "glx";
+    };
     xserver = {
       enable = true;
-
       windowManager = {
         i3 = {
           enable = true;
@@ -75,17 +79,12 @@ in {
       xkbOptions = "grp:caps_toggle";
       libinput = {
         enable = true;
-        # touchpad = {
+        touchpad = {
           tapping = false;
           naturalScrolling = true;
           accelSpeed = "0.3";
-        # };
+        };
       };
-
-    };
-
-    compton = {
-      enable  = true;
     };
   };
 
@@ -94,7 +93,7 @@ in {
       enable = true;
       antialias = true;
     };
-    enableFontDir = true;
+    fontDir.enable = true;
     fonts = with pkgs; [
       corefonts
       jetbrains-mono
