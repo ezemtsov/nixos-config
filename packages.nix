@@ -6,7 +6,8 @@
 
 let
   unstable = import <unstable> { config.allowUnfree = true; };
-  emacsGit = import (builtins.fetchTarball https://github.com/nix-community/emacs-overlay/archive/master.tar.gz);
+  emacsGit = import (builtins.fetchTarball
+    https://github.com/nix-community/emacs-overlay/archive/532be17.tar.gz);
 
   myDotnet = (pkgs.callPackage /home/ezemtsov/Resoptima/irma/support/sdk.nix {}).dotnet;
 
@@ -19,50 +20,47 @@ in {
 
     # To use the pinned channel, the original package set is thrown
     # away in the overrides:
-    config.packageOverrides = pkgs: {
-    };
-
-    # Fixing CVE-2020-13949 according to nixpkgs suggestion
-    config.permittedInsecurePackages = [
-      "thrift-0.13.0"
-    ];
+    config.packageOverrides = pkgs: {};
 
     overlays = [
       emacsGit
     ];
   };
 
+  # Gnome alps require dconf to remember default settings
+  programs.dconf.enable = true;
+
   # ... and declare packages to be installed.
   environment.systemPackages = with pkgs; [
     # sunvox
     my.iconnconfig
+    my.renoise
+    my.x32edit
+    my.bitwig-studio3
 
     binutils-unwrapped
     blueman
     breeze-icons
-    unstable.cachix
     chromium
     cmake
     curl
     direnv
-    dunst
     file
     fish
-    flameshot
     gcc
     gimp
     gitFull
     gnome3.nautilus
     gnumake
-    quasselClient
     gtk3
     gvfs
     hsetroot
     htop
     hybridreverb2
-    kind
     ispell
     jupyter
+    kind
+    kubectl
     libnotify
     libtool
     lingot
@@ -78,15 +76,24 @@ in {
     okular
     openjdk
     postgresql
+    quasselClient
     slack
     spotify
     sqlite
     tdesktop
     transmission
     tree
+    unstable.cachix
     unzip
     vlc
     wget
+    wireshark
+
+    libreoffice
+    aspell
+    aspellDicts.en
+    aspellDicts.en-computers
+    aspellDicts.nb
 
     # Music packages
     unstable.cadence
@@ -94,28 +101,6 @@ in {
     # unstable.pulseaudioFull
     unstable.audacity
     supercollider
-    (unstable.renoise.overrideAttrs(old: {
-      src = fetchurl {
-        url = "https://files.renoise.com/demo/Renoise_3_3_2_Demo_Linux.tar.gz";
-        sha256 = "0d9pnrvs93d4bwbfqxwyr3lg3k6gnzmp81m95gglzwdzczxkw38k";
-      };
-    }))
-    (x32edit.overrideAttrs(old: {
-      version = "4.2";
-      src = fetchurl {
-        url = "https://mediadl.musictribe.com/download/software/behringer/X32/X32-Edit_LINUX_4.2.tar.gz";
-        sha256 = "1wkd8qh1brfw7j4qdr109hcqbjlmik7jrybagpzgaxin75rxhx6g";
-      };
-    }))
-    (unstable.bitwig-studio3.overrideAttrs (oldAttrs: rec {
-      version = "3.3.1";
-      jre = /home/ezemtsov/Downloads/Bitwig/Linux/patch/bitwig.jar;
-      src = /home/ezemtsov/Downloads/Bitwig/Linux/bitwig-studio-3.3.1.deb;
-      postFixup = ''
-        ${oldAttrs.postFixup}
-        find -L $out -name "bitwig.jar" -exec cp ${jre} {} \;
-      '';
-    }))
 
     nushell
     zoom-us
@@ -138,14 +123,8 @@ in {
     haskellPackages.cabal-install
 
     # Dotnet packages
-    jetbrains.rider
-    (dotnetCorePackages.combinePackages
-      [
-        myDotnet
-        unstable.dotnetCorePackages.sdk_5_0
-        dotnetPackages.Fantomas
-      ]
-    )
+    unstable.jetbrains.rider
+    myDotnet
     dotnetPackages.Nuget
 
     # Python packages

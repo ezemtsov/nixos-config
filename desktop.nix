@@ -7,7 +7,7 @@ let
 in {
   environment = {
     variables = {
-      MONITOR_PRIMARY = "DP-3";
+      MONITOR_PRIMARY = "eDP-1";
       _JAVA_AWT_WM_NONREPARENTING = "1";
     };
   };
@@ -55,7 +55,6 @@ in {
             wmfocus
             rofi
             xclip
-            clipit
             i3lock
             unstable.i3status-rust
             unstable.alacritty
@@ -75,7 +74,7 @@ in {
       # };
 
       # Keyboard options
-      layout = "us,ru";
+      layout = "us,ru,no";
       xkbOptions = "grp:caps_toggle";
       libinput = {
         enable = true;

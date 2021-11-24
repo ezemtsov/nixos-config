@@ -1,9 +1,6 @@
 { config, pkgs, ... }:
 
-let
-  unstable = import <unstable> { config.allowUnfree = true; };
-
-in {
+{
   # Audio
   sound.enable = true;
   services.pipewire = {
@@ -14,11 +11,8 @@ in {
     socketActivation = true;
   };
 
-
-  # hardware.pulseaudio = {
-  #   enable = true;
-  #   package = unstable.pulseaudioFull;
-  # };
+  hardware.bluetooth.enable = true;
+  services.blueman.enable = true;
 
   security.rtkit.enable = true;
 

@@ -16,10 +16,14 @@
         127.0.0.1 postgresql
         127.0.0.1 redis
         127.0.0.1 enopt-eclipse-parser-api
+        10.147.18.203 akerbp.resoptima.net a21-p1-app151 argocd-akerbp.resoptima.net
+        51.13.98.122 irma-neptune-1.resoptima.net
       '';
   };
-  hardware.bluetooth.enable = false;
+
+  programs.fuse.userAllowOther = true;
   programs.nm-applet.enable = true;
+  programs.wireshark.enable = true;
 
   fileSystems."/mnt/internal" = {
     device = "jackson.resoptima.local:/mnt/bigstorage/internal";
