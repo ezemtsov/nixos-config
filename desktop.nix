@@ -9,6 +9,7 @@ in {
     variables = {
       MONITOR_PRIMARY = "eDP-1";
       _JAVA_AWT_WM_NONREPARENTING = "1";
+      DOTNET_ROOT = "$(dirname $(realpath $(which dotnet)))";
     };
   };
 
@@ -48,30 +49,30 @@ in {
     xserver = {
       enable = true;
       windowManager = {
-        i3 = {
-          enable = true;
-          package = pkgs.i3-gaps;
-          extraPackages = with pkgs; [
-            wmfocus
-            rofi
-            xclip
-            i3lock
-            unstable.i3status-rust
-            unstable.alacritty
-          ];
-        };
-        # session = lib.singleton {
-        #   name = "exwm";
-        #   start = "${myemacs}/bin/emacs --eval '(progn (server-start) (exwm-enable))'";
+        # i3 = {
+        #   enable = true;
+        #   package = pkgs.i3-gaps;
+        #   extraPackages = with pkgs; [
+        #     wmfocus
+        #     rofi
+        #     xclip
+        #     i3lock
+        #     unstable.i3status-rust
+        #     unstable.alacritty
+        #   ];
         # };
+        session = lib.singleton {
+          name = "exwm";
+          start = "${myemacs}/bin/emacs --eval '(progn (server-start) (exwm-enable))'";
+        };
       };
 
-      # displayManager = {
-      #   # Give EXWM permission to control the session.
-      #   sessionCommands = ''
-      #       ${pkgs.xorg.xhost}/bin/xhost +SI:localuser:$USER
-      #   '';
-      # };
+      displayManager = {
+        # Give EXWM permission to control the session.
+        sessionCommands = ''
+            ${pkgs.xorg.xhost}/bin/xhost +SI:localuser:$USER
+        '';
+      };
 
       # Keyboard options
       layout = "us,ru,no";

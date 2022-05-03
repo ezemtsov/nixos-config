@@ -14,9 +14,16 @@
       ./packages.nix
       ./services.nix
       ./audio.nix
-      # ./musnix
       ./cachix.nix
     ];
+
+  nix = {
+    package = pkgs.nix_2_3;
+    trustedUsers = [ "ezemtsov" ];
+    extraOptions = ''
+      netrc-file = /etc/nixos/netrc
+    '';
+  };
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
@@ -58,8 +65,8 @@
   # Enable docker
   virtualisation = {
     docker.enable = true;
-    #   virtualbox.host.enable = true;
-    #   virtualbox.host.enableExtensionPack = true;
+      virtualbox.host.enable = true;
+      # virtualbox.host.enableExtensionPack = true;
   };
 
 

@@ -6,28 +6,23 @@
 
 let
   unstable = import <unstable> { config.allowUnfree = true; };
-  emacsGit = import (builtins.fetchTarball
-    https://github.com/nix-community/emacs-overlay/archive/532be17.tar.gz);
-
-  myDotnet = (pkgs.callPackage /home/ezemtsov/Resoptima/irma/support/sdk.nix {}).dotnet;
-
+  tvl = import (builtins.fetchGit {
+    url = "https://cl.tvl.fyi/depot";
+    rev = "3d006181e3a533572f1e9ccff319777c5918ad98"; }) {};
+  
   my = (pkgs.callPackage ./packages/default.nix {});
 
 in {
   # Configure the Nix package manager
   nixpkgs = {
     config.allowUnfree = true;
-
-    # To use the pinned channel, the original package set is thrown
-    # away in the overrides:
-    config.packageOverrides = pkgs: {};
-
     overlays = [
-      emacsGit
+      tvl.third_party.overlays.emacs
+      tvl.third_party.overlays.tvl
     ];
   };
 
-  # Gnome alps require dconf to remember default settings
+  # Gnome apps require dconf to remember default settings
   programs.dconf.enable = true;
 
   # ... and declare packages to be installed.
@@ -36,7 +31,6 @@ in {
     my.iconnconfig
     my.renoise
     my.x32edit
-    my.bitwig-studio3
 
     binutils-unwrapped
     blueman
@@ -80,14 +74,18 @@ in {
     slack
     spotify
     sqlite
+    tailscale
     tdesktop
     transmission
     tree
-    unstable.cachix
     unzip
     vlc
     wget
-    wireshark
+    nushell
+    zoom-us
+    xclip
+    i3lock
+
 
     libreoffice
     aspell
@@ -102,8 +100,9 @@ in {
     unstable.audacity
     supercollider
 
-    nushell
-    zoom-us
+    # Nix packages
+    unstable.cachix
+    unstable.rnix-lsp
 
     # CLisp packages
     unstable.alsaLib
@@ -124,14 +123,17 @@ in {
 
     # Dotnet packages
     unstable.jetbrains.rider
-    myDotnet
+    (with unstable.dotnetCorePackages; combinePackages [
+      # sdk_3_1
+      # sdk_5_0
+      sdk_6_0
+    ])
     dotnetPackages.Nuget
 
     # Python packages
     python3
     python3Packages.pip
     python-language-server
-    python3Packages.pytest
   ];
 
 }

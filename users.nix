@@ -7,6 +7,7 @@
     extraGroups = [ "wheel"
                     "vboxusers"
                     "networkmanager"
+                    "libvirtd"
                     "wireshark"
                     "docker"
                     "audio"

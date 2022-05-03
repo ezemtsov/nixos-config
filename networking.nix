@@ -13,13 +13,12 @@
     };
     extraHosts =
       ''
-        127.0.0.1 postgresql
-        127.0.0.1 redis
-        127.0.0.1 enopt-eclipse-parser-api
-        10.147.18.203 akerbp.resoptima.net a21-p1-app151 argocd-akerbp.resoptima.net
-        51.13.98.122 irma-neptune-1.resoptima.net
+        100.108.86.109 review.resoptima.net
       '';
   };
+
+  # enable the tailscale service
+  services.tailscale.enable = true;
 
   programs.fuse.userAllowOther = true;
   programs.nm-applet.enable = true;
