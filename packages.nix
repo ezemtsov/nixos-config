@@ -6,19 +6,20 @@
 
 let
   unstable = import <unstable> { config.allowUnfree = true; };
-  tvl = import (builtins.fetchGit {
-    url = "https://cl.tvl.fyi/depot";
-    rev = "3d006181e3a533572f1e9ccff319777c5918ad98"; }) {};
-  
-  my = (pkgs.callPackage ./packages/default.nix {});
+  emacs = import (builtins.fetchGit {
+    url = "https://github.com/nix-community/emacs-overlay.git";
+    rev = "274db48d3a88a44d742c2543afc8e3f4e6be9189";
+  });
 
-in {
+  my = (pkgs.callPackage ./packages/default.nix { });
+in
+{
   # Configure the Nix package manager
   nixpkgs = {
     config.allowUnfree = true;
-    overlays = [
-      tvl.third_party.overlays.emacs
-      tvl.third_party.overlays.tvl
+    overlays = [ emacs ];
+    config.permittedInsecurePackages = [
+      "python3.9-mistune-0.8.4"
     ];
   };
 
@@ -27,11 +28,13 @@ in {
 
   # ... and declare packages to be installed.
   environment.systemPackages = with pkgs; [
-    # sunvox
-    my.iconnconfig
-    my.renoise
-    my.x32edit
+    # my.iconnconfig
+    # my.renoise
+    # my.x32edit
+    my.fsautocomplete
 
+    azure-cli
+    azure-storage-azcopy
     binutils-unwrapped
     blueman
     breeze-icons
@@ -39,6 +42,8 @@ in {
     cmake
     curl
     direnv
+    element-desktop
+    ffmpeg
     file
     fish
     gcc
@@ -51,7 +56,9 @@ in {
     hsetroot
     htop
     hybridreverb2
+    i3lock
     ispell
+    jq
     jupyter
     kind
     kubectl
@@ -61,16 +68,22 @@ in {
     lnav
     lsd
     lsp-plugins
-    manpages
+    man-pages
+    nix-index
+    nixpkgs-fmt
     nodejs
     ntfs3g
     numix-cursor-theme
     numix-icon-theme
     numix-solarized-gtk-theme
+    nushell
     okular
     openjdk
+    pavucontrol
     postgresql
+    pyright
     quasselClient
+    silver-searcher
     slack
     spotify
     sqlite
@@ -81,11 +94,8 @@ in {
     unzip
     vlc
     wget
-    nushell
-    zoom-us
     xclip
-    i3lock
-
+    zoom-us
 
     libreoffice
     aspell
@@ -95,14 +105,15 @@ in {
 
     # Music packages
     unstable.cadence
-    unstable.jack2Full
-    # unstable.pulseaudioFull
     unstable.audacity
     supercollider
 
     # Nix packages
     unstable.cachix
     unstable.rnix-lsp
+
+    # Chicken packages
+    chicken
 
     # CLisp packages
     unstable.alsaLib
@@ -123,17 +134,10 @@ in {
 
     # Dotnet packages
     unstable.jetbrains.rider
-    (with unstable.dotnetCorePackages; combinePackages [
-      # sdk_3_1
-      # sdk_5_0
-      sdk_6_0
-    ])
-    dotnetPackages.Nuget
 
     # Python packages
     python3
     python3Packages.pip
-    python-language-server
   ];
 
 }

@@ -10,6 +10,9 @@ in {
       MONITOR_PRIMARY = "eDP-1";
       _JAVA_AWT_WM_NONREPARENTING = "1";
       DOTNET_ROOT = "$(dirname $(realpath $(which dotnet)))";
+      CHICKEN_REPOSITORY = "$HOME/.config/chicken/install";
+      LSP_USE_PLISTS = "true";
+      EDITOR = "emacsclient";
     };
   };
 
@@ -20,8 +23,8 @@ in {
       driSupport32Bit = true;
   };
 
-  # programs.sway = {
-  #   enable = true;
+  # PROGRAMS.SWAY = {
+  #   ENABLE = TRUE;
   #   wrapperFeatures.gtk = true; # so that gtk works properly
   #   extraPackages = with pkgs; [
   #     xwayland
@@ -35,7 +38,6 @@ in {
   #     unstable.waybar
   #   ];
   #   extraSessionCommands = ''
-  #     export _JAVA_AWT_WM_NONREPARENTING=1
   #     export EDITOR=emacs
   #   '';
   # };
@@ -49,29 +51,20 @@ in {
     xserver = {
       enable = true;
       windowManager = {
-        # i3 = {
-        #   enable = true;
-        #   package = pkgs.i3-gaps;
-        #   extraPackages = with pkgs; [
-        #     wmfocus
-        #     rofi
-        #     xclip
-        #     i3lock
-        #     unstable.i3status-rust
-        #     unstable.alacritty
-        #   ];
-        # };
-        session = lib.singleton {
-          name = "exwm";
-          start = "${myemacs}/bin/emacs --eval '(progn (server-start) (exwm-enable))'";
+        i3 = {
+          enable = true;
+          package = pkgs.i3-gaps;
+          extraPackages = with pkgs; [
+            wmfocus
+            xclip
+            xsecurelock
+            unstable.alacritty
+          ];
         };
-      };
-
-      displayManager = {
-        # Give EXWM permission to control the session.
-        sessionCommands = ''
-            ${pkgs.xorg.xhost}/bin/xhost +SI:localuser:$USER
-        '';
+      #   session = lib.singleton {
+      #     name = "exwm";
+      #     start = "${myemacs}/bin/emacs --eval '(progn (server-start) (exwm-enable))'";
+      #   };
       };
 
       # Keyboard options

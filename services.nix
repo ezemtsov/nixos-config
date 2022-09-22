@@ -4,8 +4,6 @@ let
   status-bar = pkgs.writeShellScriptBin
     "status-bar" ./scripts/status-bar.sh;
 in {
-  services.quassel.enable = true;
-
   systemd.user.services = {
 
     clipit = {

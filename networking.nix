@@ -5,16 +5,11 @@
     firewall = {
       enable = true;
       allowPing = true;
-      allowedTCPPorts = [ 8100 40051 5000 ];
+      allowedTCPPorts = [ ];
+      checkReversePath = "loose";
     };
     hostName = "ezemtsov";
-    networkmanager = {
-      enable = true;
-    };
-    extraHosts =
-      ''
-        100.108.86.109 review.resoptima.net
-      '';
+    networkmanager.enable = true;
   };
 
   # enable the tailscale service

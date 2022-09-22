@@ -21,25 +21,34 @@
     package = pkgs.nix_2_3;
     trustedUsers = [ "ezemtsov" ];
     extraOptions = ''
-      netrc-file = /etc/nixos/netrc
+      netrc-file = /etc/nix/netrc
     '';
   };
 
-  # Use the systemd-boot EFI boot loader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.cleanTmpDir = true;
+  boot = {
+    # Use the systemd-boot EFI boot loader.
+    loader.systemd-boot.enable = true;
+    loader.efi.canTouchEfiVariables = true;
+    cleanTmpDir = true;
 
-  # This is required for dotnet to run correctly
-  boot.kernel.sysctl."fs.inotify.max_user_instances" = 524288;
+    # Enable KVM for OSX virtualization
+    extraModprobeConfig = ''
+      options kvm_intel nested=1
+      options kvm_intel emulate_invalid_guest_state=0
+      options kvm ignore_msrs=1
+    '';
+
+    # This is required for dotnet to run correctly
+    kernel.sysctl."fs.inotify.max_user_instances" = 524288;
+  };
 
   # Update Intel microcode
   hardware.cpu.intel.updateMicrocode = true;
 
   # Emacs
   services.emacs = {
+    enable = true;
     install = true;
-    defaultEditor = true;
     package = import ./emacs.nix { inherit pkgs; };
   };
 
@@ -51,24 +60,26 @@
   time.timeZone = "Europe/Oslo";
 
   # Enable power control.
-  powerManagement = {
-    enable = true;
-    cpuFreqGovernor = "performance";
-  };
+  services.tlp.enable = true;
+  # powerManagement.powertop.enable = true;
 
   # Enable backlight control.
   programs.light.enable = true;
 
   services.openssh.enable = true;
-  programs.ssh.startAgent = true;
+  programs.gnupg.agent = {
+    enable = true;
+    enableSSHSupport = true;
+  };
 
   # Enable docker
   virtualisation = {
     docker.enable = true;
-      virtualbox.host.enable = true;
-      # virtualbox.host.enableExtensionPack = true;
+    virtualbox.host.enable = true;
+    # virtualbox.host.enableExtensionPack = true;
+    # this is needed to get a bridge with DHCP enabled
+    libvirtd.enable = true;
   };
-
 
   # Enable USB automount
   services.gvfs.enable = true;
@@ -77,6 +88,6 @@
   # compatible, in order to avoid breaking some software such as database
   # servers. You should change this only after NixOS release notes say you
   # should.
-  system.stateVersion = "20.09";
+  system.stateVersion = "22.05";
 
 }
