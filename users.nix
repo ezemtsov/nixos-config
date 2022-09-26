@@ -36,24 +36,29 @@ in
           statusCommand = "${pkgs.i3status-rust}/bin/i3status-rs ~/.config/i3status-rust/config-default.toml";
         }];
         modifier = "Mod4";
-        keybindings = lib.mkOptionDefault {
-          "${modifier}+Return" = "exec --no-startup-id alacritty";
-          "${modifier}+Shift+q" = "kill";
-          "${modifier}+q" = "split toggle";
-          "${modifier}+Shift+m" = "exec --no-startup-id xrandr --output eDP-1 --primary --auto --output DP-1-1-8 --off";
-          "${modifier}+m" = "exec --no-startup-id xrandr --output eDP-1 --off --output DP-1-1-8 --auto --primary";
+        startup = [
+          { command = "hsetroot -solid \"#444444\""; }
+        ];
+        terminal = "alacritty";
+        keybindings =
+          let
+            execNoStartupId = s: "exec --no-startup-id ${s}";
+          in lib.mkOptionDefault {
+            "${modifier}+Shift+l" = execNoStartupId "${pkgs.xsecurelock}/bin/xsecurelock";
+            "${modifier}+Shift+m" = execNoStartupId "xrandr --output eDP-1 --primary --auto --output DP-1-1-8 --off";
+            "${modifier}+m" = execNoStartupId "xrandr --output eDP-1 --off --output DP-1-1-8 --auto --primary";
+          };
+        window = {
+          titlebar = false;
+          border = 1;
         };
+        workspaceAutoBackAndForth = true;
       };
-      extraConfig = ''
-        default_border pixel 1
-        hide_edge_borders none
-        workspace_auto_back_and_forth yes
-      '';
     };
 
     programs.rofi = {
       enable = true;
-      theme = "gruvbox-dark-soft";
+      theme = "Arc-Dark";
       extraConfig = {
         modi = "combi";
         show-icons = true;
@@ -63,6 +68,38 @@ in
 
     programs.i3status-rust = {
       enable = true;
+      bars = {
+        default = {
+          blocks = [
+            {
+              block = "networkmanager";
+              primary_only = true;
+              ap_format = "{ssid}";
+              device_format = "{icon}{ap}";
+            }
+            { block = "disk_space"; }
+            { block = "sound"; }
+            {
+              block = "time";
+              interval = 60;
+              format = "%a %d/%m %R";
+            }
+            { block = "keyboard_layout";
+              driver = "kbddbus"; }
+            { block = "battery"; }
+          ];
+          icons = "awesome";
+          theme = "bad-wolf";
+          settings = {
+            theme = {
+              name = "bad-wolf";
+              overrides = {
+                good_bg = "#e39866";
+              };
+            };
+          };
+        };
+      };
     };
   };
 }
