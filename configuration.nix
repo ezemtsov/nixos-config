@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   imports =
@@ -19,7 +19,10 @@
 
   nix = {
     package = pkgs.nix_2_3;
-    trustedUsers = [ "ezemtsov" ];
+    settings = {
+      trusted-users = [ "ezemtsov" ];
+      max-jobs = lib.mkDefault 8;
+    };
     extraOptions = ''
       netrc-file = /etc/nix/netrc
     '';
@@ -88,6 +91,6 @@
   # compatible, in order to avoid breaking some software such as database
   # servers. You should change this only after NixOS release notes say you
   # should.
-  system.stateVersion = "22.05";
+  system.stateVersion = "22.11";
 
 }

@@ -2,25 +2,58 @@
 # It does not contain configuration for software that is already covered
 # by otherlinux NixOS options (e.g. emacs)
 
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 let
+  nixos-version = "nixos-22.11";
+
+  nixos-channel = import
+    (fetchTarball
+      ("https://github.com/nixos/nixpkgs"
+       +"/archive/nixos-${nixos-version}.tar.gz"))
+    { config.allowUnfree = true; };
+
   unstable = import <unstable> { config.allowUnfree = true; };
+
   emacs = import (builtins.fetchGit {
     url = "https://github.com/nix-community/emacs-overlay.git";
     rev = "274db48d3a88a44d742c2543afc8e3f4e6be9189";
   });
+
+  home-manager = fetchTarball
+    ("https://github.com/nix-community/home-manager"
+     +"/archive/release-${nixos-version}.tar.gz");
+
+  weechat-overlay = self: super: {
+    weechat = super.weechat.override {
+      configure = { availablePlugins, ... }: {
+        scripts = with super.weechatScripts; [
+          buffer_autoset
+          colorize_nicks
+          multiline
+          url_hint
+          weechat-autosort
+          weechat-go
+          weechat-matrix
+          weechat-notify-send
+        ];
+      };
+    };
+  };
 
   my = (pkgs.callPackage ./packages/default.nix { });
 in
 {
   # Configure the Nix package manager
   nixpkgs = {
-    config.allowUnfree = true;
-    overlays = [ emacs ];
-    config.permittedInsecurePackages = [
-      "python3.9-mistune-0.8.4"
-    ];
+    pkgs = nixos-channel;
+    config = {
+      allowUnfree = true;
+      permittedInsecurePackages = [
+        "python-2.7.18.6"
+      ];
+    };
+    overlays = [ emacs weechat-overlay ];
   };
 
   # Gnome apps require dconf to remember default settings
@@ -28,9 +61,6 @@ in
 
   # ... and declare packages to be installed.
   environment.systemPackages = with pkgs; [
-    # my.iconnconfig
-    # my.renoise
-    # my.x32edit
     my.fsautocomplete
 
     azure-cli
@@ -82,7 +112,6 @@ in
     pavucontrol
     postgresql
     pyright
-    quasselClient
     silver-searcher
     slack
     spotify
@@ -95,7 +124,8 @@ in
     vlc
     wget
     xclip
-    zoom-us
+    weechat
+    inetutils
 
     libreoffice
     aspell
@@ -104,19 +134,15 @@ in
     aspellDicts.nb
 
     # Music packages
-    unstable.cadence
     unstable.audacity
-    supercollider
 
     # Nix packages
-    unstable.cachix
     unstable.rnix-lsp
 
     # Chicken packages
     chicken
 
     # CLisp packages
-    unstable.alsaLib
     unstable.sbcl
     unstable.lispPackages.quicklisp
 
@@ -125,7 +151,6 @@ in
     unstable.cargo
     unstable.rustup
     unstable.rust-analyzer
-    unstable.carnix
 
     # Haskell packages
     # haskell.compiler.ghc883
@@ -139,5 +164,161 @@ in
     python3
     python3Packages.pip
   ];
+
+  imports = [ (import home-manager { }).nixos ];
+  home-manager.users.ezemtsov = {
+    home.stateVersion = config.system.stateVersion;
+    xsession.windowManager.i3 = {
+      enable = true;
+      config = rec {
+        menu = "${pkgs.rofi}/bin/rofi -show";
+        bars = [{
+          statusCommand = ''
+            ${pkgs.i3status-rust}/bin/i3status-rs ~/.config/i3status-rust/config-default.toml
+          '';
+        }];
+        modifier = "Mod4";
+        startup = [
+          { command = "hsetroot -solid \"#444444\""; }
+        ];
+        terminal = "${pkgs.alacritty}/bin/alacritty";
+        keybindings =
+          let
+            execNoStartupId = s: "exec --no-startup-id ${s}";
+          in
+          lib.mkOptionDefault {
+            "${modifier}+Shift+l" = execNoStartupId "${pkgs.xsecurelock}/bin/xsecurelock";
+            "${modifier}+Shift+m" = execNoStartupId ''
+              xrandr --output eDP-1 --primary --auto --output DP-1-1-8 --off'';
+            "${modifier}+m" = execNoStartupId ''
+              xrandr --output eDP-1 --off --output DP-1-1-8 --auto --primary'';
+            "${modifier}+o" = execNoStartupId "${pkgs.wmfocus}/bin/wmfocus";
+            "${modifier}+Print" = execNoStartupId "${pkgs.flameshot}/bin/flameshot gui";
+          };
+        window = {
+          titlebar = false;
+          border = 1;
+        };
+        workspaceAutoBackAndForth = true;
+      };
+    };
+
+    services.keynav.enable = true;
+
+    programs.alacritty = {
+      enable = true;
+      settings = {
+        font = {
+          normal = {
+            family = "JetBrains Mono";
+            style = "Regular";
+          };
+          bold = {
+            family = "JetBrains Mono";
+            style = "Bold";
+          };
+          italic = {
+            family = "JetBrains Mono";
+            style = "Italic";
+          };
+        };
+        key_bindings = [
+          {
+            key = "Up";
+            mods = "Control";
+            action = "ScrollPageUp";
+          }
+          {
+            key = "Down";
+            mods = "Control";
+            action = "ScrollPageDown";
+          }
+          {
+            key = "I";
+            mods = "Control";
+            action = "ToggleViMode";
+          }
+          {
+            key = "W";
+            mods = "Alt";
+            action = "CopySelection";
+          }
+          {
+            key = "Y";
+            mods = "Control";
+            action = "PasteSelection";
+          }
+          {
+            key = "G";
+            mods = "Control";
+            action = "ClearSelection";
+          }
+          {
+            key = "Space";
+            mods = "Control";
+            action = "ToggleNormalSelection";
+            mode = "Vi";
+          }
+          {
+            key = "Left";
+            mods = "Control";
+            action = "SemanticLeft";
+            mode = "Vi";
+          }
+          {
+            key = "Right";
+            mods = "Control";
+            action = "SemanticRightEnd";
+            mode = "Vi";
+          }
+        ];
+      };
+    };
+
+    programs.rofi = {
+      enable = true;
+      theme = "Arc-Dark";
+      extraConfig = {
+        modi = "combi";
+        show-icons = true;
+        hide-scrollbar = true;
+      };
+    };
+
+    programs.i3status-rust = {
+      enable = true;
+      bars = {
+        default = {
+          blocks = [
+            {
+              block = "networkmanager";
+              primary_only = true;
+              ap_format = "{ssid}";
+              device_format = "{icon}{ap}";
+            }
+            { block = "disk_space"; }
+            { block = "sound"; }
+            {
+              block = "time";
+              interval = 60;
+              format = "%a %d/%m %R";
+            }
+            {
+              block = "keyboard_layout";
+              driver = "kbddbus";
+            }
+            { block = "battery"; }
+          ];
+          icons = "awesome";
+          settings = {
+            theme = {
+              name = "plain";
+              overrides.good_fg = "#aaaaaa";
+            };
+          };
+        };
+      };
+    };
+  };
 
 }

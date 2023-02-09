@@ -46,7 +46,7 @@ in {
     picom = {
       enable = true;
       vSync = true;
-      backend = "glx";
+      backend = "xrender";
     };
     xserver = {
       enable = true;
@@ -57,8 +57,6 @@ in {
           extraPackages = with pkgs; [
             wmfocus
             xclip
-            xsecurelock
-            unstable.alacritty
           ];
         };
       #   session = lib.singleton {

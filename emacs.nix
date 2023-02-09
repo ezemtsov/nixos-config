@@ -4,11 +4,11 @@ with pkgs;
 with emacsPackagesNg;
 
 let
-  emacsWithPackages = (emacsPackagesFor emacsNativeComp).emacsWithPackages;
+  emacsWithPackages = (emacsPackagesFor emacs).emacsWithPackages;
 
 in emacsWithPackages (epkgs:
   (with epkgs.melpaPackages; [
-    exwm
-    xelb
+    # exwm
+    # xelb
     vterm
   ]))

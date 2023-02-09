@@ -24,16 +24,6 @@ rec {
     };
   });
 
-  # bitwig-studio3 = unstable.bitwig-studio3.overrideAttrs (oldAttrs: rec {
-  #   version = "3.3.1";
-  #   jre = /home/ezemtsov/Downloads/Bitwig/Linux/patch/bitwig.jar;
-  #   src = /home/ezemtsov/Downloads/Bitwig/Linux/bitwig-studio-3.3.1.deb;
-  #   postFixup = ''
-  #       ${oldAttrs.postFixup}
-  #       find -L $out -name "bitwig.jar" -exec cp ${jre} {} \;
-  #     '';
-  # });
-
   fsautocomplete =
     let
       dotnet = pkgs.dotnetCorePackages.sdk_6_0;
@@ -41,8 +31,8 @@ rec {
       fsautocomplete-dll = pkgs.stdenvNoCC.mkDerivation {
         name = "fsautocomplete-dll";
         src = pkgs.fetchurl {
-          url = "https://github.com/fsharp/FsAutoComplete/releases/download/v0.57.0/fsautocomplete.0.57.0.nupkg";
-          sha256 = "0vdfxwj853mn4746r8lis3zvk3w6x3zsdlgg6a95kpb8nrq2fzwr";
+          url = "https://github.com/fsharp/FsAutoComplete/releases/download/v0.58.2/fsautocomplete.0.58.2.nupkg";
+          sha256 = "1346f62xzra0rdi248xkny6bpablm4f0van0vspn6f5fm3m87x1f";
         };
         nativeBuildInputs = [ pkgs.unzip ];
         dontUnpack = true;
