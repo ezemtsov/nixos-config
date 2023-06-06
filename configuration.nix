@@ -69,6 +69,9 @@
   # Enable backlight control.
   programs.light.enable = true;
 
+  # Security
+  security.pam.services.gdm.enableGnomeKeyring = true;
+  services.gnome.gnome-keyring.enable = true;
   services.openssh.enable = true;
   programs.gnupg.agent = {
     enable = true;

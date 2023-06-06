@@ -4,15 +4,6 @@ let
   status-bar = pkgs.writeShellScriptBin
     "status-bar" ./scripts/status-bar.sh;
 in {
-  services = {
-    datadog-agent = {
-      enable = false;
-      enableTraceAgent = true;
-      apiKeyFile = pkgs.writeText "datadog_api_key" "877548e15979cad623db1cf0115bb0ca";
-      site = "datadoghq.eu";
-    };
-  };
-  
   systemd.user.services = {
 
     clipit = {

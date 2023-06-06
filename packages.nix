@@ -5,24 +5,25 @@
 { config, pkgs, lib, ... }:
 
 let
-  nixos-version = "nixos-22.11";
+  nixos-version = "22.11";
 
-  nixos-channel = import
-    (fetchTarball
-      ("https://github.com/nixos/nixpkgs"
-       +"/archive/nixos-${nixos-version}.tar.gz"))
-    { config.allowUnfree = true; };
+  nixos-channel = import (fetchTarball
+    # nixos-22.11 channel
+    "https://github.com/nixos/nixpkgs/archive/9b8e5abb18324c7fe9f07cb100c3cd4a29cda8b8.tar.gz"
+  ) { config.allowUnfree = true; };
 
-  unstable = import <unstable> { config.allowUnfree = true; };
+  unstable = import (fetchTarball
+    "https://github.com/nixos/nixpkgs/archive/nixos-unstable.tar.gz"
+  ) { config.allowUnfree = true; };
 
   emacs = import (builtins.fetchGit {
     url = "https://github.com/nix-community/emacs-overlay.git";
-    rev = "274db48d3a88a44d742c2543afc8e3f4e6be9189";
+    rev = "24e553ce39c07dcfdb56375190e1ec92f1df0317";
   });
 
-  home-manager = fetchTarball
-    ("https://github.com/nix-community/home-manager"
-     +"/archive/release-${nixos-version}.tar.gz");
+  home-manager = fetchTarball (
+    "https://github.com/nix-community/home-manager/archive/release-${nixos-version}.tar.gz"
+  );
 
   weechat-overlay = self: super: {
     weechat = super.weechat.override {
@@ -61,25 +62,23 @@ in
 
   # ... and declare packages to be installed.
   environment.systemPackages = with pkgs; [
-    my.fsautocomplete
+    # my.fsautocomplete
 
     azure-cli
     azure-storage-azcopy
     binutils-unwrapped
     blueman
     breeze-icons
-    chromium
     cmake
     curl
     direnv
-    element-desktop
     ffmpeg
     file
     fish
     gcc
     gimp
     gitFull
-    gnome3.nautilus
+    dolphin
     gnumake
     gtk3
     gvfs
@@ -87,6 +86,7 @@ in
     htop
     hybridreverb2
     i3lock
+    inetutils
     ispell
     jq
     jupyter
@@ -99,6 +99,7 @@ in
     lsd
     lsp-plugins
     man-pages
+    nheko
     nix-index
     nixpkgs-fmt
     nodejs
@@ -120,12 +121,12 @@ in
     tdesktop
     transmission
     tree
+    unstable.chromium
     unzip
     vlc
+    weechat
     wget
     xclip
-    weechat
-    inetutils
 
     libreoffice
     aspell

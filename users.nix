@@ -12,6 +12,7 @@
       "libvirtd"
       "wireshark"
       "docker"
+      "plex"
     ];
     description = "Evgeny Zemtsov";
     isNormalUser = true;

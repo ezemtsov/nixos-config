@@ -1,10 +1,6 @@
 { config, lib, pkgs, ... }:
 
-let
-  unstable = import <unstable> { config.allowUnfree = true; };
-  myemacs = import ./emacs.nix { inherit pkgs; };
-
-in {
+{
   environment = {
     variables = {
       MONITOR_PRIMARY = "eDP-1";
@@ -23,30 +19,11 @@ in {
       driSupport32Bit = true;
   };
 
-  # PROGRAMS.SWAY = {
-  #   ENABLE = TRUE;
-  #   wrapperFeatures.gtk = true; # so that gtk works properly
-  #   extraPackages = with pkgs; [
-  #     xwayland
-  #     swaylock
-  #     swayidle
-  #     wl-clipboard
-  #     mako # notification daemon
-  #     unstable.alacritty # Alacritty is the default terminal in the config
-  #     rofi
-  #     unstable.wmfocus
-  #     unstable.waybar
-  #   ];
-  #   extraSessionCommands = ''
-  #     export EDITOR=emacs
-  #   '';
-  # };
-
   services = {
     picom = {
       enable = true;
       vSync = true;
-      backend = "xrender";
+      backend = "glx";
     };
     xserver = {
       enable = true;
@@ -59,10 +36,6 @@ in {
             xclip
           ];
         };
-      #   session = lib.singleton {
-      #     name = "exwm";
-      #     start = "${myemacs}/bin/emacs --eval '(progn (server-start) (exwm-enable))'";
-      #   };
       };
 
       # Keyboard options

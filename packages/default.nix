@@ -26,13 +26,13 @@ rec {
 
   fsautocomplete =
     let
-      dotnet = pkgs.dotnetCorePackages.sdk_6_0;
+      dotnet = pkgs.dotnetCorePackages.sdk_7_0;
 
       fsautocomplete-dll = pkgs.stdenvNoCC.mkDerivation {
         name = "fsautocomplete-dll";
         src = pkgs.fetchurl {
-          url = "https://github.com/fsharp/FsAutoComplete/releases/download/v0.58.2/fsautocomplete.0.58.2.nupkg";
-          sha256 = "1346f62xzra0rdi248xkny6bpablm4f0van0vspn6f5fm3m87x1f";
+          url = "https://github.com/fsharp/FsAutoComplete/releases/download/v0.59.2/fsautocomplete.0.59.2.nupkg";
+          sha256 = "007nviwf1zn9v4575nr1pk7s0qpkrz34hai4blfzskbnl8mp16y0";
         };
         nativeBuildInputs = [ pkgs.unzip ];
         dontUnpack = true;
@@ -55,7 +55,7 @@ rec {
       text = ''
         export DOTNET_ROOT=${dotnet}
         unset DOTNET_SYSTEM_GLOBALIZATION_INVARIANT
-        dotnet ${fsautocomplete-dll}/share/tools/net6.0/any/fsautocomplete.dll "$@"
+        dotnet ${fsautocomplete-dll}/share/tools/net7.0/any/fsautocomplete.dll "$@"
       '';
     };
 
