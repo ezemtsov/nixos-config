@@ -73,7 +73,7 @@
   powerManagement = {
     enable = true;
     cpuFreqGovernor = "powersave";
-    powertop.enable = true;
+    powertop.enable = false;
   };
 
   # Enable backlight control.

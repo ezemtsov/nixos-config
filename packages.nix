@@ -17,6 +17,7 @@ in {
     binutils-unwrapped
     blueman
     breeze-icons
+    chromium
     cmake
     curl
     direnv
@@ -70,12 +71,12 @@ in {
     tdesktop
     transmission
     tree
-    chromium
     unstable.cinny-desktop
     unzip
     vlc
     weechat
     wget
+    which
     xclip
 
     libreoffice
@@ -110,5 +111,8 @@ in {
 
     # Python packages
     python3
+
+    # .NET packages
+    unstable.dotnetCorePackages.sdk_7_0
   ];
 }

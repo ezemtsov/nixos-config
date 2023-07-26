@@ -162,14 +162,14 @@
           blocks = [
             {
               block = "net";
-              format = "{ssid}";
+              format = " $ssid ";
             }
             { block = "disk_space"; }
             { block = "sound"; }
             {
               block = "time";
               interval = 60;
-              format = "%a %d/%m %R";
+              format = " $timestamp.datetime(f:'%a %d/%m %R') ";
             }
             {
               block = "keyboard_layout";
@@ -177,10 +177,10 @@
             }
             { block = "battery"; }
           ];
-          icons = "awesome";
+          icons = "awesome5";
           settings = {
             theme = {
-              name = "plain";
+              theme = "plain";
               overrides.good_fg = "#aaaaaa";
             };
           };
