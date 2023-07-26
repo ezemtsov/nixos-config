@@ -4,23 +4,30 @@
   imports =
     [
       ./hardware-configuration.nix
-      ./users.nix
+      ./sources.nix
       ./networking.nix
       ./desktop.nix
+      ./home.nix
       ./packages.nix
       ./services.nix
-      ./audio.nix
       ./cachix.nix
     ];
 
+  documentation.enable = false;
+
+  # Configure the Nix package manager
+  nixpkgs = {
+    pkgs = import config.sources.nixos { config.allowUnfree = true; };
+    overlays = [ (import config.sources.emacs-overlay) ];
+  };
+
   nix = {
     package = pkgs.nix_2_3;
-    # extraOptions = ''
-    #   netrc-file = /etc/nix/netrc
-    # '';
+    extraOptions = ''
+      netrc-file = /etc/nixos/netrc
+    '';
     settings = {
       trusted-users = [ "ezemtsov" ];
-      extra-sandbox-paths = [ "/etc/nix/netrc" ];
       max-jobs = lib.mkDefault "auto";
     };
   };
@@ -29,7 +36,7 @@
     # Use the systemd-boot EFI boot loader.
     loader.systemd-boot.enable = true;
     loader.efi.canTouchEfiVariables = true;
-    cleanTmpDir = true;
+    tmp.cleanOnBoot = true;
 
     # Enable KVM for OSX virtualization
     extraModprobeConfig = ''
@@ -98,10 +105,23 @@
   services.avahi.nssmdns = true;
   services.avahi.openFirewall = true;
 
+  # Audio
+  sound.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    jack.enable = true;
+    pulse.enable = true;
+    socketActivation = true;
+  };
+
+  # Bluetooth
+  hardware.bluetooth.enable = true;
+  services.blueman.enable = true;
+
   # This value determines the NixOS release with which your system is to be
   # compatible, in order to avoid breaking some software such as database
   # servers. You should change this only after NixOS release notes say you
   # should.
-  system.stateVersion = "22.11";
-
+  system.stateVersion = "23.05";
 }
