@@ -1,7 +1,3 @@
-# Edit systhis configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
-
 { config, pkgs, lib, ... }:
 
 {
@@ -19,13 +15,14 @@
 
   nix = {
     package = pkgs.nix_2_3;
+    # extraOptions = ''
+    #   netrc-file = /etc/nix/netrc
+    # '';
     settings = {
       trusted-users = [ "ezemtsov" ];
-      max-jobs = lib.mkDefault 8;
+      extra-sandbox-paths = [ "/etc/nix/netrc" ];
+      max-jobs = lib.mkDefault "auto";
     };
-    extraOptions = ''
-      netrc-file = /etc/nix/netrc
-    '';
   };
 
   boot = {
@@ -43,6 +40,8 @@
 
     # This is required for dotnet to run correctly
     kernel.sysctl."fs.inotify.max_user_instances" = 524288;
+
+    supportedFilesystems = [ "exfat" ];
   };
 
   # Update Intel microcode
@@ -64,7 +63,11 @@
 
   # Enable power control.
   services.tlp.enable = true;
-  # powerManagement.powertop.enable = true;
+  powerManagement = {
+    enable = true;
+    cpuFreqGovernor = "powersave";
+    powertop.enable = true;
+  };
 
   # Enable backlight control.
   programs.light.enable = true;
@@ -81,14 +84,19 @@
   # Enable docker
   virtualisation = {
     docker.enable = true;
-    virtualbox.host.enable = true;
-    # virtualbox.host.enableExtensionPack = true;
+    # virtualbox.host.enable = true;
     # this is needed to get a bridge with DHCP enabled
     libvirtd.enable = true;
   };
 
   # Enable USB automount
   services.gvfs.enable = true;
+
+  # Printer
+  services.printing.enable = true;
+  services.avahi.enable = true;
+  services.avahi.nssmdns = true;
+  services.avahi.openFirewall = true;
 
   # This value determines the NixOS release with which your system is to be
   # compatible, in order to avoid breaking some software such as database

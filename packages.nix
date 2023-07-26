@@ -5,56 +5,33 @@
 { config, pkgs, lib, ... }:
 
 let
-  nixos-version = "22.11";
+  # nixos-23.05 channel
+  nixos = import (fetchTarball {
+    url = "https://github.com/nixos/nixpkgs/archive/ea4c80b39be4c09702b0cb3b42eab59e2ba4f24b.tar.gz";
+    sha256 = "sha256:1xi53rlslcprybsvrmipm69ypd3g3hr7wkxvzc73ag8296yclyll";
+  }) { config.allowUnfree = true; };
 
-  nixos-channel = import (fetchTarball
-    # nixos-22.11 channel
-    "https://github.com/nixos/nixpkgs/archive/9b8e5abb18324c7fe9f07cb100c3cd4a29cda8b8.tar.gz"
-  ) { config.allowUnfree = true; };
-
-  unstable = import (fetchTarball
-    "https://github.com/nixos/nixpkgs/archive/nixos-unstable.tar.gz"
-  ) { config.allowUnfree = true; };
+  unstable = import (fetchTarball {
+    url = "https://github.com/nixos/nixpkgs/archive/ac1acba43b2f9db073943ff5ed883ce7e8a40a2c.tar.gz";
+    sha256 = "sha256:0gl7wxjnsk9fn6ck5dlv629nvs6vj42w49bb27ysxn2xgl0zzy4p";
+  }) {
+    config.allowUnfree = true;
+    config.permittedInsecurePackages = [ "openssl-1.1.1u" ];
+  };
 
   emacs = import (builtins.fetchGit {
     url = "https://github.com/nix-community/emacs-overlay.git";
-    rev = "24e553ce39c07dcfdb56375190e1ec92f1df0317";
+    rev = "8557a967260b6f6fca567dcf6d1dee47aa71871f";
   });
-
-  home-manager = fetchTarball (
-    "https://github.com/nix-community/home-manager/archive/release-${nixos-version}.tar.gz"
-  );
-
-  weechat-overlay = self: super: {
-    weechat = super.weechat.override {
-      configure = { availablePlugins, ... }: {
-        scripts = with super.weechatScripts; [
-          buffer_autoset
-          colorize_nicks
-          multiline
-          url_hint
-          weechat-autosort
-          weechat-go
-          weechat-matrix
-          weechat-notify-send
-        ];
-      };
-    };
-  };
 
   my = (pkgs.callPackage ./packages/default.nix { });
 in
 {
   # Configure the Nix package manager
   nixpkgs = {
-    pkgs = nixos-channel;
-    config = {
-      allowUnfree = true;
-      permittedInsecurePackages = [
-        "python-2.7.18.6"
-      ];
-    };
-    overlays = [ emacs weechat-overlay ];
+    pkgs = nixos;
+    config.allowUnfree = true;
+    overlays = [ emacs ];
   };
 
   # Gnome apps require dconf to remember default settings
@@ -62,8 +39,6 @@ in
 
   # ... and declare packages to be installed.
   environment.systemPackages = with pkgs; [
-    # my.fsautocomplete
-
     azure-cli
     azure-storage-azcopy
     binutils-unwrapped
@@ -72,13 +47,13 @@ in
     cmake
     curl
     direnv
+    dolphin
     ffmpeg
     file
     fish
     gcc
     gimp
     gitFull
-    dolphin
     gnumake
     gtk3
     gvfs
@@ -112,6 +87,7 @@ in
     openjdk
     pavucontrol
     postgresql
+    proton-caller
     pyright
     silver-searcher
     slack
@@ -121,7 +97,8 @@ in
     tdesktop
     transmission
     tree
-    unstable.chromium
+    chromium
+    unstable.cinny-desktop
     unzip
     vlc
     weechat
@@ -158,15 +135,12 @@ in
     unstable.haskellPackages.ghcide
     haskellPackages.cabal-install
 
-    # Dotnet packages
-    unstable.jetbrains.rider
-
     # Python packages
     python3
-    python3Packages.pip
   ];
 
-  imports = [ (import home-manager { }).nixos ];
+  imports = [ "${nixos.home-manager.src}/nixos/default.nix" ];
+  home-manager.useGlobalPkgs = true;
   home-manager.users.ezemtsov = {
     home.stateVersion = config.system.stateVersion;
     xsession.windowManager.i3 = {
