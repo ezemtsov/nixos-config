@@ -23,7 +23,7 @@
     picom = {
       enable = true;
       vSync = true;
-      backend = "xrender";
+      backend = "egl";
     };
     xserver = {
       enable = true;
