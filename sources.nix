@@ -8,18 +8,13 @@
 
   config.sources = builtins.mapAttrs (_: fetchTarball) {
       nixos = {
-        url = "https://github.com/nixos/nixpkgs/archive/b12803b6d90e2e583429bb79b859ca53c348b39a.tar.gz";
-        sha256 = "sha256:1l9sa8hd242xrb2j18mj4f62f3cw0bf5pafp58gdl0jkl61dpapr";
-      };
-
-      unstable = {
-        url = "https://github.com/nixos/nixpkgs/archive/c516ad1ee1c9d64d420a14439f50af51aead01bb.tar.gz";
-        sha256 = "sha256:12hlalk1zjzdyqlaz3v1ql7qkbymkv9y0gxhjyrnbwqwsbiy26wd";
+        url = "https://github.com/nixos/nixpkgs/archive/66aedfd010204949cb225cf749be08cb13ce1813.tar.gz";
+        sha256 = "sha256:1jspq3g1wzdfgmnp4wzzrwh2cfn9q2w86b25bgwr7ygdcdap3fqd";
       };
 
       emacs-overlay = {
-        url = "https://github.com/nix-community/emacs-overlay/archive/22c986c6ed401dcdbc5fdbfe7e0cf551a35b58dc.tar.gz";
-        sha256 = "sha256:1hl1s49whci22mq0v15vwg55yg3ldnbvr2n9i7rkp5fnb9dsyj69";
+        url = "https://github.com/nix-community/emacs-overlay/archive/4ba15d6f4310459e6da08dcd4d3df7f4d102bdf0.tar.gz";
+        sha256 = "sha256:1c5d78aypds7pg02qh8n4fgarasq3m6nxap4ibr7cnfp0yarmxhc";
       };
 
       home-manager = {

@@ -10,15 +10,21 @@
       ./home.nix
       ./packages.nix
       ./services.nix
-      ./cachix.nix
     ];
 
   documentation.enable = false;
 
   # Configure the Nix package manager
   nixpkgs = {
-    pkgs = import config.sources.nixos { config.allowUnfree = true; };
     overlays = [ (import config.sources.emacs-overlay) ];
+    pkgs = import config.sources.nixos {
+      config = {
+        allowUnfree = true;
+        permittedInsecurePackages = [
+          "openssl-1.1.1v"
+        ];
+      };
+    };
   };
 
   nix = {
@@ -28,7 +34,7 @@
     '';
     settings = {
       trusted-users = [ "ezemtsov" ];
-      max-jobs = lib.mkDefault "auto";
+      max-jobs = "auto";
     };
   };
 
@@ -54,6 +60,9 @@
   # Update Intel microcode
   hardware.cpu.intel.updateMicrocode = true;
 
+  # Enable power saving
+  powerManagement.enable = true;
+
   # Emacs
   services.emacs = {
     enable = true;
@@ -67,14 +76,6 @@
 
   # Set your time zone.
   time.timeZone = "Europe/Oslo";
-
-  # Enable power control.
-  services.tlp.enable = true;
-  powerManagement = {
-    enable = true;
-    cpuFreqGovernor = "powersave";
-    powertop.enable = false;
-  };
 
   # Enable backlight control.
   programs.light.enable = true;

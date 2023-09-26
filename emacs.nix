@@ -1,14 +1,11 @@
 { pkgs }:
 
 with pkgs;
-with emacsPackagesNg;
 
-let
-  emacsWithPackages = (emacsPackagesFor emacs).emacsWithPackages;
-
-in emacsWithPackages (epkgs:
-  (with epkgs.melpaPackages; [
+(emacsPackagesFor emacs29).emacsWithPackages (epkgs: with epkgs; [
     # exwm
     # xelb
-    vterm
-  ]))
+    lsp-bridge
+    melpaPackages.vterm
+  ]
+)

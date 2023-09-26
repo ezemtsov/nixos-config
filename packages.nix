@@ -1,11 +1,6 @@
 { config, pkgs, lib, ... }:
 
 let
-  unstable = import config.sources.unstable {
-    config.allowUnfree = true;
-    config.permittedInsecurePackages = [ "openssl-1.1.1u" ];
-  };
-
 in {
   # Gnome apps require dconf to remember default settings
   programs.dconf.enable = true;
@@ -41,6 +36,7 @@ in {
     jupyter
     kind
     kubectl
+    kubelogin
     libnotify
     libtool
     lingot
@@ -71,13 +67,18 @@ in {
     tdesktop
     transmission
     tree
-    unstable.cinny-desktop
+    cinny-desktop
     unzip
     vlc
     weechat
     wget
     which
     xclip
+    element-desktop
+    cachix
+    zstd
+    nginx
+    niv
 
     libreoffice
     aspell
@@ -86,33 +87,71 @@ in {
     aspellDicts.nb
 
     # Music packages
-    unstable.audacity
+    audacity
 
     # Nix packages
-    unstable.rnix-lsp
+    nil
 
     # Chicken packages
     chicken
 
     # CLisp packages
-    unstable.sbcl
-    unstable.lispPackages.quicklisp
+    sbcl
+    lispPackages.quicklisp
 
     # Rust packages
-    unstable.rustc
-    unstable.cargo
-    unstable.rustup
-    unstable.rust-analyzer
+    rustc
+    cargo
+    rustup
+    rust-analyzer
 
     # Haskell packages
     # haskell.compiler.ghc883
-    unstable.haskellPackages.ghcide
+    haskellPackages.ghcide
     haskellPackages.cabal-install
 
-    # Python packages
-    python3
+    # Python packages with dependencies for lsp-bridge
+    (python3.withPackages (p: with p; [
+      epc
+      orjson
+      sexpdata
+      six
+      paramiko
+      rapidfuzz
+    ]))
 
     # .NET packages
-    unstable.dotnetCorePackages.sdk_7_0
+    dotnetCorePackages.sdk_6_0
+
+    # fsautocomplete
+    (
+      let
+        dotnet = dotnetCorePackages.sdk_6_0;
+        fsautocomplete-dll = pkgs.stdenvNoCC.mkDerivation {
+          name = "fsautocomplete-dll";
+          src = pkgs.fetchurl {
+            url = "https://github.com/fsharp/FsAutoComplete/releases/download/v0.63.1/fsautocomplete.0.63.1.nupkg";
+            sha256 = "sha256:13hl4a913al5yvnadyw19y8afw9sprazsdjhcndn2gc3v9vxb90b";
+          };
+          nativeBuildInputs = [ pkgs.unzip ];
+          buildCommand = ''
+            mkdir -p $out/bin $out/share
+            unzip $src -d $out/share
+            echo $out/share/tools
+          '';
+        };
+      in
+      pkgs.writeShellApplication {
+        name = "fsautocomplete";
+        runtimeInputs = [
+          dotnet
+          fsautocomplete-dll
+        ];
+        text = ''
+          export DOTNET_ROOT=${dotnet}
+          unset DOTNET_SYSTEM_GLOBALIZATION_INVARIANT
+          dotnet ${fsautocomplete-dll}/share/tools/net6.0/any/fsautocomplete.dll "$@"
+        '';
+      })
   ];
 }
