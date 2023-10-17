@@ -1,10 +1,6 @@
 { config, pkgs, lib, ... }@args:
 
 {
-  imports = [
-    "${(import ./sources.nix args).config.sources.home-manager}/nixos/default.nix"
-  ];
-
   # Define a user account
   programs.fish.enable = true;
   users.defaultUserShell = pkgs.fish;
@@ -160,10 +156,6 @@
       bars = {
         default = {
           blocks = [
-            {
-              block = "net";
-              format = " $ssid ";
-            }
             { block = "disk_space"; }
             { block = "sound"; }
             {

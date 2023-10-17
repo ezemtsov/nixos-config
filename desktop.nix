@@ -5,9 +5,10 @@
     variables = {
       MONITOR_PRIMARY = "eDP-1";
       _JAVA_AWT_WM_NONREPARENTING = "1";
-      DOTNET_ROOT = "$(dirname $(realpath $(which dotnet)))";
-      CHICKEN_REPOSITORY = "$HOME/.config/chicken/install";
-      LSP_USE_PLISTS = "true";
+      DOTNET_ROOT = with pkgs.dotnetCorePackages; combinePackages ([
+        sdk_6_0
+        sdk_7_0
+      ]);
       EDITOR = "emacsclient";
     };
   };

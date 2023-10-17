@@ -12,11 +12,13 @@ in {
     binutils-unwrapped
     blueman
     breeze-icons
+    cachix
     chromium
+    cinny-desktop
     cmake
     curl
     direnv
-    dolphin
+    element-desktop
     ffmpeg
     file
     fish
@@ -24,8 +26,8 @@ in {
     gimp
     gitFull
     gnumake
+    google-cloud-sdk
     gtk3
-    gvfs
     hsetroot
     htop
     hybridreverb2
@@ -41,12 +43,10 @@ in {
     libtool
     lingot
     lnav
-    lsd
-    lsp-plugins
     man-pages
+    gnome.nautilus
+    nginx
     nheko
-    nix-index
-    nixpkgs-fmt
     nodejs
     ntfs3g
     numix-cursor-theme
@@ -59,38 +59,38 @@ in {
     postgresql
     proton-caller
     pyright
-    silver-searcher
+    ripgrep
     slack
     spotify
     sqlite
+    signal-desktop
     tailscale
     tdesktop
     transmission
     tree
-    cinny-desktop
     unzip
     vlc
     weechat
     wget
     which
     xclip
-    element-desktop
-    cachix
     zstd
-    nginx
-    niv
 
     libreoffice
     aspell
     aspellDicts.en
     aspellDicts.en-computers
     aspellDicts.nb
-
+    
     # Music packages
     audacity
 
     # Nix packages
     nil
+    niv
+    nix-diff
+    nix-index
+    nixpkgs-fmt
 
     # Chicken packages
     chicken
@@ -121,37 +121,10 @@ in {
     ]))
 
     # .NET packages
-    dotnetCorePackages.sdk_6_0
-
-    # fsautocomplete
-    (
-      let
-        dotnet = dotnetCorePackages.sdk_6_0;
-        fsautocomplete-dll = pkgs.stdenvNoCC.mkDerivation {
-          name = "fsautocomplete-dll";
-          src = pkgs.fetchurl {
-            url = "https://github.com/fsharp/FsAutoComplete/releases/download/v0.63.1/fsautocomplete.0.63.1.nupkg";
-            sha256 = "sha256:13hl4a913al5yvnadyw19y8afw9sprazsdjhcndn2gc3v9vxb90b";
-          };
-          nativeBuildInputs = [ pkgs.unzip ];
-          buildCommand = ''
-            mkdir -p $out/bin $out/share
-            unzip $src -d $out/share
-            echo $out/share/tools
-          '';
-        };
-      in
-      pkgs.writeShellApplication {
-        name = "fsautocomplete";
-        runtimeInputs = [
-          dotnet
-          fsautocomplete-dll
-        ];
-        text = ''
-          export DOTNET_ROOT=${dotnet}
-          unset DOTNET_SYSTEM_GLOBALIZATION_INVARIANT
-          dotnet ${fsautocomplete-dll}/share/tools/net6.0/any/fsautocomplete.dll "$@"
-        '';
-      })
+    (dotnetCorePackages.combinePackages (with dotnetCorePackages; [
+      sdk_6_0
+      sdk_7_0
+    ]))
+    fsautocomplete
   ];
 }

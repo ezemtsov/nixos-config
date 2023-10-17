@@ -3,7 +3,7 @@
 {
   networking = {
     firewall = {
-      enable = true;
+      enable = false;
       allowPing = true;
       allowedTCPPorts = [ 42000 ];
       checkReversePath = "loose";

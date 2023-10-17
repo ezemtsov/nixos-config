@@ -1,23 +1,27 @@
 { config, pkgs, lib, ... }:
 
+
+let
+  sources = import ./nix/sources.nix;
+in
 {
   imports =
     [
       ./hardware-configuration.nix
-      ./sources.nix
       ./networking.nix
       ./desktop.nix
       ./home.nix
       ./packages.nix
       ./services.nix
+      "${sources.home-manager}/nixos/default.nix"
     ];
 
   documentation.enable = false;
 
   # Configure the Nix package manager
   nixpkgs = {
-    overlays = [ (import config.sources.emacs-overlay) ];
-    pkgs = import config.sources.nixos {
+    overlays = [ (import sources.emacs-overlay) ];
+    pkgs = import sources.nixos {
       config = {
         allowUnfree = true;
         permittedInsecurePackages = [
@@ -38,6 +42,7 @@
     };
   };
 
+
   boot = {
     # Use the systemd-boot EFI boot loader.
     loader.systemd-boot.enable = true;
@@ -46,10 +51,10 @@
 
     # Enable KVM for OSX virtualization
     extraModprobeConfig = ''
-      options kvm_intel nested=1
-      options kvm_intel emulate_invalid_guest_state=0
-      options kvm ignore_msrs=1
-    '';
+        options kvm_intel nested=1
+        options kvm_intel emulate_invalid_guest_state=0
+        options kvm ignore_msrs=1
+      '';
 
     # This is required for dotnet to run correctly
     kernel.sysctl."fs.inotify.max_user_instances" = 524288;
@@ -96,15 +101,9 @@
     # this is needed to get a bridge with DHCP enabled
     libvirtd.enable = true;
   };
-
+  
   # Enable USB automount
   services.gvfs.enable = true;
-
-  # Printer
-  services.printing.enable = true;
-  services.avahi.enable = true;
-  services.avahi.nssmdns = true;
-  services.avahi.openFirewall = true;
 
   # Audio
   sound.enable = true;
