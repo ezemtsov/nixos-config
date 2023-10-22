@@ -8,20 +8,29 @@ let
     emacsPackagesFor
     emacs29
   ;
-
+  
 in
-(emacsPackagesFor emacs29).emacsWithPackages (epkgs:
-  with epkgs; [
+(emacsPackagesFor emacs29).emacsWithPackages (epkgs: with epkgs; [
+    (exwm.overrideDerivation (o: {
+      # https://github.com/ch11ng/exwm/issues/759
+      postInstall = ''
+        cd $out/share/emacs/site-lisp/elpa/exwm-${o.version}
+        sed -i '/(cl-pushnew xcb:Atom:_NET_WM_STATE_HIDDEN exwm--ewmh-state)/d' exwm-layout.el
+        rm exwm-layout.elc
+      '';
+    }))
+    xelb
+
     buffer-move
     cape
     cl-lib
     cmake-mode
+    color-theme-sanityinc-tomorrow
     consult
     corfu
     dockerfile-mode
     dumb-jump
     eglot-fsharp
-    emojify
     envrc
     exec-path-from-shell
     flycheck
@@ -32,8 +41,9 @@ in
     jinja2-mode
     magit
     markdown-preview-mode
+    modus-themes
     multiple-cursors
-    nix-mode
+    nix-ts-mode
     orderless
     protobuf-mode
     python-mode
@@ -42,11 +52,12 @@ in
     restclient
     rotate
     sudo-edit
+    telephone-line
     transient
     treesit-grammars.with-all-grammars
     undo-tree
-    vterm
     vertico
+    vterm
     vterm-toggle
     web-mode
     which-key
