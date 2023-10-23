@@ -1,6 +1,14 @@
 { config, pkgs, lib, ... }:
 
 let
+
+  dotnet = with pkgs; (dotnetCorePackages.combinePackages (with dotnetCorePackages; [
+    sdk_6_0
+    sdk_7_0
+    runtime_6_0
+    runtime_7_0
+  ]));
+
 in {
   # Gnome apps require dconf to remember default settings
   programs.dconf.enable = true;
@@ -74,6 +82,7 @@ in {
     wget
     which
     xclip
+    xsecurelock
     zstd
 
     libreoffice
@@ -81,7 +90,7 @@ in {
     aspellDicts.en
     aspellDicts.en-computers
     aspellDicts.nb
-    
+
     # Music packages
     audacity
 
@@ -121,10 +130,7 @@ in {
     ]))
 
     # .NET packages
-    (dotnetCorePackages.combinePackages (with dotnetCorePackages; [
-      sdk_6_0
-      sdk_7_0
-    ]))
-    fsautocomplete
+    dotnet
+    (fsautocomplete.overrideDerivation (o: { dotnet-runtime = dotnet; }))
   ];
 }
