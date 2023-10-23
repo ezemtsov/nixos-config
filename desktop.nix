@@ -21,22 +21,35 @@
   };
 
   services = {
-    picom = {
-      enable = true;
-      vSync = true;
-      backend = "egl";
-    };
+    # picom = {
+    #   enable = true;
+    #   vSync = true;
+    #   backend = "egl";
+    # };
     xserver = {
       enable = true;
+
+      # Give EXWM permission to control the session.
+      displayManager = {
+        sessionCommands = "${pkgs.xorg.xhost}/bin/xhost +SI:localuser:$USER";
+      };
+      
       windowManager = {
-        i3 = {
-          enable = true;
-          package = pkgs.i3-gaps;
-          extraPackages = with pkgs; [
-            wmfocus
-            xclip
-          ];
+        session = lib.singleton {
+          name = "exwm";
+          start = ''
+            ${config.services.emacs.package}/bin/emacs \
+                --debug-init
+          '';
         };
+        # i3 = {
+        #   enable = true;
+        #   package = pkgs.i3-gaps;
+        #   extraPackages = with pkgs; [
+        #     wmfocus
+        #     xclip
+        #   ];
+        # };
       };
 
       # Keyboard options
