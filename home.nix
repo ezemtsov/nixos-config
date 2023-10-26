@@ -38,6 +38,7 @@
         id = 0;
         name = "default";
         extraConfig = ''
+          user_pref("ui.key.menuAccessKeyFocuses", false);
           user_pref("browser.link.open_newwindow", 1);
           user_pref("browser.tabs.inTitlebar", 0);
           user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
