@@ -70,7 +70,7 @@ in
 
   # Emacs
   services.emacs = {
-    enable = true;
+    enable = false;
     install = true;
     package = import ./emacs.nix { inherit pkgs; };
   };
