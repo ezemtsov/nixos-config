@@ -21,11 +21,11 @@
   };
 
   services = {
-    # picom = {
-    #   enable = true;
-    #   vSync = true;
-    #   backend = "egl";
-    # };
+    picom = {
+      enable = true;
+      vSync = true;
+      backend = "egl";
+    };
     xserver = {
       enable = true;
 
