@@ -53,6 +53,7 @@ in
     rainbow-mode
     restclient
     rotate
+    rust-mode
     sudo-edit
     telephone-line
     transient
