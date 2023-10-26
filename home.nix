@@ -31,154 +31,31 @@
 
   home-manager.users.ezemtsov = {
     home.stateVersion = config.system.stateVersion;
-    xsession.windowManager.i3 = {
+
+    programs.firefox = {
       enable = true;
-      config = rec {
-        menu = "${pkgs.rofi}/bin/rofi -show";
-        bars = [{
-          statusCommand = ''
-            ${pkgs.i3status-rust}/bin/i3status-rs ~/.config/i3status-rust/config-default.toml
-          '';
-        }];
-        modifier = "Mod4";
-        startup = [
-          { command = "hsetroot -solid \"#444444\""; }
-        ];
-        terminal = "${pkgs.alacritty}/bin/alacritty";
-        keybindings =
-          let
-            execNoStartupId = s: "exec --no-startup-id ${s}";
-          in
-          lib.mkOptionDefault {
-            "${modifier}+Shift+l" = execNoStartupId "${pkgs.xsecurelock}/bin/xsecurelock";
-            "${modifier}+Shift+m" = execNoStartupId ''
-              xrandr --output eDP-1 --primary --auto --output DP-1-1-8 --off'';
-            "${modifier}+m" = execNoStartupId ''
-              xrandr --output eDP-1 --off --output DP-1-1-8 --auto --primary'';
-            "${modifier}+o" = execNoStartupId "${pkgs.wmfocus}/bin/wmfocus";
-            "${modifier}+Print" = execNoStartupId "${pkgs.flameshot}/bin/flameshot gui";
-          };
-        window = {
-          titlebar = false;
-          border = 1;
-        };
-        workspaceAutoBackAndForth = true;
+      profiles.default = {
+        id = 0;
+        name = "default";
+        extraConfig = ''
+          user_pref("browser.link.open_newwindow", 1);
+          user_pref("browser.tabs.inTitlebar", 0);
+          user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
+        '';
+        userChrome = ''
+          /* Hide Tab bar with only one Tab - [110] */
+          #tabbrowser-tabs .tabbrowser-tab:only-of-type,
+          #tabbrowser-tabs .tabbrowser-tab:only-of-type + #tabbrowser-arrowscrollbox-periphery{
+            display:none !important;
+          }
+          #tabbrowser-tabs, #tabbrowser-arrowscrollbox {min-height:0!important;}
+          /* #TabsToolbar:not(:hover) */ #alltabs-button {display:none !important;}
+        '';
       };
     };
 
-    services.keynav.enable = true;
-    services.parcellite.enable = true;
     services.flameshot.enable = true;
     services.dunst.enable = true;
-
-    programs.alacritty = {
-      enable = true;
-      settings = {
-        font = {
-          normal = {
-            family = "JetBrains Mono";
-            style = "Regular";
-          };
-          bold = {
-            family = "JetBrains Mono";
-            style = "Bold";
-          };
-          italic = {
-            family = "JetBrains Mono";
-            style = "Italic";
-          };
-        };
-        key_bindings = [
-          {
-            key = "Up";
-            mods = "Control";
-            action = "ScrollPageUp";
-          }
-          {
-            key = "Down";
-            mods = "Control";
-            action = "ScrollPageDown";
-          }
-          {
-            key = "I";
-            mods = "Control";
-            action = "ToggleViMode";
-          }
-          {
-            key = "W";
-            mods = "Alt";
-            action = "CopySelection";
-          }
-          {
-            key = "Y";
-            mods = "Control";
-            action = "PasteSelection";
-          }
-          {
-            key = "G";
-            mods = "Control";
-            action = "ClearSelection";
-          }
-          {
-            key = "Space";
-            mods = "Control";
-            action = "ToggleNormalSelection";
-            mode = "Vi";
-          }
-          {
-            key = "Left";
-            mods = "Control";
-            action = "SemanticLeft";
-            mode = "Vi";
-          }
-          {
-            key = "Right";
-            mods = "Control";
-            action = "SemanticRightEnd";
-            mode = "Vi";
-          }
-        ];
-      };
-    };
-
-    programs.rofi = {
-      enable = true;
-      theme = "Arc-Dark";
-      extraConfig = {
-        modi = "combi";
-        show-icons = true;
-        hide-scrollbar = true;
-      };
-    };
-
-    programs.i3status-rust = {
-      enable = true;
-      bars = {
-        default = {
-          blocks = [
-            { block = "disk_space"; }
-            { block = "sound"; }
-            {
-              block = "time";
-              interval = 60;
-              format = " $timestamp.datetime(f:'%a %d/%m %R') ";
-            }
-            {
-              block = "keyboard_layout";
-              driver = "kbddbus";
-            }
-            { block = "battery"; }
-          ];
-          icons = "awesome5";
-          settings = {
-            theme = {
-              theme = "plain";
-              overrides.good_fg = "#aaaaaa";
-            };
-          };
-        };
-      };
-    };
   };
 
 }
