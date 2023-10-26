@@ -72,7 +72,7 @@
       antialias = true;
     };
     fontDir.enable = true;
-    fonts = with pkgs; [
+    packages = with pkgs; [
       corefonts
       jetbrains-mono
       font-awesome_5
