@@ -26,6 +26,8 @@ in
     cl-lib
     cmake-mode
     color-theme-sanityinc-tomorrow
+    ivy-posframe # only for counsel
+    counsel # for starting linux apps
     consult
     corfu
     dockerfile-mode
@@ -39,11 +41,11 @@ in
     fsharp-mode
     hcl-mode
     jinja2-mode
+    kubernetes
     magit
     markdown-preview-mode
     modus-themes
     multiple-cursors
-    nix-ts-mode
     orderless
     protobuf-mode
     python-mode
@@ -57,6 +59,7 @@ in
     treesit-grammars.with-all-grammars
     undo-tree
     vertico
+    vertico-posframe
     vterm
     vterm-toggle
     web-mode
