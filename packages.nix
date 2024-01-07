@@ -132,5 +132,8 @@ in {
     # .NET packages
     dotnet
     (fsautocomplete.overrideDerivation (o: { dotnet-runtime = dotnet; }))
+
+    # Typescript
+    nodePackages.typescript-language-server
   ];
 }
