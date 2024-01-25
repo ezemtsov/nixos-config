@@ -35,6 +35,7 @@ in {
     gitFull
     gnumake
     google-cloud-sdk
+    grobi
     gtk3
     hsetroot
     htop
