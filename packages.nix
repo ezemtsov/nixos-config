@@ -20,6 +20,7 @@ in {
   environment.systemPackages = with pkgs; [
     azure-cli
     azure-storage-azcopy
+    aws-workspaces
     binutils-unwrapped
     blueman
     breeze-icons
