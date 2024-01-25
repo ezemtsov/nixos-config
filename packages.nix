@@ -66,7 +66,6 @@ in {
     pavucontrol
     postgresql
     proton-caller
-    pyright
     ripgrep
     slack
     spotify
@@ -119,15 +118,9 @@ in {
     haskellPackages.ghcide
     haskellPackages.cabal-install
 
-    # Python packages with dependencies for lsp-bridge
-    (python3.withPackages (p: with p; [
-      epc
-      orjson
-      sexpdata
-      six
-      paramiko
-      rapidfuzz
-    ]))
+    # Python packages
+    pyright
+    python3
 
     # .NET packages
     dotnet
