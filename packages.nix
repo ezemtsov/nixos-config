@@ -13,6 +13,9 @@ in {
   # Gnome apps require dconf to remember default settings
   programs.dconf.enable = true;
 
+  # Allow testing .NET compiled executables
+  programs.nix-ld.enable = true;
+
   # ... and declare packages to be installed.
   environment.systemPackages = with pkgs; [
     azure-cli
