@@ -26,9 +26,9 @@ in
   cl-lib
   cmake-mode
   color-theme-sanityinc-tomorrow
-  counsel # for starting linux apps
   consult
   corfu
+  counsel # for starting linux apps
   dockerfile-mode
   dumb-jump
   eglot-fsharp
@@ -40,15 +40,15 @@ in
   fsharp-mode
   hcl-mode
   jinja2-mode
-  kubernetes
+  kubel
   magit
   markdown-preview-mode
   modus-themes
   multiple-cursors
   orderless
-  protobuf-mode
-  projectile
   pdf-tools
+  projectile
+  protobuf-mode
   python-mode
   rainbow-delimiters
   rainbow-mode
@@ -56,8 +56,8 @@ in
   rotate
   rust-mode
   sudo-edit
-  tide
   telephone-line
+  tide
   transient
   treesit-grammars.with-all-grammars
   undo-tree
