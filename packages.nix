@@ -1,13 +1,14 @@
 { config, pkgs, lib, ... }:
 
 let
-
-  dotnet = with pkgs; (dotnetCorePackages.combinePackages (with dotnetCorePackages; [
+  dotnet = with pkgs.dotnetCorePackages; (combinePackages [
     sdk_6_0
     sdk_7_0
+    sdk_8_0
     runtime_6_0
     runtime_7_0
-  ]));
+    runtime_8_0
+  ]);
 
 in {
   # Gnome apps require dconf to remember default settings
