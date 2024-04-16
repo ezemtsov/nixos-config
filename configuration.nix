@@ -12,7 +12,6 @@ in
       ./desktop.nix
       ./home.nix
       ./packages.nix
-      ./services.nix
       "${sources.home-manager}/nixos/default.nix"
     ];
 
