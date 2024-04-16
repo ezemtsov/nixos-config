@@ -119,6 +119,7 @@
       jetbrains-mono
       font-awesome_5
       dejavu_fonts
+      nerdfonts
       source-code-pro
     ];
   };
