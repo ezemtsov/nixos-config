@@ -33,12 +33,10 @@ in
 
   nix = {
     package = pkgs.nix_2_3;
-    extraOptions = ''
-      netrc-file = /etc/nixos/netrc
-    '';
     settings = {
       trusted-users = [ "ezemtsov" ];
       max-jobs = "auto";
+      netrc-file = "/etc/nix/netrc";
     };
   };
 
