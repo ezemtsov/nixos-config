@@ -40,7 +40,6 @@ in
     };
   };
 
-
   boot = {
     # Use the systemd-boot EFI boot loader.
     loader.systemd-boot.enable = true;
@@ -99,7 +98,7 @@ in
     # this is needed to get a bridge with DHCP enabled
     libvirtd.enable = true;
   };
-  
+
   # Enable USB automount
   services.gvfs.enable = true;
 
