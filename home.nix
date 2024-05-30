@@ -36,6 +36,34 @@
   home-manager.useUserPackages = false;
   home-manager.users.ezemtsov = {
     home.stateVersion = config.system.stateVersion;
+
+    services.grobi = {
+      enable = true;
+      rules = [
+        {
+          name = "USB-C";
+          outputs_connected = [ "DP-1-1-8" ];
+          configure_single = "DP-1-1-8";
+          primary = true;
+          automic = true;
+        }
+        {
+          name = "HDMI";
+          outputs_connected = [ "DP-3" ];
+          configure_single = "DP-3";
+          primary = true;
+          automic = true;
+        }
+        {
+          name = "Mobile";
+          outputs_disconnected = [ "DP-1-1-8" "DP-3" ];
+          configure_single = "eDP-1";
+          primary = true;
+          automic = true;
+        }
+      ];
+    };
+
     services.flameshot.enable = true;
     services.dunst.enable = true;
   };
