@@ -13,6 +13,7 @@ in
       ./home.nix
       ./packages.nix
       "${sources.home-manager}/nixos/default.nix"
+      ./fabric.nix
     ];
 
   documentation.enable = false;
@@ -111,6 +112,8 @@ in
     pulse.enable = true;
     socketActivation = true;
   };
+
+  hardware.pulseaudio.enable = lib.mkForce false;
 
   # Bluetooth
   hardware.bluetooth.enable = true;

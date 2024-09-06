@@ -21,6 +21,7 @@ in
   }))
   xelb
 
+  all-the-icons
   buffer-move
   cape
   cl-lib
@@ -28,20 +29,25 @@ in
   color-theme-sanityinc-tomorrow
   consult
   corfu
-  counsel # for starting linux apps
   dockerfile-mode
+  doom-modeline
   dumb-jump
   eglot-fsharp
+  ement # matrix client
   envrc
   exec-path-from-shell
   flycheck
   forge
   format-all
   fsharp-mode
+  geiser
+  geiser-guile
   hcl-mode
+  highlight-indentation
   jinja2-mode
   kubel
   magit
+  marginalia
   markdown-preview-mode
   modus-themes
   multiple-cursors
@@ -69,4 +75,12 @@ in
   winum
   yaml-mode
   yasnippet
+  yasnippet-snippets
+  google-c-style
+
+  ivy-posframe
+  vertico-posframe
+
+  i3bar
+  exwm-modeline
 ])

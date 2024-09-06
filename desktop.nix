@@ -11,6 +11,9 @@
         sdk_8_0
       ]);
       EDITOR = "emacsclient";
+
+      # Setting this to compile rust-openssl
+      PKG_CONFIG_PATH="${pkgs.openssl.dev}/lib/pkgconfig";
     };
   };
 
@@ -19,6 +22,9 @@
     enable = true;
     enable32Bit = true;
   };
+
+  # Copy paste between X windows
+  services.clipcat.enable = true;
 
   services.picom = {
     enable = true;
@@ -46,7 +52,8 @@
   # Keyboard options
   services.xserver.xkb.layout = "us,ru,no";
   services.xserver.xkb.options = "grp:caps_toggle";
-  services.xserver.libinput = {
+
+  services.libinput = {
     enable = true;
     touchpad = {
       tapping = false;
@@ -64,7 +71,7 @@
     packages = with pkgs; [
       corefonts
       jetbrains-mono
-      font-awesome_5
+      font-awesome_6
       dejavu_fonts
       nerdfonts
       source-code-pro

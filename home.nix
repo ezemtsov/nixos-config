@@ -30,12 +30,13 @@
     wheelNeedsPassword = false;
   };
 
-  # There two properties are important to align home-manager with
-  # global nixpkgs set.
+  # # There two properties are important to align home-manager with
+  # # global nixpkgs set.
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = false;
   home-manager.users.ezemtsov = {
     home.stateVersion = config.system.stateVersion;
+    home.enableNixpkgsReleaseCheck = false;
 
     services.grobi = {
       enable = true;
@@ -64,8 +65,65 @@
       ];
     };
 
-    services.flameshot.enable = true;
-    services.dunst.enable = true;
-  };
+    systemd.user.services = {
+      test-service = {
+        Unit = {
+          Description = "Test service with timer input";
+          After = [ "network.target" ];
+        };
+        Service = {
+          Type = "oneshot";
+          ExecStart = "notify-send $(date)";
+        };
+        Install.WantedBy = [ "default.target" ];
+      };
+    };
 
+    systemd.user.timers = {
+      test-timer = {
+        Unit.Description = "A test timer-based service";
+        Timer = {
+          Unit = "test-service";
+          OnUnitActiveSec = "10s";
+        };
+        Install.WantedBy = [ "timers.target" ];
+      };
+    };
+
+    services.dunst.enable = true;
+
+    programs.i3status-rust.enable = true;
+    programs.i3status-rust.bars.default = {
+      blocks = [
+        {
+          block = "net";
+          format = " $icon {$signal_strength $ssid|Wired connection} ";
+        }
+        { block = "disk_space"; }
+        { block = "sound"; }
+        {
+          block = "time";
+          interval = 60;
+          format = " $timestamp.datetime(f:'%a %d/%m %R') ";
+        }
+        {
+          block = "keyboard_layout";
+          driver = "xkbswitch";
+        }
+        { block = "battery"; }
+      ];
+      icons = "awesome5";
+      settings.theme.overrides =
+        let
+          bg = "#282A2E";
+        in {
+          idle_bg = bg;
+          good_bg = bg;
+          warning_bg = bg;
+          critical_bg = bg;
+          info_bg = bg;
+          separator_bg = bg;
+        };
+    };
+  };
 }

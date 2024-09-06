@@ -19,33 +19,30 @@ in {
 
   # ... and declare packages to be installed.
   environment.systemPackages = with pkgs; [
+    aws-workspaces
     azure-cli
     azure-storage-azcopy
-    aws-workspaces
     binutils-unwrapped
     blueman
     breeze-icons
     cachix
     chromium
-    cinny-desktop
     cmake
     curl
     direnv
-    element-desktop
     ffmpeg
     file
     fish
     gcc
     gimp
     gitFull
+    nemo
     gnumake
     google-cloud-sdk
-    grobi
     gtk3
     hsetroot
     htop
     hybridreverb2
-    i3lock
     inetutils
     ispell
     jq
@@ -58,36 +55,31 @@ in {
     lingot
     lnav
     man-pages
-    gnome.nautilus
     nginx
-    nheko
-    nodejs
     ntfs3g
     numix-cursor-theme
     numix-icon-theme
     numix-solarized-gtk-theme
-    nushell
     okular
     openjdk
+    openssl
     pavucontrol
     postgresql
     proton-caller
     ripgrep
+    signal-desktop
     slack
     spotify
     sqlite
-    signal-desktop
     tailscale
     tdesktop
-    transmission
+    transmission_4
     tree
     unzip
     vlc
     weechat
     wget
     which
-    xclip
-    xsecurelock
     zstd
 
     libreoffice
@@ -95,6 +87,15 @@ in {
     aspellDicts.en
     aspellDicts.en-computers
     aspellDicts.nb
+
+    # Exwm packages
+    i3status-rust
+    networkmanagerapplet
+    flameshot
+    grobi
+    xclip
+    xsecurelock
+    xkb-switch
 
     # Music packages
     audacity
@@ -109,9 +110,9 @@ in {
     # Chicken packages
     chicken
 
-    # CLisp packages
-    sbcl
-    lispPackages.quicklisp
+    # # CLisp packages
+    # sbcl
+    # lispPackages.quicklisp
 
     # Rust packages
     rustc
@@ -120,9 +121,8 @@ in {
     rust-analyzer
 
     # Haskell packages
-    # haskell.compiler.ghc883
-    haskellPackages.ghcide
     haskellPackages.cabal-install
+    haskellPackages.ghcide
 
     # Python packages
     pyright
@@ -132,8 +132,20 @@ in {
     dotnet
     (fsautocomplete.overrideDerivation (o: { dotnet-runtime = dotnet; }))
 
-    # Typescript
+    # Go packages
+    go
+    gopls
+
+    # Guile
+    guile
+
+    # JSON/HTML
+    vscode-langservers-extracted
+
+    # Javascript packages
+    nodejs
     nodePackages.typescript-language-server
+
     # NixOS helpers
     (writeShellScriptBin "nixos-switch" (builtins.readFile ./nixos-switch))
   ];
