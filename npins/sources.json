@@ -1,0 +1,41 @@
+{
+  "pins": {
+    "emacs-overlay": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "nix-community",
+        "repo": "emacs-overlay"
+      },
+      "branch": "master",
+      "revision": "5d87c6391f09134b214a85eb3b28ecbebbad7269",
+      "url": "https://github.com/nix-community/emacs-overlay/archive/5d87c6391f09134b214a85eb3b28ecbebbad7269.tar.gz",
+      "hash": "18vr7ncjk22l6b1xy56cz3fa7a5qxww5xikavdrjr92wax2y26j2"
+    },
+    "home-manager": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "nix-community",
+        "repo": "home-manager"
+      },
+      "branch": "release-24.05",
+      "revision": "e1391fb22e18a36f57e6999c7a9f966dc80ac073",
+      "url": "https://github.com/nix-community/home-manager/archive/e1391fb22e18a36f57e6999c7a9f966dc80ac073.tar.gz",
+      "hash": "0c83di08nhkzq0cwc3v7aax3x8y5m7qahyzxppinzwxi3r8fnjq3"
+    },
+    "nixpkgs": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "NixOS",
+        "repo": "nixpkgs"
+      },
+      "branch": "nixos-unstable",
+      "revision": "ad416d066ca1222956472ab7d0555a6946746a80",
+      "url": "https://github.com/NixOS/nixpkgs/archive/ad416d066ca1222956472ab7d0555a6946746a80.tar.gz",
+      "hash": "0b9x5sghija7gy4lzf6l9s2kchdwj0zxs37ndlms2r8z1g3gwa7v"
+    }
+  },
+  "version": 3
+}

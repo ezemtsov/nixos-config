@@ -2,7 +2,7 @@
 
 
 let
-  sources = import ./nix/sources.nix;
+  sources = import npins/default.nix;
 in
 {
   imports =
@@ -20,7 +20,7 @@ in
   # Configure the Nix package manager
   nixpkgs = {
     overlays = [ (import sources.emacs-overlay) ];
-    pkgs = import sources.nixos {
+    pkgs = import sources.nixpkgs {
       config = {
         allowUnfree = true;
         permittedInsecurePackages = [
@@ -33,6 +33,7 @@ in
 
   nix = {
     package = pkgs.nix_2_3;
+    nixPath = ["nixpkgs=${sources.nixpkgs}:nixos-config=/etc/nixos/configuration.nix"];
     settings = {
       trusted-users = [ "ezemtsov" ];
       max-jobs = "auto";
@@ -103,7 +104,6 @@ in
   services.gvfs.enable = true;
 
   # Audio
-  sound.enable = true;
   services.pipewire = {
     enable = true;
     alsa.enable = true;

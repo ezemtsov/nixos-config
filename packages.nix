@@ -101,7 +101,7 @@ in {
 
     # Nix packages
     nil
-    niv
+    npins
     nix-diff
     nix-index
     nixpkgs-fmt
@@ -134,5 +134,7 @@ in {
 
     # Typescript
     nodePackages.typescript-language-server
+    # NixOS helpers
+    (writeShellScriptBin "nixos-switch" (builtins.readFile ./nixos-switch))
   ];
 }
