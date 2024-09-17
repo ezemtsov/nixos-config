@@ -104,7 +104,6 @@ in {
     nil
     npins
     nix-diff
-    nix-index
     nixpkgs-fmt
 
     # Chicken packages

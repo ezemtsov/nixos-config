@@ -42,6 +42,11 @@ in
     };
   };
 
+  # Replace command-not-found with nix-index
+  programs.nix-index.enable = true;
+  programs.nix-index.enableFishIntegration = true;
+  programs.command-not-found.enable = false;
+
   boot = {
     # Use the systemd-boot EFI boot loader.
     loader.systemd-boot.enable = true;
