@@ -115,9 +115,7 @@ in {
 
     # Rust packages
     rustc
-    cargo
     rustup
-    rust-analyzer
 
     # Haskell packages
     haskellPackages.cabal-install
