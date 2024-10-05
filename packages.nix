@@ -127,6 +127,7 @@ in {
     # .NET packages
     dotnet
     (fsautocomplete.overrideDerivation (o: { dotnet-runtime = dotnet; }))
+    csharp-ls
 
     # Go packages
     go
