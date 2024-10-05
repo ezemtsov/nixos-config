@@ -46,7 +46,6 @@ in {
     inetutils
     ispell
     jq
-    jupyter
     kind
     kubectl
     kubelogin
