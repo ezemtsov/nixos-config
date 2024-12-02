@@ -13,22 +13,18 @@ in
       ./home.nix
       ./packages.nix
       "${sources.home-manager}/nixos/default.nix"
-      ./fabric.nix
+#      ./test.nix
     ];
 
   documentation.enable = false;
 
   # Configure the Nix package manager
   nixpkgs = {
-    overlays = [ (import sources.emacs-overlay) ];
+    overlays = [
+      (import sources.emacs-overlay)
+    ];
     pkgs = import sources.nixpkgs {
-      config = {
-        allowUnfree = true;
-        permittedInsecurePackages = [
-          "openssl-1.1.1w"
-          "openssl-1.1.1m"
-        ];
-      };
+      config.allowUnfree = true;
     };
   };
 
@@ -74,14 +70,14 @@ in
 
   # Emacs
   services.emacs = {
-    enable = false;
+    enable = true;
     install = true;
     package = import ./emacs.nix { inherit pkgs; };
   };
 
   location.latitude = 59.91;
   location.longitude = 10.75;
-  services.redshift.enable = true;
+  #services.redshift.enable = true;
 
   # Set your time zone.
   time.timeZone = "Europe/Oslo";

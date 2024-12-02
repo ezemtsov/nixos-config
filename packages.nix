@@ -19,9 +19,7 @@ in {
 
   # ... and declare packages to be installed.
   environment.systemPackages = with pkgs; [
-    aws-workspaces
-    azure-cli
-    azure-storage-azcopy
+    # aws-workspaces
     binutils-unwrapped
     blueman
     breeze-icons
@@ -36,37 +34,16 @@ in {
     gcc
     gimp
     gitFull
-    nemo
-    gnumake
-    google-cloud-sdk
-    gtk3
-    hsetroot
-    htop
-    hybridreverb2
-    inetutils
-    ispell
-    jq
-    kind
-    kubectl
-    kubelogin
-    libnotify
-    libtool
-    lingot
-    lnav
-    man-pages
     nginx
     ntfs3g
     numix-cursor-theme
     numix-icon-theme
     numix-solarized-gtk-theme
-    okular
     openjdk
     openssl
     pavucontrol
     postgresql
-    proton-caller
     ripgrep
-    signal-desktop
     slack
     spotify
     sqlite
@@ -76,31 +53,52 @@ in {
     tree
     unzip
     vlc
-    weechat
     wget
     which
     zstd
+    beeper
+    pqrs
+    pandoc
+    wpa_supplicant_gui
+    wpa_supplicant
 
     libreoffice
-    aspell
-    aspellDicts.en
-    aspellDicts.en-computers
-    aspellDicts.nb
+    nuspell
+    hunspellDicts.en-us
+    hunspellDicts.nb_NO
+    hunspellDicts.ru_RU
 
-    # Exwm packages
+    azure-cli
+    azure-storage-azcopy
+    google-cloud-sdk
+
+    plasma-browser-integration
+    (pkgs.writeShellScriptBin "vterm" ''
+        emacsclient -c -e '(let ((default-directory "~/")) (vterm))'
+    '')
+
+    # nirix
+    # alacritty
+    # waybar
+    # fuzzel
+    # wlrctl
+    # (pkgs.writeShellScriptBin "fuzzel" ''
+    #     emacsclient -e "(consult-buffer)"
+    # '')
+
     i3status-rust
-    networkmanagerapplet
     flameshot
     grobi
     xclip
     xsecurelock
     xkb-switch
 
+    emacs-lsp-booster
+
     # Music packages
     audacity
 
     # Nix packages
-    nil
     npins
     nix-diff
     nixpkgs-fmt
@@ -115,6 +113,7 @@ in {
     # Rust packages
     rustc
     rustup
+    rust-analyzer
 
     # Haskell packages
     haskellPackages.cabal-install
@@ -122,7 +121,15 @@ in {
 
     # Python packages
     pyright
-    python3
+    ruff
+    (python3.withPackages (p: with p; [
+      pandas
+      plotly
+      pyarrow
+      kaleido
+      matplotlib
+      jupyter
+    ]))
 
     # .NET packages
     dotnet

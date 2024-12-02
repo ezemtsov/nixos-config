@@ -6,11 +6,12 @@ let
     callPackage
     emacsPackages
     emacsPackagesFor
-    emacs29
   ;
 
+  emacs = pkgs.emacs30;
+
 in
-(emacsPackagesFor emacs29).emacsWithPackages (epkgs: with epkgs; [
+(emacsPackagesFor emacs).emacsWithPackages (epkgs: with epkgs; [
   (exwm.overrideDerivation (o: {
     # https://github.com/ch11ng/exwm/issues/759
     postInstall = ''
@@ -21,6 +22,10 @@ in
   }))
   xelb
 
+  i3bar
+  exwm-modeline
+  vertico-posframe
+
   all-the-icons
   buffer-move
   cape
@@ -28,29 +33,33 @@ in
   cmake-mode
   color-theme-sanityinc-tomorrow
   consult
+  company
   corfu
   dockerfile-mode
-  doom-modeline
   dumb-jump
   eglot-fsharp
-  ement # matrix client
   envrc
+  jinx
+  mu4e
   exec-path-from-shell
-  flycheck
-  forge
   format-all
   fsharp-mode
   geiser
   geiser-guile
+  go-mode
+  google-c-style
   hcl-mode
   highlight-indentation
+  impatient-mode
   jinja2-mode
+  json-mode
   kubel
   magit
   marginalia
   markdown-preview-mode
-  modus-themes
   multiple-cursors
+  nginx-mode
+  nix-mode
   orderless
   pdf-tools
   projectile
@@ -66,6 +75,7 @@ in
   tide
   transient
   treesit-grammars.with-all-grammars
+  typescript-mode
   undo-tree
   vertico
   vterm
@@ -76,11 +86,5 @@ in
   yaml-mode
   yasnippet
   yasnippet-snippets
-  google-c-style
-
-  ivy-posframe
-  vertico-posframe
-
-  i3bar
-  exwm-modeline
+  jupyter
 ])

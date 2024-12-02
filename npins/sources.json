@@ -8,9 +8,9 @@
         "repo": "emacs-overlay"
       },
       "branch": "master",
-      "revision": "00859b191a98a4f08e7cffc639a5b9cd3be9cdf7",
-      "url": "https://github.com/nix-community/emacs-overlay/archive/00859b191a98a4f08e7cffc639a5b9cd3be9cdf7.tar.gz",
-      "hash": "1336h85qcs1nw569zfi8cjf4cqdhbjprnk41gvcsja3hds9kgb1y"
+      "revision": "9d98277bf20a8b143f32e8ee11cc2b6fc92c20f6",
+      "url": "https://github.com/nix-community/emacs-overlay/archive/9d98277bf20a8b143f32e8ee11cc2b6fc92c20f6.tar.gz",
+      "hash": "1j7nnva439v7vz6v5dnc4j64hi4cgipnr54hqsqk142braayfqyh"
     },
     "home-manager": {
       "type": "Git",
@@ -32,9 +32,9 @@
         "repo": "nixpkgs"
       },
       "branch": "nixos-unstable",
-      "revision": "bc947f541ae55e999ffdb4013441347d83b00feb",
-      "url": "https://github.com/NixOS/nixpkgs/archive/bc947f541ae55e999ffdb4013441347d83b00feb.tar.gz",
-      "hash": "06187qzdapb6ghymwvzcv02bxbw7h1v6r4aywjg86b6i2sy97s1l"
+      "revision": "5e4fbfb6b3de1aa2872b76d49fafc942626e2add",
+      "url": "https://github.com/NixOS/nixpkgs/archive/5e4fbfb6b3de1aa2872b76d49fafc942626e2add.tar.gz",
+      "hash": "127dk2l5fr0922an96rmlzg32vh6pxh7r6qyvkhwf20jdzg9k61r"
     }
   },
   "version": 3

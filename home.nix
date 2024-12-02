@@ -43,8 +43,8 @@
       rules = [
         {
           name = "USB-C";
-          outputs_connected = [ "DP-1-1-8" ];
-          configure_single = "DP-1-1-8";
+          outputs_connected = [ "DP-1-3" ];
+          configure_single = "DP-1-3";
           primary = true;
           automic = true;
         }
@@ -65,33 +65,7 @@
       ];
     };
 
-    systemd.user.services = {
-      test-service = {
-        Unit = {
-          Description = "Test service with timer input";
-          After = [ "network.target" ];
-        };
-        Service = {
-          Type = "oneshot";
-          ExecStart = "notify-send $(date)";
-        };
-        Install.WantedBy = [ "default.target" ];
-      };
-    };
-
-    systemd.user.timers = {
-      test-timer = {
-        Unit.Description = "A test timer-based service";
-        Timer = {
-          Unit = "test-service";
-          OnUnitActiveSec = "10s";
-        };
-        Install.WantedBy = [ "timers.target" ];
-      };
-    };
-
     services.dunst.enable = true;
-
     programs.i3status-rust.enable = true;
     programs.i3status-rust.bars.default = {
       blocks = [
@@ -100,7 +74,6 @@
           format = " $icon {$signal_strength $ssid|Wired connection} ";
         }
         { block = "disk_space"; }
-        { block = "sound"; }
         {
           block = "time";
           interval = 60;
