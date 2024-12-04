@@ -76,4 +76,8 @@
       iosevka-comfy.comfy
     ];
   };
+
+  # Lock laptop after sleeping
+  programs.xss-lock.enable = true;
+  programs.xss-lock.lockerCommand = "${pkgs.xsecurelock}/bin/xsecurelock";
 }
