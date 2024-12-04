@@ -69,6 +69,9 @@ in
   # Enable power saving
   powerManagement.enable = true;
 
+  # Adjust performance automatically
+  services.thermald.enable = true;
+
   # Emacs
   services.emacs = {
     enable = false;
