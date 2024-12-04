@@ -13,7 +13,6 @@ in
       ./home.nix
       ./packages.nix
       "${sources.home-manager}/nixos/default.nix"
-#      ./test.nix
     ];
 
   documentation.enable = false;
@@ -49,21 +48,11 @@ in
     loader.efi.canTouchEfiVariables = true;
     tmp.cleanOnBoot = true;
 
-    # Enable KVM for OSX virtualization
-    extraModprobeConfig = ''
-        options kvm_intel nested=1
-        options kvm_intel emulate_invalid_guest_state=0
-        options kvm ignore_msrs=1
-      '';
-
     # This is required for dotnet to run correctly
     kernel.sysctl."fs.inotify.max_user_instances" = 524288;
 
     supportedFilesystems = [ "exfat" ];
   };
-
-  # Update Intel microcode
-  hardware.cpu.intel.updateMicrocode = true;
 
   # Enable power saving
   powerManagement.enable = true;
@@ -77,7 +66,6 @@ in
 
   location.latitude = 59.91;
   location.longitude = 10.75;
-  #services.redshift.enable = true;
 
   # Set your time zone.
   time.timeZone = "Europe/Oslo";

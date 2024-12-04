@@ -2,10 +2,8 @@
 
 let
   dotnet = with pkgs.dotnetCorePackages; (combinePackages [
-    sdk_6_0
     sdk_7_0
     sdk_8_0
-    runtime_6_0
     runtime_7_0
     runtime_8_0
   ]);
@@ -19,10 +17,7 @@ in {
 
   # ... and declare packages to be installed.
   environment.systemPackages = with pkgs; [
-    # aws-workspaces
     binutils-unwrapped
-    blueman
-    breeze-icons
     cachix
     chromium
     cmake
@@ -34,33 +29,27 @@ in {
     gcc
     gimp
     gitFull
-    nginx
+    htop
     ntfs3g
-    numix-cursor-theme
-    numix-icon-theme
-    numix-solarized-gtk-theme
     openjdk
     openssl
-    pavucontrol
+    pandoc
     postgresql
+    pqrs
     ripgrep
     slack
     spotify
     sqlite
     tailscale
     tdesktop
-    transmission_4
+    transmission_4-qt
     tree
     unzip
     vlc
     wget
     which
     zstd
-    beeper
-    pqrs
-    pandoc
-    wpa_supplicant_gui
-    wpa_supplicant
+    kubectl
 
     libreoffice
     nuspell
@@ -72,19 +61,6 @@ in {
     azure-storage-azcopy
     google-cloud-sdk
 
-    plasma-browser-integration
-    (pkgs.writeShellScriptBin "vterm" ''
-        emacsclient -c -e '(let ((default-directory "~/")) (vterm))'
-    '')
-
-    # nirix
-    # alacritty
-    # waybar
-    # fuzzel
-    # wlrctl
-    # (pkgs.writeShellScriptBin "fuzzel" ''
-    #     emacsclient -e "(consult-buffer)"
-    # '')
 
     i3status-rust
     flameshot
@@ -133,7 +109,6 @@ in {
 
     # .NET packages
     dotnet
-    (fsautocomplete.overrideDerivation (o: { dotnet-runtime = dotnet; }))
     csharp-ls
 
     # Go packages

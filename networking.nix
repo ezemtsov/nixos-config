@@ -16,10 +16,8 @@
 
   # enable the tailscale service
   services.tailscale.enable = true;
-
   programs.fuse.userAllowOther = true;
   programs.nm-applet.enable = true;
-  programs.wireshark.enable = true;
 
   fileSystems."/mnt/internal" = {
     device = "jackson.resoptima.local:/mnt/bigstorage/internal";

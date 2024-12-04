@@ -17,7 +17,6 @@
       "vboxusers"
       "networkmanager"
       "libvirtd"
-      "wireshark"
       "docker"
     ];
     description = "Evgeny Zemtsov";

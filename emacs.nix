@@ -71,7 +71,6 @@ in
   rotate
   rust-mode
   sudo-edit
-  telephone-line
   tide
   transient
   treesit-grammars.with-all-grammars
