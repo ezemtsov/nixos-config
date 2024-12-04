@@ -15,44 +15,38 @@
       PKG_CONFIG_PATH="${pkgs.openssl.dev}/lib/pkgconfig";
     };
   };
+
+  # Copy paste between X windows
+  services.clipcat.enable = true;
+
   # Graphics
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
   };
 
-  # # Copy paste between X windows
-  # services.clipcat.enable = true;
-
-  # services.picom = {
-  #   enable = true;
-  #   vSync = true;
-  #   backend = "egl";
-  # };
+  services.picom = {
+    enable = true;
+    vSync = true;
+    backend = "egl";
+    settings.unredir-if-possible-exclude = [
+      "name *= 'Chromium'"
+    ];
+  };
 
   services.xserver.enable = true;
 
-  services.displayManager.sddm.enable = true;
-  services.displayManager.sddm.wayland.enable = true;
-  services.desktopManager.plasma6.enable = true;
-  programs.chromium.enablePlasmaBrowserIntegration = true;
-  environment.plasma6.excludePackages = with pkgs.kdePackages; [
-    konsole
-    elisa
-    kate
-  ];
+  # Give EXWM permission to control the session.
+  services.xserver.displayManager = {
+    sessionCommands = "${pkgs.xorg.xhost}/bin/xhost +SI:localuser:$USER";
+  };
 
-  # # Give EXWM permission to control the session.
-  # services.xserver.displayManager = {
-  #   sessionCommands = "${pkgs.xorg.xhost}/bin/xhost +SI:localuser:$USER";
-  # };
-
-  # services.xserver.windowManager = {
-  #   session = lib.singleton {
-  #     name = "exwm";
-  #     start = "/run/current-system/sw/bin/emacs";
-  #   };
-  # };
+  services.xserver.windowManager = {
+    session = lib.singleton {
+      name = "exwm";
+      start = "/run/current-system/sw/bin/emacs";
+    };
+  };
 
   # Keyboard options
   services.xserver.xkb.layout = "us,ru,no";
