@@ -24,6 +24,14 @@ in
     ];
     pkgs = import sources.nixpkgs {
       config.allowUnfree = true;
+      config.permittedInsecurePackages = [
+        "dotnet-core-combined"
+        "dotnet-sdk-6.0.428"
+        "dotnet-sdk-7.0.410"
+        "dotnet-sdk-7.0.20"
+        "dotnet-runtime-7.0.20"
+        "dotnet-sdk-wrapped-7.0.410"
+      ];
     };
   };
 
