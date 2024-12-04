@@ -15,6 +15,15 @@ in {
   # Allow testing .NET compiled executables
   programs.nix-ld.enable = true;
 
+  # Configure git
+  programs.git = {
+    enable = true;
+    config = {
+      user.name  = "Evgeny Zemtsov";
+      user.email = "eugene.zemtsov@gmail.com";
+    };
+  };
+
   # ... and declare packages to be installed.
   environment.systemPackages = with pkgs; [
     binutils-unwrapped
