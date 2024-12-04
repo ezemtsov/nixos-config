@@ -29,34 +29,36 @@
     wheelNeedsPassword = false;
   };
 
-  # # There two properties are important to align home-manager with
-  # # global nixpkgs set.
+  # There two properties are important to align home-manager with
+  # global nixpkgs set.
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = false;
   home-manager.users.ezemtsov = {
     home.stateVersion = config.system.stateVersion;
     home.enableNixpkgsReleaseCheck = false;
 
+    services.dunst.enable = true;
+
     services.grobi = {
       enable = true;
       rules = [
         {
           name = "USB-C";
-          outputs_connected = [ "DP-1-3" ];
-          configure_single = "DP-1-3";
+          outputs_connected = [ "DP-2" ];
+          configure_single = "DP-8";
           primary = true;
           automic = true;
         }
         {
           name = "HDMI";
-          outputs_connected = [ "DP-3" ];
-          configure_single = "DP-3";
+          outputs_connected = [ "HDMI-1" ];
+          configure_single = "HDMI-1";
           primary = true;
           automic = true;
         }
         {
           name = "Mobile";
-          outputs_disconnected = [ "DP-1-1-8" "DP-3" ];
+          outputs_disconnected = [ "DP-8" "HDMI-1" ];
           configure_single = "eDP-1";
           primary = true;
           automic = true;
@@ -64,7 +66,6 @@
       ];
     };
 
-    services.dunst.enable = true;
     programs.i3status-rust.enable = true;
     programs.i3status-rust.bars.default = {
       blocks = [

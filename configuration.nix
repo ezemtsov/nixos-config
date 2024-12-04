@@ -51,6 +51,10 @@ in
   programs.command-not-found.enable = false;
 
   boot = {
+    # Pick latest kernel
+    kernelPackages = pkgs.linuxPackages_latest;
+    kernelParams = [ "amd_pstate=guided" ];
+
     # Use the systemd-boot EFI boot loader.
     loader.systemd-boot.enable = true;
     loader.efi.canTouchEfiVariables = true;
@@ -67,7 +71,7 @@ in
 
   # Emacs
   services.emacs = {
-    enable = true;
+    enable = false;
     install = true;
     package = import ./emacs.nix { inherit pkgs; };
   };
@@ -120,5 +124,5 @@ in
   # compatible, in order to avoid breaking some software such as database
   # servers. You should change this only after NixOS release notes say you
   # should.
-  system.stateVersion = "23.05";
+  system.stateVersion = "24.11";
 }
