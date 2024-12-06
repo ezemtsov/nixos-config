@@ -15,10 +15,10 @@ in
   (exwm.overrideDerivation (o: {
     # https://github.com/ch11ng/exwm/issues/759
     postInstall = ''
-        cd $out/share/emacs/site-lisp/elpa/exwm-${o.version}
-        sed -i '/(cl-pushnew xcb:Atom:_NET_WM_STATE_HIDDEN exwm--ewmh-state)/d' exwm-layout.el
-        rm exwm-layout.elc
-      '';
+      cd $out/share/emacs/site-lisp/elpa/exwm-${o.version}
+      sed -i '/(cl-pushnew xcb:Atom:_NET_WM_STATE_HIDDEN exwm--ewmh-state)/d' exwm-layout.el
+      rm exwm-layout.elc
+    '';
   }))
   xelb
 
