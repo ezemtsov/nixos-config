@@ -39,64 +39,44 @@
 
     services.dunst.enable = true;
 
-    services.grobi = {
-      enable = true;
-      rules = [
-        {
-          name = "USB-C";
-          outputs_connected = [ "DP-2" ];
-          configure_single = "DP-8";
-          primary = true;
-          automic = true;
-        }
-        {
-          name = "HDMI";
-          outputs_connected = [ "HDMI-1" ];
-          configure_single = "HDMI-1";
-          primary = true;
-          automic = true;
-        }
-        {
-          name = "Mobile";
-          outputs_disconnected = [ "DP-8" "HDMI-1" ];
+    services.grobi =
+      let external = [ "HDMI-1" "DP-8" "DP-9" ];
+      in {
+        enable = true;
+        rules = map
+          (o: {
+            name = o;
+            outputs_connected = [ o ];
+            configure_single = o;
+            primary = true;
+          })
+          external ++ [{
+          name = "eDP-1";
+          outputs_disconnected = external;
           configure_single = "eDP-1";
           primary = true;
-          automic = true;
-        }
-      ];
-    };
+        }];
+      };
 
     programs.i3status-rust.enable = true;
     programs.i3status-rust.bars.default = {
       blocks = [
-        {
-          block = "net";
-          format = " $icon {$signal_strength $ssid|Wired connection} ";
-        }
+        { block = "net"; format = " $icon {$signal_strength $ssid} "; }
         { block = "disk_space"; }
-        {
-          block = "time";
-          interval = 60;
-          format = " $timestamp.datetime(f:'%a %d/%m %R') ";
-        }
-        {
-          block = "keyboard_layout";
-          driver = "xkbswitch";
-        }
+        { block = "sound"; }
+        { block = "time"; interval = 60; }
+        { block = "keyboard_layout"; driver = "xkbswitch"; }
         { block = "battery"; }
       ];
       icons = "awesome5";
-      settings.theme.overrides =
-        let
-          bg = "#282A2E";
-        in {
-          idle_bg = bg;
-          good_bg = bg;
-          warning_bg = bg;
-          critical_bg = bg;
-          info_bg = bg;
-          separator_bg = bg;
-        };
+      settings.theme.overrides = {
+        idle_bg = "#282A2E";
+        good_bg = "#282A2E";
+        warning_bg = "#282A2E";
+        critical_bg = "#282A2E";
+        info_bg = "#282A2E";
+        separator_bg = "#282A2E";
+      };
     };
   };
 }
