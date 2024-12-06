@@ -9,15 +9,17 @@
     eval (direnv hook fish)
     source (find '${pkgs.emacsPackages.vterm}' -name 'emacs-vterm.fish')
   '';
+
   users.defaultUserShell = pkgs.fish;
 
   users.extraUsers.ezemtsov = {
     extraGroups = [
-      "wheel"
-      "vboxusers"
+      "wheel" # for sudo
+      "vboxusers" # for virtualbox
       "networkmanager"
-      "libvirtd"
-      "docker"
+      "libvirtd" # for kvm
+      "docker" # for containers
+      "video" # for brightness ctrl
     ];
     description = "Evgeny Zemtsov";
     isNormalUser = true;
