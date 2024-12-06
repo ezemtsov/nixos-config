@@ -5,7 +5,7 @@
   programs.fish.enable = true;
   programs.fish.shellInit = ''
     alias k="kubectl"
-    alias emasc="emacs"
+    alias e="emacsclient"
     eval (direnv hook fish)
     source (find '${pkgs.emacsPackages.vterm}' -name 'emacs-vterm.fish')
   '';
