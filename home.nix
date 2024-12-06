@@ -67,7 +67,7 @@
         { block = "disk_space"; }
         { block = "sound"; }
         { block = "time"; interval = 60; }
-        { block = "keyboard_layout"; driver = "xkbswitch"; }
+        { block = "custom"; persistent = true; command = "${pkgs.xkbmon}/bin/xkbmon -u"; }
         { block = "battery"; }
       ];
       icons = "awesome5";
