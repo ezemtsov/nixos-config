@@ -8,7 +8,7 @@
       DOTNET_ROOT = with pkgs.dotnetCorePackages; combinePackages ([
         sdk_7_0
         sdk_8_0
-      ]);
+      ]) + "/share/dotnet";
       EDITOR = "emacsclient";
 
       # Setting this to compile rust-openssl
@@ -25,14 +25,17 @@
     enable32Bit = true;
   };
 
-  services.picom = {
-    enable = true;
-    vSync = true;
-    backend = "egl";
-    settings.unredir-if-possible-exclude = [
-      "name *= 'Chromium'"
-    ];
-  };
+  # services.picom = {
+  #   enable = true;
+  #   vSync = true;
+  #   backend = "egl";
+  #   settings = {
+  #     unredir-if-possible = true;
+  #     unredir-if-possible-exclude = [
+  #       "name *= 'Chromium'"
+  #     ];
+  #   };
+  # };
 
   services.xserver.enable = true;
 
