@@ -18,17 +18,4 @@
   services.tailscale.enable = true;
   programs.fuse.userAllowOther = true;
   programs.nm-applet.enable = true;
-
-  fileSystems."/mnt/internal" = {
-    device = "jackson.resoptima.local:/mnt/bigstorage/internal";
-    fsType = "nfs";
-    options = ["x-systemd.automount" "noauto"];
-  };
-
-  fileSystems."/mnt/external" = {
-    device = "jackson.resoptima.local:/mnt/bigstorage/external";
-    fsType = "nfs";
-    options = ["x-systemd.automount" "noauto"];
-  };
-
 }
