@@ -41,6 +41,20 @@
 
     services.dunst.enable = true;
 
+    xdg = {
+      desktopEntries.emacs-dired = {
+        type = "Application";
+        name = "emacs-dired";
+        exec = "emacsclient %f";
+      };
+      mimeApps = {
+        enable = true;
+        defaultApplications = {
+          "inode/directory" = "emacs-dired.desktop";
+        };
+      };
+    };
+
     services.grobi =
       let external = [ "HDMI-1" "DP-8" "DP-9" ];
       in {
