@@ -97,12 +97,11 @@ in
   };
 
   # Enable docker
-  virtualisation = {
-    docker.enable = true;
-    # virtualbox.host.enable = true;
-    # this is needed to get a bridge with DHCP enabled
-    libvirtd.enable = true;
-  };
+  virtualisation.docker.enable = true;
+
+  # KVM (for nix vmTools)
+  virtualisation.libvirtd.enable = true;
+  boot.kernelModules = [ "kvm-amd" ];
 
   # Enable USB automount
   services.gvfs.enable = true;
