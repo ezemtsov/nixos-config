@@ -17,5 +17,4 @@
   # enable the tailscale service
   services.tailscale.enable = true;
   programs.fuse.userAllowOther = true;
-  programs.nm-applet.enable = true;
 }

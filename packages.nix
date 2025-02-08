@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, sources, ... }:
 
 let
   dotnet = with pkgs.dotnetCorePackages; (combinePackages [
@@ -9,9 +9,6 @@ let
   ]);
 
 in {
-  # Gnome apps require dconf to remember default settings
-  programs.dconf.enable = true;
-
   # Allow testing .NET compiled executables
   programs.nix-ld.enable = true;
 
@@ -22,13 +19,21 @@ in {
       user.name  = "Evgeny Zemtsov";
       user.email = "eugene.zemtsov@gmail.com";
     };
-  };
+  }
+;
+  programs.thunderbird.enable = true;
+
+  # Steam
+  programs.steam.enable = true;
+  programs.steam.gamescopeSession.enable = true;
 
   # ... and declare packages to be installed.
   environment.systemPackages = with pkgs; [
     binutils-unwrapped
+    bottom
     cachix
     chromium
+    firefox
     cmake
     curl
     direnv
@@ -39,6 +44,8 @@ in {
     gimp
     gitFull
     htop
+    kubectl
+    kubelogin
     ntfs3g
     openjdk
     openssl
@@ -58,7 +65,7 @@ in {
     wget
     which
     zstd
-    kubectl
+    alacritty
 
     libreoffice
     nuspell
@@ -66,21 +73,28 @@ in {
     hunspellDicts.nb_NO
     hunspellDicts.ru_RU
 
-    azure-cli
+    # azure-cli
     azure-storage-azcopy
     google-cloud-sdk
 
+    # Gaming
+    gamemode
+    lutris
+    wineWowPackages.stable
+    winetricks
+    torzu
 
-    i3status-rust
-    flameshot
-    grobi
-    xclip
-    xsecurelock
-    xkb-switch
-
-    emacs-lsp-booster
+    # EXWM packages
+    # i3status-rust
+    # flameshot
+    # grobi
+    # xclip
+    # xsecurelock
+    # xkb-switch
 
     # Music packages
+    alsa-utils
+    pavucontrol
     audacity
 
     # Nix packages
@@ -99,6 +113,7 @@ in {
     rustc
     rustup
     rust-analyzer
+    pkg-config
 
     # Haskell packages
     haskellPackages.cabal-install
@@ -136,5 +151,6 @@ in {
 
     # NixOS helpers
     (writeShellScriptBin "nixos-switch" (builtins.readFile ./nixos-switch))
+    (pkgs.callPackage "${sources.agenix}/pkgs/agenix.nix" {})
   ];
 }

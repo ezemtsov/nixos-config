@@ -1,21 +1,22 @@
-{ config, pkgs, lib, ... }:
-
+{ config, pkgs, lib, sources, ... }:
 
 let
   sources = import npins/default.nix;
-in
-{
+in {
+  _module.args = { inherit sources; };
+
   imports =
     [
       ./hardware-configuration.nix
       ./networking.nix
       ./desktop.nix
-      ./home.nix
       ./packages.nix
-      "${sources.home-manager}/nixos/default.nix"
+      "${sources.home-manager}/nixos"
     ];
 
+  # Fish is fucked up and slows down the system build
   documentation.enable = false;
+  documentation.man.generateCaches = false;
 
   # Configure the Nix package manager
   nixpkgs = {
@@ -26,10 +27,13 @@ in
       config.allowUnfree = true;
       config.permittedInsecurePackages = [
         "dotnet-core-combined"
+        "dotnet-wrapped-combined"
+        "dotnet-combined"
+        "dotnet-runtime-7.0.20"
+        "dotnet-runtime-wrapped-7.0.20"
         "dotnet-sdk-6.0.428"
         "dotnet-sdk-7.0.410"
         "dotnet-sdk-7.0.20"
-        "dotnet-runtime-7.0.20"
         "dotnet-sdk-wrapped-7.0.410"
       ];
     };
@@ -49,11 +53,11 @@ in
   programs.nix-index.enable = true;
   programs.nix-index.enableFishIntegration = true;
   programs.command-not-found.enable = false;
+  services.locate.enable = true;
 
   boot = {
     # Pick latest kernel
     kernelPackages = pkgs.linuxPackages_latest;
-    kernelParams = [ "amd_pstate=guided" ];
 
     # Use the systemd-boot EFI boot loader.
     loader.systemd-boot.enable = true;
@@ -67,9 +71,15 @@ in
   };
 
   # Enable power saving
-  powerManagement.enable = true;
+  powerManagement.enable = false;
   services.thermald.enable = true;
   services.tlp.enable = true;
+  services.tlp.settings = {
+    CPU_SCALING_GOVERNOR_ON_AC = "performance";
+    CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
+    CPU_ENERGY_PERF_POLICY_ON_BAT = "power";
+    CPU_ENERGY_PERF_POLICY_ON_AC = "performance";
+  };
 
   # Emacs
   services.emacs = {
@@ -78,10 +88,9 @@ in
     package = import ./emacs.nix { inherit pkgs; };
   };
 
+  # Set location and time zone
   location.latitude = 59.91;
   location.longitude = 10.75;
-
-  # Set your time zone.
   time.timeZone = "Europe/Oslo";
 
   # Enable backlight control.
@@ -107,15 +116,14 @@ in
   services.gvfs.enable = true;
 
   # Audio
+  security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
     alsa.enable = true;
-    jack.enable = true;
+    # jack.enable = true;
     pulse.enable = true;
-    socketActivation = true;
+    # socketActivation = true;
   };
-
-  hardware.pulseaudio.enable = lib.mkForce false;
 
   # Bluetooth
   hardware.bluetooth.enable = true;

@@ -8,23 +8,27 @@ let
     emacsPackagesFor
   ;
 
-  emacs = pkgs.emacs30;
+  emacs = pkgs.emacs30-pgtk;
 
 in
 (emacsPackagesFor emacs).emacsWithPackages (epkgs: with epkgs; [
-  (exwm.overrideDerivation (o: {
-    # https://github.com/ch11ng/exwm/issues/759
-    postInstall = ''
-      cd $out/share/emacs/site-lisp/elpa/exwm-${o.version}
-      sed -i '/(cl-pushnew xcb:Atom:_NET_WM_STATE_HIDDEN exwm--ewmh-state)/d' exwm-layout.el
-      rm exwm-layout.elc
-    '';
-  }))
-  xelb
+  # (exwm.overrideDerivation (o: {
+  #   # https://github.com/ch11ng/exwm/issues/759
+  #   postInstall = ''
+  #     cd $out/share/emacs/site-lisp/elpa/exwm-${o.version}
+  #     sed -i '/(cl-pushnew xcb:Atom:_NET_WM_STATE_HIDDEN exwm--ewmh-state)/d' exwm-layout.el
+  #     rm exwm-layout.elc
+  #   '';
+  # }))
+  # xelb
 
-  i3bar
-  exwm-modeline
+  # i3bar
+  # exwm-modeline
   vertico-posframe
+
+  eat
+  vterm
+  vterm-toggle
 
   all-the-icons
   buffer-move
@@ -33,7 +37,6 @@ in
   cmake-mode
   color-theme-sanityinc-tomorrow
   consult
-  company
   corfu
   dockerfile-mode
   dumb-jump
@@ -62,7 +65,6 @@ in
   nix-mode
   orderless
   pdf-tools
-  projectile
   protobuf-mode
   python-mode
   rainbow-delimiters
@@ -75,15 +77,11 @@ in
   transient
   treesit-grammars.with-all-grammars
   typescript-mode
-  undo-tree
+  vundo
   vertico
-  vterm
-  vterm-toggle
   web-mode
   which-key
   winum
   yaml-mode
-  yasnippet
-  yasnippet-snippets
   jupyter
 ])

@@ -1,0 +1,21 @@
+* {
+    background: transparent;
+    color: white;
+    padding: 0 3px;
+    font-family: JetBrainsMono;
+    font-size: 12px;
+    border-radius: 0px;
+}
+#tray menu {
+    background-color: #333333;
+    color: white;
+}
+#tray menu menuitem:hover {
+    background-color: gray;
+}
+#workspaces button.focused {
+    background: #333333;
+}
+#battery.charging {
+    background-color: #333333;
+}

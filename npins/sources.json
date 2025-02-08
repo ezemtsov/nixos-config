@@ -1,5 +1,17 @@
 {
   "pins": {
+    "agenix": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "ryantm",
+        "repo": "agenix"
+      },
+      "branch": "main",
+      "revision": "e600439ec4c273cf11e06fe4d9d906fb98fa097c",
+      "url": "https://github.com/ryantm/agenix/archive/e600439ec4c273cf11e06fe4d9d906fb98fa097c.tar.gz",
+      "hash": "006ngydiykjgqs85cl19h9klq8kaqm5zs0ng51dnwy7nzgqxzsdr"
+    },
     "emacs-overlay": {
       "type": "Git",
       "repository": {
@@ -8,9 +20,9 @@
         "repo": "emacs-overlay"
       },
       "branch": "master",
-      "revision": "54d102696b787b0baf144fd71a377172b561af62",
-      "url": "https://github.com/nix-community/emacs-overlay/archive/54d102696b787b0baf144fd71a377172b561af62.tar.gz",
-      "hash": "0xclkvycra94f93z5v2k2b8zvk3vgw2r8mgh89r0ql836mvf98v0"
+      "revision": "5b1779b13077a122dba393d0b0c148a0e5bf16f6",
+      "url": "https://github.com/nix-community/emacs-overlay/archive/5b1779b13077a122dba393d0b0c148a0e5bf16f6.tar.gz",
+      "hash": "099wwcmcn2nxbxks4d28b528sla3dk3m3k9cmimga9zlyairkm5y"
     },
     "home-manager": {
       "type": "Git",
@@ -20,9 +32,9 @@
         "repo": "home-manager"
       },
       "branch": "release-24.11",
-      "revision": "62d536255879be574ebfe9b87c4ac194febf47c5",
-      "url": "https://github.com/nix-community/home-manager/archive/62d536255879be574ebfe9b87c4ac194febf47c5.tar.gz",
-      "hash": "0v9bsc6r2626kap2m12zxw47m4p2kpr4pjldr7wvgqq48vwd72cm"
+      "revision": "bd65bc3cde04c16755955630b344bc9e35272c56",
+      "url": "https://github.com/nix-community/home-manager/archive/bd65bc3cde04c16755955630b344bc9e35272c56.tar.gz",
+      "hash": "15k41il0mvmwyv6jns4z8k6khhmb22jk5gpcqs1paym3l01g6abn"
     },
     "nixpkgs": {
       "type": "Git",
@@ -32,9 +44,9 @@
         "repo": "nixpkgs"
       },
       "branch": "nixos-unstable",
-      "revision": "ac35b104800bff9028425fec3b6e8a41de2bbfff",
-      "url": "https://github.com/NixOS/nixpkgs/archive/ac35b104800bff9028425fec3b6e8a41de2bbfff.tar.gz",
-      "hash": "1fbj7shlmviilmgz5z2gp59j6xwgdr01jfh75qhixx06kib4305p"
+      "revision": "a3eaf5e8eca7cab680b964138fb79073704aca75",
+      "url": "https://github.com/NixOS/nixpkgs/archive/a3eaf5e8eca7cab680b964138fb79073704aca75.tar.gz",
+      "hash": "0baq5ksv34g9pyj4s1sz2nva9ayji55i9zayjwnpyns3lmzl2qy9"
     }
   },
   "version": 3

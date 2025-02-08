@@ -1,0 +1,39 @@
+[
+  {
+    "disk": {
+      "format": "{free}"
+    },
+    "modules-left": [
+      "niri/workspaces",
+      "wlr/taskbar"
+    ],
+    "modules-right": [
+      "tray",
+      "niri/language",
+      "disk",
+      "network",
+      "clock",
+      "battery",
+      "systemd-failed-units"
+    ],
+    "network": {
+      "format": "{ifname}",
+      "format-wifi": "{essid} ({signalStrength}%)",
+      "interface": "wlp1s0"
+    },
+    "niri/language": {
+      "format": "{short}"
+    },
+    "position": "top",
+    "systemd-failed-units": {
+      "format": "✗ {nr_failed}",
+      "hide-on-ok": true
+    },
+    "wlr/taskbar": {
+      "format": "{icon}",
+      "on-click": "activate",
+      "icon-size": 18,
+      "tooltip": false
+    }
+  }
+]
