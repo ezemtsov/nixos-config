@@ -1,6 +1,8 @@
 { config, lib, pkgs, ... }:
 
 {
+  services.xserver.enable = true;
+
   environment = {
     variables = {
       MONITOR_PRIMARY = "eDP-1";
@@ -12,7 +14,7 @@
       EDITOR = "emacsclient";
 
       # force enable wayland
-      NIXOS_OZONE_WL = 1;
+      # NIXOS_OZONE_WL = 1;
 
       NIRI_CONFIG = "/etc/nixos/dotfiles/niri/config.kdl";
 
@@ -22,7 +24,7 @@
   };
 
   # # Copy paste between X windows
-  # services.clipcat.enable = true;
+  services.clipcat.enable = true;
 
   # Graphics
   hardware.graphics = {
@@ -30,24 +32,19 @@
     enable32Bit = true;
   };
 
-  # services.picom = {
-  #   enable = true;
-  #   vSync = true;
-  #   backend = "egl";
-  #   settings = {
-  #     unredir-if-possible = true;
-  #     unredir-if-possible-exclude = [
-  #       "_NET_WM_BYPASS_COMPOSITOR@:c = 2"
-  #     ];
-  #   };
-  # };
+  services.picom = {
+    enable = false;
+    vSync = true;
+    backend = "egl";
+    settings = {
+      unredir-if-possible = true;
+      unredir-if-possible-exclude = [
+        "_NET_WM_BYPASS_COMPOSITOR@:c = 2"
+      ];
+    };
+  };
 
-  services.xserver.enable = true;
-  services.xserver.displayManager.gdm.enable = true;
-  programs.xwayland.enable = true;
   gtk.iconCache.enable = true;
-
-  programs.niri.enable = true;
 
   environment.systemPackages = with pkgs; [
     rofi-wayland
@@ -60,16 +57,24 @@
   ];
 
   # Give EXWM permission to control the session.
-  services.xserver.displayManager = {
-    sessionCommands = "${pkgs.xorg.xhost}/bin/xhost +SI:localuser:$USER";
-  };
-
   services.xserver.windowManager = {
     session = lib.singleton {
       name = "exwm";
       start = "/run/current-system/sw/bin/emacs";
     };
   };
+  services.xserver.displayManager = {
+    sessionCommands = "${pkgs.xorg.xhost}/bin/xhost +SI:localuser:$USER";
+  };
+
+  # services.desktopManager.plasma6.enable = true;
+  # services.displayManager.gdm.enable = true;
+  # programs.xwayland.enable = true;
+  # programs.niri.enable = true;
+
+  # services.displayManager.cosmic-greeter.enable = true;
+  # services.desktopManager.cosmic.enable = true;
+  # services.desktopManager.cosmic.xwayland.enable = true;
 
   # Keyboard options
   services.xserver.xkb.layout = "us,ru,no";
@@ -93,16 +98,19 @@
     packages = with pkgs; [
       corefonts
       jetbrains-mono
-      font-awesome
-      dejavu_fonts
-      source-code-pro
-      iosevka
+      font-awesome_6
     ];
   };
 
-  # # Lock laptop after sleeping
-  # programs.xss-lock.enable = true;
-  # programs.xss-lock.lockerCommand = "${pkgs.xsecurelock}/bin/xsecurelock";
+  programs.firefox.enable = true;
+  programs.dconf.enable = true;
+
+  # Lock laptop after sleeping
+  programs.xss-lock.enable = true;
+  programs.xss-lock.lockerCommand = "${pkgs.xsecurelock}/bin/xsecurelock";
+
+  # Don't turn off laptop on close lid when on power
+  # services.logind.lidSwitchExternalPower = "ignore";
 
   # Define a user account
   programs.fish.enable = true;
@@ -135,150 +143,118 @@
     wheelNeedsPassword = false;
   };
 
-  # There two properties are important to align home-manager with
-  # global nixpkgs set.
-  home-manager.useGlobalPkgs = true;
-  home-manager.useUserPackages = false;
-  home-manager.users.ezemtsov = { config, ... }: {
-    home.stateVersion = "24.11";
-    home.enableNixpkgsReleaseCheck = false;
+  # # There two properties are important to align home-manager with
+  # # global nixpkgs set.
+  # home-manager.useGlobalPkgs = true;
+  # home-manager.useUserPackages = false;
+  # # home-manager.backupFileExtension = "backup";
+  # home-manager.users.ezemtsov = { config, ... }: {
+  #   home.stateVersion = "25.05";
+  #   home.enableNixpkgsReleaseCheck = true;
 
-    home.pointerCursor = {
-      name = "Bibata-Original-Classic";
-      x11.enable = true;
-      gtk.enable = true;
-      package = pkgs.bibata-cursors;
-    };
 
-    qt.enable = true;
 
-    gtk = {
-      enable = true;
-      theme.name = "Breeze-Dark";
-      cursorTheme.name = "Bibata-Original-Classic";
-    };
+  # #   # home.pointerCursor = {
+  # #   #   name = "Bibata-Original-Classic";
+  # #   #   x11.enable = true;
+  # #   #   gtk.enable = true;
+  # #   #   size = 32;
+  # #   #   package = pkgs.bibata-cursors;
+  # #   # };
 
-    programs.firefox.enable = true;
+  # #   # qt.enable = true;
 
-    # notifications
-    services.mako = {
-      enable = true;
-      defaultTimeout = 5;
-      borderColor = "#808080";
-      backgroundColor = "#333333";
-    };
+  # #   # gtk = {
+  # #   #   enable = true;
+  # #   #   theme.name = "Breeze-Dark";
+  # #   #   cursorTheme.name = "Bibata-Original-Classic";
+  # #   # };
 
-    programs.waybar.enable = true;
-    programs.waybar.systemd.enable = true;
-    systemd.user.services.waybar.Unit.After = lib.mkForce [ "niri.service" ];
+  # #   # programs.firefox.enable = true;
 
-    xdg = {
-      portal = {
-        enable = true;
-        extraPortals = with pkgs; [
-          xdg-desktop-portal-gtk
-          xdg-desktop-portal-gnome
-        ];
-        config.common.default = [ "*" ];
-      };
-      desktopEntries.dired = {
-        type = "Application";
-        name = "emacs-dired";
-        exec = "emacsclient %f";
-      };
-      mimeApps = {
-        enable = true;
-        defaultApplications = {
-          "inode/directory" = "emacs-dired.desktop";
-          "text/html" = "firefox.desktop";
-        };
-      };
-      configFile."waybar/config".source = ./dotfiles/waybar/config;
-      configFile."waybar/style.css".source = ./dotfiles/waybar/style.css;
-      configFile."rofi/config.rasi".source = ./dotfiles/rofi/config.rasi;
-    };
+  # #   # # notifications
+  # #   # services.dunst = {
+  # #   #   enable = true;
+  # #   #   settings = {
+  # #   #     global = {
+  # #   #       frame_color = "#808080";
+  # #   #     };
+  # #   #     urgency_normal = {
+  # #   #       timeout = "5";
+  # #   #       background = "#333333";
+  # #   #     };
+  # #   #   };
+  # #   # };
 
-    # services.grobi =
-    #   let external = [ "HDMI-1" ] ++ map (i: "DP-${toString i}") (lib.lists.range 1 9);
-    #   in {
-    #     enable = true;
-    #     rules = map
-    #       (o: {
-    #         name = o;
-    #         outputs_connected = [ o ];
-    #         configure_single = o;
-    #         primary = true;
-    #       })
-    #       external ++ [{
-    #       name = "eDP-1";
-    #       outputs_disconnected = external;
-    #       configure_single = "eDP-1";
-    #       primary = true;
-    #     }];
-    #   };
+  # #   # programs.waybar.enable = true;
+  # #   # programs.waybar.systemd.enable = true;
+  # #   # systemd.user.services.waybar.Unit.After = lib.mkForce [ "niri.service" ];
 
-    # programs.i3status-rust.enable = true;
-    # programs.i3status-rust.bars.default = {
-    #   blocks = [
-    #     { block = "maildir"; inboxes = [ "~/Maildir/icloud/Inbox/" ];  }
-    #     { block = "net"; format = " $icon {$signal_strength $ssid} "; }
-    #     { block = "disk_space"; }
-    #     { block = "sound"; }
-    #     { block = "time"; interval = 60; }
-    #     { block = "custom"; persistent = true; command = "${pkgs.xkbmon}/bin/xkbmon -u"; }
-    #     { block = "battery"; }
-    #   ];
-    #   icons = "awesome5";
-    #   settings.theme.overrides = {
-    #     idle_bg = "#282A2E";
-    #     good_bg = "#282A2E";
-    #     warning_bg = "#282A2E";
-    #     critical_bg = "#282A2E";
-    #     info_bg = "#282A2E";
-    #     separator_bg = "#282A2E";
-    #   };
-    # };
+  # #   xdg = {
+  # #   #   portal = {
+  # #   #     enable = true;
+  # #   #     extraPortals = with pkgs; [
+  # #   #       xdg-desktop-portal-gtk
+  # #   #       xdg-desktop-portal-gnome
+  # #   #       xdg-desktop-portal-wlr
+  # #   #     ];
+  # #   #     config.common.default = [ "*" ];
+  # #   #   };
+  # #     desktopEntries.dired = {
+  # #       type = "Application";
+  # #       name = "emacs-dired";
+  # #       exec = "emacsclient %f";
+  # #     };
+  # #   #   mimeApps = {
+  # #   #     enable = true;
+  # #   #     defaultApplications = {
+  # #   #       "inode/directory" = "emacs-dired.desktop";
+  # #   #       "text/html" = "firefox.desktop";
+  # #   #     };
+  # #   #   };
+  # #   #   configFile."waybar/config".source = ./dotfiles/waybar/config;
+  # #   #   configFile."waybar/style.css".source = ./dotfiles/waybar/style.css;
+  # #   #   configFile."rofi/config.rasi".source = ./dotfiles/rofi/config.rasi;
+  # #   };
 
-    # services.imapnotify.enable = true;
-    # services.mbsync.enable = true;
-    # programs.mbsync.enable = true;
-    # programs.msmtp.enable = true;
-    # programs.mu.enable = true;
-    # accounts.email = {
-    #   accounts.icloud = {
-    #     primary = true;
-    #     flavor = "plain";
-    #     address = "mail@paket.no";
-    #     userName = "mail@paket.no";
-    #     # aliases = [ "mail@paket.no" ];
-    #     realName = "Evgeny Zemtsov";
-    #     passwordCommand = "cat /run/agenix/icloud";
-    #     imap = {
-    #       host = "imap.mail.me.com";
-    #       port = 993;
-    #       tls.enable = true;
-    #     };
-    #     smtp = {
-    #       host = "smtp.mail.me.com";
-    #       port = 587;
-    #       tls.enable = true;
-    #       tls.useStartTls = true;
-    #     };
-    #     mbsync.enable = true;
-    #     msmtp.enable = true;
-    #     mu.enable = true;
-    #     imapnotify = {
-    #       enable = true;
-    #       boxes = ["Inbox"];
-    #       onNotifyPost.mail = "${pkgs.libnotify}/bin/notify-send 'New email'";
-    #     };
-    #   };
-    # };
-  };
+  #   services.grobi =
+  #     let external = [ "HDMI-1" ] ++ map (i: "DP-${toString i}") (lib.lists.range 1 9);
+  #     in {
+  #       enable = true;
+  #       rules = map
+  #         (o: {
+  #           name = o;
+  #           outputs_connected = [ o ];
+  #           configure_single = o;
+  #           primary = true;
+  #         })
+  #         external ++ [{
+  #           name = "eDP-1";
+  #           outputs_disconnected = external;
+  #           configure_single = "eDP-1";
+  #           primary = true;
+  #         }];
+  #     };
 
-  # age.secrets.icloud = {
-  #   file = ./secrets/icloud.age;
-  #   owner = "ezemtsov";
+  # #   programs.i3status-rust.enable = true;
+  # #   programs.i3status-rust.bars.default = {
+  # #     blocks = [
+  # #       { block = "net"; format = " $icon {$signal_strength $ssid} "; }
+  # #       { block = "disk_space"; format = " $available.eng(w:2) "; }
+  # #       { block = "sound"; format = " $volume.eng(w:2) "; }
+  # #       { block = "time"; interval = 60; }
+  # #       { block = "custom"; persistent = true; command = "${pkgs.xkbmon}/bin/xkbmon -u"; }
+  # #       { block = "battery"; }
+  # #     ];
+  # #     icons = "awesome6";
+  # #     settings.theme.overrides = {
+  # #       idle_bg = "#282A2E";
+  # #       good_bg = "#282A2E";
+  # #       warning_bg = "#282A2E";
+  # #       critical_bg = "#282A2E";
+  # #       info_bg = "#282A2E";
+  # #       separator_bg = "#282A2E";
+  # #     };
+  # #   };
   # };
-
 }

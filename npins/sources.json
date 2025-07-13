@@ -8,9 +8,10 @@
         "repo": "agenix"
       },
       "branch": "main",
-      "revision": "e600439ec4c273cf11e06fe4d9d906fb98fa097c",
-      "url": "https://github.com/ryantm/agenix/archive/e600439ec4c273cf11e06fe4d9d906fb98fa097c.tar.gz",
-      "hash": "006ngydiykjgqs85cl19h9klq8kaqm5zs0ng51dnwy7nzgqxzsdr"
+      "submodules": false,
+      "revision": "531beac616433bac6f9e2a19feb8e99a22a66baf",
+      "url": "https://github.com/ryantm/agenix/archive/531beac616433bac6f9e2a19feb8e99a22a66baf.tar.gz",
+      "hash": "103slb8xy5sb68zxjjbb9d0svq8xz751a7yrg6vrz5rh4374bzgl"
     },
     "emacs-overlay": {
       "type": "Git",
@@ -20,9 +21,10 @@
         "repo": "emacs-overlay"
       },
       "branch": "master",
-      "revision": "5b1779b13077a122dba393d0b0c148a0e5bf16f6",
-      "url": "https://github.com/nix-community/emacs-overlay/archive/5b1779b13077a122dba393d0b0c148a0e5bf16f6.tar.gz",
-      "hash": "099wwcmcn2nxbxks4d28b528sla3dk3m3k9cmimga9zlyairkm5y"
+      "submodules": false,
+      "revision": "6ab8bb6826895f1ac82366eddeed184a69729e5a",
+      "url": "https://github.com/nix-community/emacs-overlay/archive/6ab8bb6826895f1ac82366eddeed184a69729e5a.tar.gz",
+      "hash": "0zm45ijl2w1js0jyxxxnkfvjcpv864hr7bq1d6lrd8b1a7k9rgy7"
     },
     "home-manager": {
       "type": "Git",
@@ -31,10 +33,11 @@
         "owner": "nix-community",
         "repo": "home-manager"
       },
-      "branch": "release-24.11",
-      "revision": "bd65bc3cde04c16755955630b344bc9e35272c56",
-      "url": "https://github.com/nix-community/home-manager/archive/bd65bc3cde04c16755955630b344bc9e35272c56.tar.gz",
-      "hash": "15k41il0mvmwyv6jns4z8k6khhmb22jk5gpcqs1paym3l01g6abn"
+      "branch": "master",
+      "submodules": false,
+      "revision": "96354906f58464605ff81d2f6c2ea23211cbf051",
+      "url": "https://github.com/nix-community/home-manager/archive/96354906f58464605ff81d2f6c2ea23211cbf051.tar.gz",
+      "hash": "0pcsnhggwgphh7f78q0842l3dq84yhgipvn4cpf5xckydjpxbnd6"
     },
     "nixpkgs": {
       "type": "Git",
@@ -44,10 +47,11 @@
         "repo": "nixpkgs"
       },
       "branch": "nixos-unstable",
-      "revision": "a3eaf5e8eca7cab680b964138fb79073704aca75",
-      "url": "https://github.com/NixOS/nixpkgs/archive/a3eaf5e8eca7cab680b964138fb79073704aca75.tar.gz",
-      "hash": "0baq5ksv34g9pyj4s1sz2nva9ayji55i9zayjwnpyns3lmzl2qy9"
+      "submodules": false,
+      "revision": "3016b4b15d13f3089db8a41ef937b13a9e33a8df",
+      "url": "https://github.com/NixOS/nixpkgs/archive/3016b4b15d13f3089db8a41ef937b13a9e33a8df.tar.gz",
+      "hash": "11p1dpmm7nk15mb60m1ii4jywydy3g7x5qpyr9yarlzfl2c91x1z"
     }
   },
-  "version": 3
+  "version": 5
 }

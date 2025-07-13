@@ -12,7 +12,12 @@ in {
       ./desktop.nix
       ./packages.nix
       "${sources.home-manager}/nixos"
+      "${sources.agenix}/modules/age.nix"
+      ./vr.nix
+      ./test.nix
     ];
+
+  system.rebuild.enableNg = false;
 
   # Fish is fucked up and slows down the system build
   documentation.enable = false;
@@ -59,6 +64,9 @@ in {
     # Pick latest kernel
     kernelPackages = pkgs.linuxPackages_latest;
 
+    # Make booting nicer
+    plymouth.enable = true;
+
     # Use the systemd-boot EFI boot loader.
     loader.systemd-boot.enable = true;
     loader.efi.canTouchEfiVariables = true;
@@ -71,14 +79,13 @@ in {
   };
 
   # Enable power saving
-  powerManagement.enable = false;
-  services.thermald.enable = true;
-  services.tlp.enable = true;
-  services.tlp.settings = {
-    CPU_SCALING_GOVERNOR_ON_AC = "performance";
-    CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
-    CPU_ENERGY_PERF_POLICY_ON_BAT = "power";
-    CPU_ENERGY_PERF_POLICY_ON_AC = "performance";
+  powerManagement.enable = true;
+  services.tlp = {
+    enable = true;
+    settings = {
+      CPU_SCALING_GOVERNOR_ON_BAT="powersave";
+      CPU_SCALING_GOVERNOR_ON_AC="performance";
+    };
   };
 
   # Emacs
@@ -109,8 +116,18 @@ in {
   virtualisation.docker.enable = true;
 
   # KVM (for nix vmTools)
-  virtualisation.libvirtd.enable = true;
-  boot.kernelModules = [ "kvm-amd" ];
+  boot.kernelModules =  [ "kvm-amd" ];
+  # virtualisation.libvirtd = {
+  #   enable = true;
+  #   qemu.ovmf = {
+  #     enable = true;
+  #     packages = [ (pkgs.OVMF.override {
+  #       secureBoot = true;
+  #       tpmSupport = true;
+  #     }).fd];
+  #   };
+  #   qemu.vhostUserPackages = with pkgs; [ virtiofsd ];
+  # };
 
   # Enable USB automount
   services.gvfs.enable = true;

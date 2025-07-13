@@ -2,10 +2,10 @@
 
 let
   dotnet = with pkgs.dotnetCorePackages; (combinePackages [
-    sdk_7_0
     sdk_8_0
-    runtime_7_0
+    sdk_9_0
     runtime_8_0
+    runtime_9_0
   ]);
 
 in {
@@ -19,31 +19,27 @@ in {
       user.name  = "Evgeny Zemtsov";
       user.email = "eugene.zemtsov@gmail.com";
     };
-  }
-;
-  programs.thunderbird.enable = true;
+  };
 
-  # Steam
-  programs.steam.enable = true;
-  programs.steam.gamescopeSession.enable = true;
+  programs.thunderbird.enable = true;
+  programs.evolution.enable = true;
 
   # ... and declare packages to be installed.
   environment.systemPackages = with pkgs; [
     binutils-unwrapped
-    bottom
     cachix
     chromium
     firefox
     cmake
     curl
     direnv
-    ffmpeg
+    ffmpeg-full
     file
     fish
     gcc
     gimp
     gitFull
-    htop
+    (btop.override { rocmSupport = true; })
     kubectl
     kubelogin
     ntfs3g
@@ -66,6 +62,11 @@ in {
     which
     zstd
     alacritty
+    signal-desktop
+    jq
+    eaglemode
+    ryzenadj
+    virt-manager
 
     libreoffice
     nuspell
@@ -78,19 +79,17 @@ in {
     google-cloud-sdk
 
     # Gaming
-    gamemode
     lutris
     wineWowPackages.stable
     winetricks
-    torzu
 
     # EXWM packages
-    # i3status-rust
-    # flameshot
-    # grobi
-    # xclip
-    # xsecurelock
-    # xkb-switch
+    i3status-rust
+    flameshot
+    grobi
+    xclip
+    xsecurelock
+    xkb-switch
 
     # Music packages
     alsa-utils
@@ -104,6 +103,11 @@ in {
 
     # Chicken packages
     chicken
+
+    # C package
+    clang-tools
+    gcc
+    glibc.dev
 
     # # CLisp packages
     # sbcl
@@ -126,9 +130,11 @@ in {
       pandas
       plotly
       pyarrow
-      kaleido
+      # kaleido
       matplotlib
       jupyter
+      kubernetes
+      debugpy
     ]))
 
     # .NET packages
