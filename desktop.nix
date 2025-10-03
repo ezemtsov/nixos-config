@@ -133,6 +133,7 @@
       "libvirtd" # for kvm
       "docker" # for containers
       "video" # for brightness ctrl
+      "audio" # for musnix
     ];
     description = "Evgeny Zemtsov";
     isNormalUser = true;

@@ -33,11 +33,24 @@
         "owner": "nix-community",
         "repo": "home-manager"
       },
+      "branch": "release-25.05",
+      "submodules": false,
       "revision": "3b955f5f0a942f9f60cdc9cacb7844335d0f21c3",
       "url": "https://github.com/nix-community/home-manager/archive/3b955f5f0a942f9f60cdc9cacb7844335d0f21c3.tar.gz",
       "hash": "sha256-uhzsV0Q0I9j2y/rfweWeGif5AWe0MGrgZ/3TjpDYdGA="
+    },
+    "musnix": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "musnix",
+        "repo": "musnix"
+      },
       "branch": "master",
       "submodules": false,
+      "revision": "7ccc92050e43dc92309396c6f2fe1f542214a242",
+      "url": "https://github.com/musnix/musnix/archive/7ccc92050e43dc92309396c6f2fe1f542214a242.tar.gz",
+      "hash": "1wg2iflnr0062c34d0iqk2hyn27jshsz79a1i1qqc7j1hixspxx8"
     },
     "nixpkgs": {
       "type": "Git",

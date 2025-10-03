@@ -13,6 +13,7 @@ in {
       ./packages.nix
       "${sources.home-manager}/nixos"
       "${sources.agenix}/modules/age.nix"
+      "${sources.musnix}"
       ./vr.nix
       ./test.nix
     ];
@@ -127,6 +128,8 @@ in {
   services.gvfs.enable = true;
 
   # Audio
+  musnix.enable = true;
+
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
