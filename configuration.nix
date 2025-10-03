@@ -34,12 +34,6 @@ in {
         "dotnet-core-combined"
         "dotnet-wrapped-combined"
         "dotnet-combined"
-        "dotnet-runtime-7.0.20"
-        "dotnet-runtime-wrapped-7.0.20"
-        "dotnet-sdk-6.0.428"
-        "dotnet-sdk-7.0.410"
-        "dotnet-sdk-7.0.20"
-        "dotnet-sdk-wrapped-7.0.410"
       ];
     };
   };
