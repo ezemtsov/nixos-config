@@ -78,7 +78,7 @@
   # services.desktopManager.cosmic.xwayland.enable = true;
 
   # Keyboard options
-  services.xserver.xkb.layout = "us,ru,no";
+  services.xserver.xkb.layout = "us,ru,no,se";
   services.xserver.xkb.options = "grp:caps_toggle";
 
   services.libinput = {
