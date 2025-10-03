@@ -34,15 +34,15 @@
   };
 
   services.picom = {
-    enable = false;
+    enable = true;
     vSync = true;
-    backend = "egl";
-    settings = {
-      unredir-if-possible = true;
-      unredir-if-possible-exclude = [
-        "_NET_WM_BYPASS_COMPOSITOR@:c = 2"
-      ];
-    };
+    # backend = "egl";
+    # settings = {
+    #   unredir-if-possible = true;
+    #   unredir-if-possible-exclude = [
+    #     "_NET_WM_BYPASS_COMPOSITOR@:c = 2"
+    #   ];
+    # };
   };
 
   gtk.iconCache.enable = true;
