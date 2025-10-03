@@ -145,118 +145,35 @@
     wheelNeedsPassword = false;
   };
 
-  # # There two properties are important to align home-manager with
-  # # global nixpkgs set.
-  # home-manager.useGlobalPkgs = true;
-  # home-manager.useUserPackages = false;
-  # # home-manager.backupFileExtension = "backup";
-  # home-manager.users.ezemtsov = { config, ... }: {
-  #   home.stateVersion = "25.05";
-  #   home.enableNixpkgsReleaseCheck = true;
 
+  # There two properties are important to align home-manager with
+  # global nixpkgs set.
+  home-manager.useGlobalPkgs = true;
+  home-manager.useUserPackages = false;
+  home-manager.backupFileExtension = "backup";
 
+  home-manager.users.ezemtsov = { config, ... }: {
+    home.stateVersion = "25.05";
+    home.enableNixpkgsReleaseCheck = false;
 
-  # #   # home.pointerCursor = {
-  # #   #   name = "Bibata-Original-Classic";
-  # #   #   x11.enable = true;
-  # #   #   gtk.enable = true;
-  # #   #   size = 32;
-  # #   #   package = pkgs.bibata-cursors;
-  # #   # };
+    services.grobi =
+      let external = [ "HDMI-1" ] ++ map (i: "DP-${toString i}") (lib.lists.range 1 9);
+      in {
+        enable = true;
+        rules = map
+          (o: {
+            name = o;
+            outputs_connected = [ o ];
+            configure_single = o;
+            primary = true;
+          })
+          external ++ [{
+            name = "eDP-1";
+            outputs_disconnected = external;
+            configure_single = "eDP-1";
+            primary = true;
+          }];
+      };
 
-  # #   # qt.enable = true;
-
-  # #   # gtk = {
-  # #   #   enable = true;
-  # #   #   theme.name = "Breeze-Dark";
-  # #   #   cursorTheme.name = "Bibata-Original-Classic";
-  # #   # };
-
-  # #   # programs.firefox.enable = true;
-
-  # #   # # notifications
-  # #   # services.dunst = {
-  # #   #   enable = true;
-  # #   #   settings = {
-  # #   #     global = {
-  # #   #       frame_color = "#808080";
-  # #   #     };
-  # #   #     urgency_normal = {
-  # #   #       timeout = "5";
-  # #   #       background = "#333333";
-  # #   #     };
-  # #   #   };
-  # #   # };
-
-  # #   # programs.waybar.enable = true;
-  # #   # programs.waybar.systemd.enable = true;
-  # #   # systemd.user.services.waybar.Unit.After = lib.mkForce [ "niri.service" ];
-
-  # #   xdg = {
-  # #   #   portal = {
-  # #   #     enable = true;
-  # #   #     extraPortals = with pkgs; [
-  # #   #       xdg-desktop-portal-gtk
-  # #   #       xdg-desktop-portal-gnome
-  # #   #       xdg-desktop-portal-wlr
-  # #   #     ];
-  # #   #     config.common.default = [ "*" ];
-  # #   #   };
-  # #     desktopEntries.dired = {
-  # #       type = "Application";
-  # #       name = "emacs-dired";
-  # #       exec = "emacsclient %f";
-  # #     };
-  # #   #   mimeApps = {
-  # #   #     enable = true;
-  # #   #     defaultApplications = {
-  # #   #       "inode/directory" = "emacs-dired.desktop";
-  # #   #       "text/html" = "firefox.desktop";
-  # #   #     };
-  # #   #   };
-  # #   #   configFile."waybar/config".source = ./dotfiles/waybar/config;
-  # #   #   configFile."waybar/style.css".source = ./dotfiles/waybar/style.css;
-  # #   #   configFile."rofi/config.rasi".source = ./dotfiles/rofi/config.rasi;
-  # #   };
-
-  #   services.grobi =
-  #     let external = [ "HDMI-1" ] ++ map (i: "DP-${toString i}") (lib.lists.range 1 9);
-  #     in {
-  #       enable = true;
-  #       rules = map
-  #         (o: {
-  #           name = o;
-  #           outputs_connected = [ o ];
-  #           configure_single = o;
-  #           primary = true;
-  #         })
-  #         external ++ [{
-  #           name = "eDP-1";
-  #           outputs_disconnected = external;
-  #           configure_single = "eDP-1";
-  #           primary = true;
-  #         }];
-  #     };
-
-  # #   programs.i3status-rust.enable = true;
-  # #   programs.i3status-rust.bars.default = {
-  # #     blocks = [
-  # #       { block = "net"; format = " $icon {$signal_strength $ssid} "; }
-  # #       { block = "disk_space"; format = " $available.eng(w:2) "; }
-  # #       { block = "sound"; format = " $volume.eng(w:2) "; }
-  # #       { block = "time"; interval = 60; }
-  # #       { block = "custom"; persistent = true; command = "${pkgs.xkbmon}/bin/xkbmon -u"; }
-  # #       { block = "battery"; }
-  # #     ];
-  # #     icons = "awesome6";
-  # #     settings.theme.overrides = {
-  # #       idle_bg = "#282A2E";
-  # #       good_bg = "#282A2E";
-  # #       warning_bg = "#282A2E";
-  # #       critical_bg = "#282A2E";
-  # #       info_bg = "#282A2E";
-  # #       separator_bg = "#282A2E";
-  # #     };
-  # #   };
-  # };
+  };
 }
