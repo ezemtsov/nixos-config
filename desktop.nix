@@ -67,14 +67,10 @@
     };
   };
 
-  # services.desktopManager.plasma6.enable = true;
   # services.displayManager.gdm.enable = true;
   # programs.xwayland.enable = true;
   # programs.niri.enable = true;
 
-  # services.displayManager.cosmic-greeter.enable = true;
-  # services.desktopManager.cosmic.enable = true;
-  # services.desktopManager.cosmic.xwayland.enable = true;
   services.libinput = {
     enable = true;
     touchpad = {
