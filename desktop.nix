@@ -28,9 +28,6 @@
     };
   };
 
-  # # Copy paste between X windows
-  services.clipcat.enable = true;
-
   # Graphics
   hardware.graphics = {
     enable = true;
