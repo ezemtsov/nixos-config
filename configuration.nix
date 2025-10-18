@@ -14,7 +14,6 @@ in {
       "${sources.home-manager}/nixos"
       "${sources.agenix}/modules/age.nix"
       "${sources.musnix}"
-      ./vr.nix
       ./test.nix
     ];
 

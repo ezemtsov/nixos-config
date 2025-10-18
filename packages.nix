@@ -23,6 +23,8 @@ in {
 
   programs.thunderbird.enable = true;
   programs.evolution.enable = true;
+  # Sideloading APK
+  programs.adb.enable = true;
 
   # ... and declare packages to be installed.
   environment.systemPackages = with pkgs; [
