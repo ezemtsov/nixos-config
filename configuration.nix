@@ -15,7 +15,6 @@ in {
       "${sources.home-manager}/nixos"
       "${sources.agenix}/modules/age.nix"
       "${sources.musnix}"
-      ./test.nix
     ];
 
   system.rebuild.enableNg = false;
