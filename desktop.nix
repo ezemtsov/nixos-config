@@ -37,18 +37,6 @@
     enable32Bit = true;
   };
 
-  services.picom = {
-    enable = true;
-    vSync = true;
-    # backend = "egl";
-    # settings = {
-    #   unredir-if-possible = true;
-    #   unredir-if-possible-exclude = [
-    #     "_NET_WM_BYPASS_COMPOSITOR@:c = 2"
-    #   ];
-    # };
-  };
-
   gtk.iconCache.enable = true;
 
   environment.systemPackages = with pkgs; [
@@ -159,9 +147,7 @@
     wheelNeedsPassword = false;
   };
 
-
-  # There two properties are important to align home-manager with
-  # global nixpkgs set.
+  # Setup home-manager to reuse global channel
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = false;
   home-manager.backupFileExtension = "backup";
@@ -169,6 +155,9 @@
   home-manager.users.ezemtsov = { config, ... }: {
     home.stateVersion = "25.05";
     home.enableNixpkgsReleaseCheck = false;
+
+    services.picom.enable = true;
+    services.picom.vSync = true;
 
     services.grobi =
       let external = [ "HDMI-1" ] ++ map (i: "DP-${toString i}") (lib.lists.range 1 9);
@@ -188,6 +177,5 @@
             primary = true;
           }];
       };
-
   };
 }
