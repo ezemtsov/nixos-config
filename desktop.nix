@@ -90,6 +90,7 @@
       corefonts
       jetbrains-mono
       font-awesome_6
+      noto-fonts-color-emoji
     ];
   };
 
