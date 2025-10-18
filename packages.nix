@@ -21,27 +21,27 @@ in {
     };
   };
 
-  programs.thunderbird.enable = true;
-  programs.evolution.enable = true;
   # Sideloading APK
   programs.adb.enable = true;
 
   # ... and declare packages to be installed.
   environment.systemPackages = with pkgs; [
+    (btop.override { rocmSupport = true; })
     binutils-unwrapped
     cachix
     chromium
-    firefox
     cmake
     curl
     direnv
+    eaglemode
     ffmpeg-full
     file
+    firefox
     fish
     gcc
     gimp
     gitFull
-    (btop.override { rocmSupport = true; })
+    jq
     kubectl
     kubelogin
     ntfs3g
@@ -51,24 +51,20 @@ in {
     postgresql
     pqrs
     ripgrep
+    ryzenadj
     slack
     spotify
     sqlite
     tailscale
-    tdesktop
+    tdlib
     transmission_4-qt
     tree
     unzip
+    virt-manager
     vlc
     wget
     which
     zstd
-    alacritty
-    signal-desktop
-    jq
-    eaglemode
-    ryzenadj
-    virt-manager
 
     libreoffice
     nuspell
@@ -76,7 +72,11 @@ in {
     hunspellDicts.nb_NO
     hunspellDicts.ru_RU
 
-    # azure-cli
+    # AI Stuff
+    claude-code
+    claude-monitor
+
+    # cloud SDK
     azure-storage-azcopy
     google-cloud-sdk
 
@@ -85,14 +85,6 @@ in {
     wineWowPackages.stable
     winetricks
 
-    # EXWM packages
-    i3status-rust
-    flameshot
-    grobi
-    xclip
-    xsecurelock
-    xkb-switch
-
     # Music packages
     alsa-utils
     pavucontrol
@@ -100,6 +92,7 @@ in {
 
     # Nix packages
     npins
+    nil
     nix-diff
     nixpkgs-fmt
 
@@ -116,8 +109,6 @@ in {
     # lispPackages.quicklisp
 
     # Rust packages
-    rustc
-    rustup
     rust-analyzer
     pkg-config
 
@@ -129,7 +120,9 @@ in {
     pyright
     ruff
     (python3.withPackages (p: with p; [
+      black
       pandas
+      requests
       plotly
       pyarrow
       # kaleido
@@ -142,6 +135,7 @@ in {
     # .NET packages
     dotnet
     csharp-ls
+    fsautocomplete
 
     # Go packages
     go
