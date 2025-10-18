@@ -527,7 +527,9 @@ the back&forth behaviour of i3."
   :ensure t
   :mode "\\.nix\\'"
   :custom
-  (nix-nixfmt-bin "nixpkgs-fmt"))
+  (nix-nixfmt-bin "nixpkgs-fmt")
+  :hook
+  (nix-ts-mode . eglot-ensure))
 
 ;; Add support for pushing to gerrit
 (use-package magit
