@@ -17,8 +17,6 @@ in {
       "${sources.musnix}"
     ];
 
-  system.rebuild.enableNg = false;
-
   # Fish is fucked up and slows down the system build
   documentation.enable = false;
   documentation.man.generateCaches = false;
