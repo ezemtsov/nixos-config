@@ -152,6 +152,8 @@
     home.stateVersion = "25.05";
     home.enableNixpkgsReleaseCheck = false;
 
+    services.dunst.enable = true;
+
     services.picom.enable = true;
     services.picom.vSync = true;
 
