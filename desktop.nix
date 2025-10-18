@@ -113,9 +113,13 @@
     alias k="kubectl"
     alias e="emacsclient"
     set fish_greeting ""
-    eval (direnv hook fish)
     source (find '${pkgs.emacsPackages.vterm}' -name 'emacs-vterm.fish')
   '';
+
+  programs.direnv.enable = true;
+  programs.direnv.nix-direnv.enable = true;
+  programs.direnv.enableBashIntegration = true;
+  programs.direnv.enableFishIntegration = true;
 
   users.defaultUserShell = pkgs.fish;
 
