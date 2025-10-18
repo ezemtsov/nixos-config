@@ -1,4 +1,4 @@
-{ config, pkgs, lib, sources, ... }:
+{ pkgs, sources, ... }:
 
 let
   dotnet = with pkgs.dotnetCorePackages; (combinePackages [

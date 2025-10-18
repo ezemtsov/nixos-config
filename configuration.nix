@@ -1,4 +1,4 @@
-{ config, pkgs, lib, sources, ... }:
+{ pkgs, ... }:
 
 let
   sources = import npins/default.nix;
