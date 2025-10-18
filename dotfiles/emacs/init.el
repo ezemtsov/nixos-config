@@ -642,4 +642,19 @@ the back&forth behaviour of i3."
 
 (use-package envrc
   :ensure t)
-(put 'scroll-left 'disabled nil)
+
+(use-package yasnippet
+  :ensure t
+  :bind
+  ("M-+" . yas-insert-snippet) 
+  :config
+  (yas-global-mode t))
+
+(use-package yasnippet-capf
+  :ensure t
+  :after cape
+  :config
+  (add-to-list 'completion-at-point-functions #'yasnippet-capf))
+
+(use-package yasnippet-snippets
+  :ensure t)
