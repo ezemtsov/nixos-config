@@ -37,9 +37,6 @@
   gtk.iconCache.enable = true;
 
   environment.systemPackages = with pkgs; [
-    rofi-wayland
-    alacritty
-
     # EXWM packages
     i3status-rust
     flameshot
@@ -47,10 +44,6 @@
     xclip
     xsecurelock
     nemo
-    xwayland-satellite
-    wayland-utils
-    wl-clipboard
-    waypipe
   ];
 
 
