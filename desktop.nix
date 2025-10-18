@@ -46,6 +46,11 @@
     nemo
   ];
 
+  services.displayManager.ly.enable = true;
+  services.displayManager.ly.settings = {
+    animation = "colormix";
+    bgclock = "en";
+  };
 
   # Configure EXWM
   services.xserver = {
@@ -59,10 +64,6 @@
       };
     };
   };
-
-  # services.displayManager.gdm.enable = true;
-  # programs.xwayland.enable = true;
-  # programs.niri.enable = true;
 
   services.libinput = {
     enable = true;
