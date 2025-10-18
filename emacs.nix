@@ -1,88 +1,26 @@
 { pkgs }:
 
-let
-  inherit (pkgs)
-    fetchFromGitHub
-    callPackage
-    emacsPackages
-    emacsPackagesFor
-    emacsWithPackagesFromUsePackage
-  ;
+pkgs.emacsWithPackagesFromUsePackage {
+  package = pkgs.emacs30;
+  config = ./dotfiles/emacs/init.el;
 
-  emacs = pkgs.emacs30;
+  # Additional packages not automatically detected from use-package
+  # declarations
+  extraEmacsPackages = epkgs: with epkgs; [
+    vterm
+    jinx
+    treesit-grammars.with-all-grammars
+  ];
 
-in
-# emacsWithPackagesFromUsePackage {
-
-# }
-
-(emacsPackagesFor emacs).emacsWithPackages (epkgs: with epkgs; [
-  exwm
-  xelb
-
-  i3bar
-  exwm-modeline
-  vertico-posframe
-
-  eat
-  vterm
-  vterm-toggle
-
-  ace-window
-  all-the-icons
-  buffer-move
-  cape
-  cl-lib
-  cmake-mode
-  color-theme-sanityinc-tomorrow
-  consult
-  consult-project-extra
-  corfu
-  dape
-  dockerfile-mode
-  dumb-jump
-  eglot-fsharp
-  envrc
-  exec-path-from-shell
-  format-all
-  fsharp-mode
-  geiser
-  geiser-guile
-  go-mode
-  google-c-style
-  gptel
-  hcl-mode
-  highlight-indentation
-  impatient-mode
-  jinja2-mode
-  jinx
-  json-mode
-  jupyter
-  kubel
-  magit
-  marginalia
-  markdown-preview-mode
-  mu4e
-  multiple-cursors
-  nginx-mode
-  nix-mode
-  orderless
-  pdf-tools
-  protobuf-mode
-  python-mode
-  rainbow-delimiters
-  rainbow-mode
-  restclient
-  rotate
-  rust-mode
-  sudo-edit
-  tide
-  transient
-  treesit-grammars.with-all-grammars
-  typescript-mode
-  vertico
-  vundo
-  web-mode
-  which-key
-  yaml-mode
-])
+  override = self: super: {
+    telega = super.telega.overrideAttrs {
+      src = pkgs.fetchFromGitHub {
+        owner = "zevlg";
+        repo = "telega.el";
+        rev = "f5b48d2a605c1383ddb8522ed315b625115f16a6";
+        hash = "sha256-ebaM9Wl9uoBOAVDGwKxYFzpUk8JGtM4DA0ML/vGWBIo=";
+      };
+      buildInputs = [ pkgs.tdlib ];
+    };
+  };
+}

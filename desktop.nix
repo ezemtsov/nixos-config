@@ -21,6 +21,10 @@
 
       # Setting this to compile rust-openssl
       PKG_CONFIG_PATH="${pkgs.openssl.dev}/lib/pkgconfig";
+
+      # Use Emacs XIM for input methods
+      GTK_IM_MODULE = "xim";
+      QT_IM_MODULE = "xim";
     };
   };
 
@@ -50,6 +54,13 @@
   environment.systemPackages = with pkgs; [
     rofi-wayland
     alacritty
+
+    # EXWM packages
+    i3status-rust
+    flameshot
+    grobi
+    xclip
+    xsecurelock
     nemo
     xwayland-satellite
     wayland-utils
@@ -57,15 +68,18 @@
     waypipe
   ];
 
-  # Give EXWM permission to control the session.
-  services.xserver.windowManager = {
-    session = lib.singleton {
-      name = "exwm";
-      start = "/run/current-system/sw/bin/emacs";
+
+  # Configure EXWM
+  services.xserver = {
+    # Give EXWM permission to control the session.
+    displayManager.sessionCommands = "${pkgs.xorg.xhost}/bin/xhost +SI:localuser:$USER";
+    windowManager = {
+      session = lib.singleton {
+        name = "exwm";
+        start = ''/run/current-system/sw/bin/emacs \
+          --init-directory /etc/nixos/dotfiles/emacs'';
+      };
     };
-  };
-  services.xserver.displayManager = {
-    sessionCommands = "${pkgs.xorg.xhost}/bin/xhost +SI:localuser:$USER";
   };
 
   # services.desktopManager.plasma6.enable = true;
