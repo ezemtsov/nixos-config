@@ -7,10 +7,10 @@
     variables = {
       MONITOR_PRIMARY = "eDP-1";
       _JAVA_AWT_WM_NONREPARENTING = "1";
-      DOTNET_ROOT = with pkgs.dotnetCorePackages; combinePackages ([
+      DOTNET_ROOT = with pkgs.dotnetCorePackages; combinePackages [
         sdk_8_0
         sdk_9_0
-      ]) + "/share/dotnet";
+      ] + "/share/dotnet";
 
       EDITOR = "emacsclient";
 
@@ -154,7 +154,7 @@
   home-manager.useUserPackages = false;
   home-manager.backupFileExtension = "backup";
 
-  home-manager.users.ezemtsov = { config, ... }: {
+  home-manager.users.ezemtsov = { ... }: {
     home.stateVersion = "25.05";
     home.enableNixpkgsReleaseCheck = false;
 

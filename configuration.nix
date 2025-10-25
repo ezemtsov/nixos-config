@@ -26,6 +26,7 @@ in {
     overlays = [
       (import sources.emacs-overlay)
     ];
+
     pkgs = import sources.nixpkgs {
       config.allowUnfree = true;
       config.permittedInsecurePackages = [
@@ -109,6 +110,7 @@ in {
 
   # KVM (for nix vmTools)
   boot.kernelModules =  [ "kvm-amd" ];
+
   # virtualisation.libvirtd = {
   #   enable = true;
   #   qemu.ovmf = {

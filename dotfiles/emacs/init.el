@@ -219,9 +219,9 @@ With argument, do this that many times."
      consult--source-modified-buffer
      consult--source-recent-file
      (:name "Apps"
-      :category app
-      :items executable-list
-      :action (lambda (cand) (start-process cand nil cand)))))
+            :category app
+            :items executable-list
+            :action (lambda (cand) (start-process cand nil cand)))))
   :bind
   ("C-s" . consult-line)
   ("C-x b" . consult-buffer)
@@ -509,40 +509,40 @@ the back&forth behaviour of i3."
 
            (, (kbd "C-\\") . toggle-input-method)))
 
-         ;; Force Slack to behave
-         ;; https://github.com/ch11ng/exwm/issues/574#issuecomment-490814569
-         (add-to-list 'exwm-manage-configurations '((equal exwm-class-name "Slack") managed t))
+  ;; Force Slack to behave
+  ;; https://github.com/ch11ng/exwm/issues/574#issuecomment-490814569
+  (add-to-list 'exwm-manage-configurations '((equal exwm-class-name "Slack") managed t))
 
-         ;; Show system tray
-         (exwm-systemtray-mode t)
+  ;; Show system tray
+  (exwm-systemtray-mode t)
 
-         (setq exwm-floating-setup-hook nil)
-         (add-hook 'exwm-floating-setup-hook #'exwm-layout-show-mode-line)
+  (setq exwm-floating-setup-hook nil)
+  (add-hook 'exwm-floating-setup-hook #'exwm-layout-show-mode-line)
 
-         ;; Set static name for most of the x classes
-         (add-hook 'exwm-update-class-hook
-                   (lambda () (exwm-workspace-rename-buffer exwm-class-name)))
+  ;; Set static name for most of the x classes
+  (add-hook 'exwm-update-class-hook
+            (lambda () (exwm-workspace-rename-buffer exwm-class-name)))
 
-         ;; Line-editing shortcuts
-         (exwm-input-set-simulation-key (kbd "C-r") (kbd "C-r")) ;; refresh page
-         (exwm-input-set-simulation-key (kbd "C-d") (kbd "C-d")) ;; cancel process
+  ;; Line-editing shortcuts
+  (exwm-input-set-simulation-key (kbd "C-r") (kbd "C-r")) ;; refresh page
+  (exwm-input-set-simulation-key (kbd "C-d") (kbd "C-d")) ;; cancel process
 
-         (exwm-input-set-simulation-key (kbd "M-w") (kbd "C-c")) ;; copy text
-         (exwm-input-set-simulation-key (kbd "C-y") (kbd "C-v")) ;; paste text
+  (exwm-input-set-simulation-key (kbd "M-w") (kbd "C-c")) ;; copy text
+  (exwm-input-set-simulation-key (kbd "C-y") (kbd "C-v")) ;; paste text
 
-         ;; Workspace setup
-         (setq exwm-workspace-show-all-buffers t)
-         (setq exwm-layout-show-all-buffers t)
+  ;; Workspace setup
+  (setq exwm-workspace-show-all-buffers t)
+  (setq exwm-layout-show-all-buffers t)
 
-         (add-hook 'exwm-randr-screen-change-hook #'exwm-randr-refresh)
+  (add-hook 'exwm-randr-screen-change-hook #'exwm-randr-refresh)
 
-         ;; Enable XIM
-         (exwm-xim-mode t)
-         (setenv "XMODIFIERS" "@im=exwm-xim")
+  ;; Enable XIM
+  (exwm-xim-mode t)
+  (setenv "XMODIFIERS" "@im=exwm-xim")
 
-         ;; Enable EXWM
-         (exwm-randr-mode t)
-         (exwm-wm-mode t))
+  ;; Enable EXWM
+  (exwm-randr-mode t)
+  (exwm-wm-mode t))
 
 (use-package exwm-modeline
   :ensure t
@@ -688,7 +688,7 @@ the back&forth behaviour of i3."
 (use-package yasnippet
   :ensure t
   :bind
-  ("M-+" . yas-insert-snippet) 
+  ("M-+" . yas-insert-snippet)
   :config
   (yas-global-mode t))
 
