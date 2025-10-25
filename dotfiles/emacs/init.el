@@ -137,7 +137,12 @@ With argument, do this that many times."
   :init
   (load-theme 'sanityinc-tomorrow-night t)
   :config
-  (set-face-attribute 'default nil :font "JetBrains Mono-12")
+  ;; Font settings
+  (set-face-attribute 'default nil
+                      :font "IBM Plex Mono Text"
+                      :height 120
+                      :weight 'regular)
+
   (set-face-attribute 'mode-line nil :height 0.8)
   (set-face-attribute 'tab-bar nil :height 0.8)
   (menu-bar-mode 0)
