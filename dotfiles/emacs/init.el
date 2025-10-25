@@ -440,8 +440,8 @@ the back&forth behaviour of i3."
            (, (kbd "<XF86MonBrightnessDown>") . (lambda () (interactive) (shell-command "light -U 10")))
 
            ;; Move focus
-           (, (kbd "s-<left>") . (lambda () (interactive) (condition-case nil (windmove-left) (error (tab-previous)))))
-           (, (kbd "s-<right>") . (lambda () (interactive) (condition-case nil (windmove-right) (error (tab-next)))))
+           (, (kbd "s-<left>") . windmove-left)
+           (, (kbd "s-<right>") . windmove-right)
            (, (kbd "s-<down>") . windmove-down)
            (, (kbd "s-<up>") . windmove-up)
 
