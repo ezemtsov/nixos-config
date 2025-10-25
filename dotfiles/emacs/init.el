@@ -238,10 +238,13 @@ With argument, do this that many times."
   (add-to-list 'completion-at-point-functions #'cape-dict)
   (add-to-list 'completion-at-point-functions #'cape-file))
 
-(use-package undo-tree
+(use-package vundo
   :ensure t
+  :init
+  (setq vundo-compact-display t)
+  (setq vundo-popup-timeout 0.7)
   :config
-  (undo-tree-mode t))
+  (vundo-popup-mode nil))
 
 ;; Use fish for vterm
 (use-package vterm
