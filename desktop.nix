@@ -59,8 +59,11 @@
     windowManager = {
       session = lib.singleton {
         name = "exwm";
-        start = ''/run/current-system/sw/bin/emacs \
-          --init-directory /etc/nixos/dotfiles/emacs'';
+        start = ''
+          /run/current-system/sw/bin/emacs \
+          --init-directory /etc/nixos/dotfiles/emacs \
+          --eval "(server-start)"
+        '';
       };
     };
   };
