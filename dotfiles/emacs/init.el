@@ -677,10 +677,18 @@ the back&forth behaviour of i3."
   (setq telega-emoji-use-images t)
   (telega-notifications-mode t))
 
+(use-package eat
+  :ensure t
+  :config
+  (eat-eshell-mode t)
+  :bind
+  ("M-<return>" . (lambda () (interactive) (eat "fish" t))))
+
 (use-package claude-code-ide
   :vc (:url "https://github.com/manzaltu/claude-code-ide.el" :rev :newest)
   :bind ("C-c C-'" . claude-code-ide-menu)
   :config
+  (setq claude-code-ide-terminal-backend 'eat)
   (setq claude-code-ide-use-ide-diff nil)
   (claude-code-ide-emacs-tools-setup))
 
