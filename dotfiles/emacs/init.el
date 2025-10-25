@@ -688,7 +688,9 @@ the back&forth behaviour of i3."
   :ensure t)
 
 (use-package envrc
-  :ensure t)
+  :ensure t
+  :config
+  (envrc-global-mode t))
 
 (use-package yasnippet
   :ensure t
