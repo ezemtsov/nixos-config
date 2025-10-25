@@ -294,6 +294,10 @@ With argument, do this that many times."
   :config
   (ultra-scroll-mode t))
 
+(use-package buffer-move :ensure t)
+(use-package rotate :ensure t)
+(use-package rainbow-delimiters :ensure t)
+
 (use-package tab-bar
   :config
   (setq tab-bar-tab-name-function 'tab-bar-tab-name-all)
