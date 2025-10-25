@@ -640,8 +640,6 @@ the back&forth behaviour of i3."
 (use-package rust-mode
   :ensure t
   :mode "\\.rs\\'"
-  :config
-  (add-hook 'before-save-hook #'eglot-format-buffer)
   :hook
   (rust-mode . eglot-ensure))
 
