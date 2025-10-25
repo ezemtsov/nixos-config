@@ -518,8 +518,7 @@ the back&forth behaviour of i3."
 (use-package eglot
   :custom
   ;; shutdown eglot servers after buffer is closed
-  (eglot-autoshutdown t)
-  (add-to-list 'eglot-server-programs '(nix-mode . "nil")))
+  (eglot-autoshutdown t))
 
 (use-package nix-ts-mode
   :ensure t

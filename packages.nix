@@ -92,7 +92,7 @@ in {
 
     # Nix packages
     npins
-    nil
+    nixd
     nix-diff
     nixpkgs-fmt
 
