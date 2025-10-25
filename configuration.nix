@@ -38,7 +38,7 @@ in {
   };
 
   nix = {
-    package = pkgs.nix_2_3;
+    package = pkgs.lix;
     nixPath = ["nixpkgs=${sources.nixpkgs}:nixos-config=/etc/nixos/configuration.nix"];
     settings = {
       trusted-users = [ "ezemtsov" ];
