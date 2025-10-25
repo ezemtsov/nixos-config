@@ -57,7 +57,6 @@
 
   ;; Setup emoji
   (setf use-default-font-for-symbols nil)
-  (set-fontset-font t 'symbol "Noto Color Emoji" nil 'append)
 
   (defun delete-word (arg)
     "Delete characters forward until encountering the end of a word.
@@ -154,8 +153,15 @@ With argument, do this that many times."
   ;; Use different weights for emphasis
   (set-face-attribute 'bold nil :weight 'semibold)
   (set-face-attribute 'italic nil :slant 'italic)
+
+  ;; Ensure proper emoji rendering with fallback
+  (set-fontset-font t 'symbol "Noto Color Emoji" nil 'prepend)
+  (set-fontset-font t 'unicode "Noto Color Emoji" nil 'append)
+
+  ;; Make mode-line info slightly smaller
   (set-face-attribute 'mode-line nil :height 0.8)
   (set-face-attribute 'tab-bar nil :height 0.8)
+
   (menu-bar-mode 0)
   (scroll-bar-mode 0)
   (tool-bar-mode 0)
@@ -666,7 +672,6 @@ the back&forth behaviour of i3."
   :config
   (setq telega-use-images t)
   (setq telega-emoji-use-images t)
-  (setq telega-emoji-font-family  "Noto Color Emoji")
   (telega-notifications-mode t))
 
 (use-package claude-code-ide
