@@ -562,6 +562,11 @@ the back&forth behaviour of i3."
   ;; shutdown eglot servers after buffer is closed
   (eglot-autoshutdown t))
 
+(use-package eldoc-box
+  :ensure t
+  :bind
+  :bind ("C-." . eldoc-box-help-at-point))
+
 (use-package nix-ts-mode
   :ensure t
   :mode "\\.nix\\'"
