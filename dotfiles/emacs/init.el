@@ -593,14 +593,15 @@ the back&forth behaviour of i3."
   (transient-append-suffix 'magit-push "p"
     '("R" "Push to gerrit" magit-push-to-gerrit)))
 
-;; (use-package tide
-;;   :ensure t
-;;   :config
-;;   (tide-setup)
-;;   (flycheck-mode +1)
-;;   (setq flycheck-check-syntax-automatically '(save mode-enabled))
-;;   (eldoc-mode +1)
-;;   (tide-hl-identifier-mode +1))
+(use-package tsx-ts-mode :mode "\\.tsx\\'")
+
+;; if you use treesitter based typescript-ts-mode (emacs 29+)
+(use-package tide
+  :ensure t
+  :after (company flycheck)
+  :hook ((typescript-ts-mode . tide-setup)
+         (tsx-ts-mode . tide-setup)
+         (typescript-ts-mode . tide-hl-identifier-mode)))
 
 (use-package web-mode
   :ensure t
