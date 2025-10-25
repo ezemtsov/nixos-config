@@ -657,3 +657,8 @@ the back&forth behaviour of i3."
 
 (use-package yasnippet-snippets
   :ensure t)
+
+(use-package apheleia
+  :ensure t
+  :init
+  (apheleia-global-mode t))
