@@ -273,9 +273,7 @@ With argument, do this that many times."
   (vterm-max-scrollback 10000)
   (vterm-timer-delay 0.01)
   (vterm-buffer-name-string "vterm %s")
-  (vterm-shell "fish")
-  :bind
-  ("C-<return>" . (lambda () (interactive) (vterm (concat "shell " default-directory)))))
+  (vterm-shell "fish"))
 
 (use-package multiple-cursors
   :ensure t
