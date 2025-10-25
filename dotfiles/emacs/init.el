@@ -111,6 +111,27 @@ With argument, do this that many times."
   ("M->" . flymake-goto-next-error)
   ("M-<" . flymake-goto-prev-error))
 
+;; Automatically use tree-sitter modes when available
+(use-package treesit
+  :config
+  (setq major-mode-remap-alist
+        '((python-mode . python-ts-mode)
+          (rust-mode . rust-ts-mode)
+          (json-mode . json-ts-mode)
+          (go-mode . go-ts-mode)
+          (typescript-mode . typescript-ts-mode)
+          (javascript-mode . js-ts-mode)
+          (js-mode . js-ts-mode)
+          (css-mode . css-ts-mode)
+          (yaml-mode . yaml-ts-mode)
+          (sh-mode . bash-ts-mode)
+          (c-mode . c-ts-mode)
+          (c++-mode . c++-ts-mode)
+          (cmake-mode . cmake-ts-mode)
+          (dockerfile-mode . dockerfile-ts-mode)
+          (toml-mode . toml-ts-mode)
+          (html-mode . html-ts-mode))))
+
 (use-package color-theme-sanityinc-tomorrow
   :ensure t
   :init
