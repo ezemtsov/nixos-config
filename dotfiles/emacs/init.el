@@ -99,8 +99,6 @@ With argument, do this that many times."
   ("C-x 3" . split-window-right-focus)
   ("C-=" . text-scale-increase)
   ("C--" . text-scale-decrease)
-  ("M-TAB" . completion-at-point)
-  ("M-/" . completion-at-point)
   ("C-c a" . align-regexp)
   ("C-c w" . whitespace-cleanup)
   ("M-<backspace>" . backward-delete-word)
