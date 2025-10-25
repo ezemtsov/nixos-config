@@ -137,12 +137,23 @@ With argument, do this that many times."
   :init
   (load-theme 'sanityinc-tomorrow-night t)
   :config
+  ;; Better font rendering on Linux
+  (setq x-use-underline-position-properties t)
+  (setq underline-minimum-offset 1)
+
+  ;; Pixel-precise font rendering
+  (setq frame-resize-pixelwise t)
+  (setq window-resize-pixelwise t)
+
   ;; Font settings
   (set-face-attribute 'default nil
                       :font "IBM Plex Mono Text"
                       :height 120
                       :weight 'regular)
 
+  ;; Use different weights for emphasis
+  (set-face-attribute 'bold nil :weight 'semibold)
+  (set-face-attribute 'italic nil :slant 'italic)
   (set-face-attribute 'mode-line nil :height 0.8)
   (set-face-attribute 'tab-bar nil :height 0.8)
   (menu-bar-mode 0)

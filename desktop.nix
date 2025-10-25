@@ -78,13 +78,28 @@
     fontconfig = {
       enable = true;
       antialias = true;
+      hinting = {
+        enable = true;
+        style = "slight";
+      };
+      subpixel = {
+        rgba = "rgb";
+        lcdfilter = "default";
+      };
+      defaultFonts = {
+        monospace = [ "IBM Plex Mono" ];
+        sansSerif = [ "IBM Plex Sans" ];
+        serif = [ "IBM Plex Serif" ];
+        emoji = [ "Noto Color Emoji" ];
+      };
     };
     fontDir.enable = true;
     packages = with pkgs; [
       corefonts
-      jetbrains-mono
+      ibm-plex
       font-awesome_6
       noto-fonts-color-emoji
+      dejavu_fonts  # Fallback
     ];
   };
 
