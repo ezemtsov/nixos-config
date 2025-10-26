@@ -85,7 +85,8 @@ in {
     wineWowPackages.stable
     winetricks
 
-    # Music packages
+    # Audio packages
+    bluetuith
     alsa-utils
     pavucontrol
     audacity
