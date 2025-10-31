@@ -52,6 +52,9 @@ in {
     # Pick latest kernel
     kernelPackages = pkgs.linuxPackages_latest;
 
+    # Enable full preemptive (for real-time audio)
+    kernelParams = [ "preempt=full" ];
+
     # Make booting nicer
     plymouth.enable = true;
 
@@ -128,9 +131,8 @@ in {
   services.pipewire = {
     enable = true;
     alsa.enable = true;
-    # jack.enable = true;
     pulse.enable = true;
-    # socketActivation = true;
+    wireplumber.enable = true;
   };
 
   # Bluetooth
