@@ -29,11 +29,6 @@ in {
 
     pkgs = import sources.nixpkgs {
       config.allowUnfree = true;
-      config.permittedInsecurePackages = [
-        "dotnet-core-combined"
-        "dotnet-wrapped-combined"
-        "dotnet-combined"
-      ];
     };
   };
 
