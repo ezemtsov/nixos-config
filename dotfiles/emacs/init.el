@@ -18,6 +18,10 @@
   (setq gc-cons-threshold (* 20 1000 1000))
   (setq gc-cons-percentage 0.6)
 
+  ;; Trim heap fragmentation hourly, glibc is greedy
+  (run-with-timer 3600 3600 (lambda () (malloc-trim 0)))
+  (midnight-mode t) ;; Offload buffers nightly
+
   (global-auto-revert-mode t)
   (setq global-auto-revert-non-file-buffers t)
 
