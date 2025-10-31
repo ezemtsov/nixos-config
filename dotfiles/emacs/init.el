@@ -266,9 +266,7 @@ With argument, do this that many times."
   :ensure t
   :init
   (setq vundo-compact-display t)
-  (setq vundo-popup-timeout 0.7)
-  :config
-  (vundo-popup-mode nil))
+  (setq vundo-popup-timeout 0.7))
 
 ;; Use fish for vterm
 (use-package vterm
