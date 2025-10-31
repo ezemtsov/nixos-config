@@ -27,6 +27,7 @@ in {
   # ... and declare packages to be installed.
   environment.systemPackages = with pkgs; [
     (btop.override { rocmSupport = true; })
+    htop
     binutils-unwrapped
     cachix
     chromium
