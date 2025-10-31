@@ -66,6 +66,7 @@ in {
     wget
     which
     zstd
+    unixtools.netstat
 
     libreoffice
     nuspell
