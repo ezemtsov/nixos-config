@@ -675,7 +675,7 @@ the back&forth behaviour of i3."
   :ensure t
   :config
   (setq telega-use-images t)
-  (setq telega-emoji-use-images t)
+  (setq telega-chat-history-limit 50)
   (telega-notifications-mode t))
 
 (use-package eat
