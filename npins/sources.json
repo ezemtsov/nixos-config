@@ -9,8 +9,8 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "2f0f812f69f3eb4140157fe15e12739adf82e32a",
-      "url": "https://github.com/ryantm/agenix/archive/2f0f812f69f3eb4140157fe15e12739adf82e32a.tar.gz",
+      "revision": "fcdea223397448d35d9b31f798479227e80183f6",
+      "url": "https://github.com/ryantm/agenix/archive/fcdea223397448d35d9b31f798479227e80183f6.tar.gz",
       "hash": "1d4m7hsq727q7ndjqmgyl8vkbkqjwps962ygmv2mcc5dbqzgn963"
     },
     "emacs-overlay": {
@@ -22,9 +22,9 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "afb43e18061eef0c5249762b2e3dd08fc5bf7e86",
-      "url": "https://github.com/nix-community/emacs-overlay/archive/afb43e18061eef0c5249762b2e3dd08fc5bf7e86.tar.gz",
-      "hash": "1r64ilbh1lbjafbx3lqc188yjpzbi3pff8gvprc335r1dqx0c993"
+      "revision": "19e7b4e4573178ad3d7c8828aefd1f3a20e6ead4",
+      "url": "https://github.com/nix-community/emacs-overlay/archive/19e7b4e4573178ad3d7c8828aefd1f3a20e6ead4.tar.gz",
+      "hash": "0zf3pazhaanfbvbwbzxh687i36qyjjglp0awkqc5wikgj7r7kxik"
     },
     "home-manager": {
       "type": "Git",
@@ -35,9 +35,9 @@
       },
       "branch": "release-25.05",
       "submodules": false,
-      "revision": "3b955f5f0a942f9f60cdc9cacb7844335d0f21c3",
-      "url": "https://github.com/nix-community/home-manager/archive/3b955f5f0a942f9f60cdc9cacb7844335d0f21c3.tar.gz",
-      "hash": "sha256-uhzsV0Q0I9j2y/rfweWeGif5AWe0MGrgZ/3TjpDYdGA="
+      "revision": "44831a7eaba4360fb81f2acc5ea6de5fde90aaa3",
+      "url": "https://github.com/nix-community/home-manager/archive/44831a7eaba4360fb81f2acc5ea6de5fde90aaa3.tar.gz",
+      "hash": "07pk5m6mxi666dclaxdwf7xrinifv01vvgxn49bjr8rsbh31syaq"
     },
     "musnix": {
       "type": "Git",
@@ -48,9 +48,22 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "7ccc92050e43dc92309396c6f2fe1f542214a242",
-      "url": "https://github.com/musnix/musnix/archive/7ccc92050e43dc92309396c6f2fe1f542214a242.tar.gz",
-      "hash": "1wg2iflnr0062c34d0iqk2hyn27jshsz79a1i1qqc7j1hixspxx8"
+      "revision": "599562080b2901046829ca69e0d1461041d27b32",
+      "url": "https://github.com/musnix/musnix/archive/599562080b2901046829ca69e0d1461041d27b32.tar.gz",
+      "hash": "0ml7pl7hx65m7xkxjb47sabfa6bd699bwnxdimhbkfda6712pv5x"
+    },
+    "nix-index-database": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "nix-community",
+        "repo": "nix-index-database"
+      },
+      "branch": "main",
+      "submodules": false,
+      "revision": "82befcf7dc77c909b0f2a09f5da910ec95c5b78f",
+      "url": "https://github.com/nix-community/nix-index-database/archive/82befcf7dc77c909b0f2a09f5da910ec95c5b78f.tar.gz",
+      "hash": "02qka3cav73cacl2jfkrnj5ydd4gjqd4q9sk4jv1pd64vh1l2wvp"
     },
     "nixpkgs": {
       "type": "Git",
@@ -61,9 +74,9 @@
       },
       "branch": "nixos-unstable",
       "submodules": false,
-      "revision": "01f116e4df6a15f4ccdffb1bcd41096869fb385c",
-      "url": "https://github.com/NixOS/nixpkgs/archive/01f116e4df6a15f4ccdffb1bcd41096869fb385c.tar.gz",
-      "hash": "1vlmhgh1zdr00afxzsd7kfaynkc9zif0kwmbjmzvb1nqrwj05x3z"
+      "revision": "a6531044f6d0bef691ea18d4d4ce44d0daa6e816",
+      "url": "https://github.com/NixOS/nixpkgs/archive/a6531044f6d0bef691ea18d4d4ce44d0daa6e816.tar.gz",
+      "hash": "03hcg3la1hscail46aqmcbxh5y766ah318d16qs78jibkq4kq5nz"
     }
   },
   "version": 5
