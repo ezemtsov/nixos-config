@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-config_path="/etc/nixos"
-
-nixpkgs_path=$(nix-instantiate --eval ${config_path}/npins/default.nix -A nixpkgs.outPath)
-
 sudo nixos-rebuild switch \
-     -I nixpkgs=${nixpkgs_pin} \
-     -I nixos-config="${config_path}/configuration.nix"
+     -I nixpkgs=$(nix-instantiate --eval --raw /etc/nixos/npins/default.nix -A nixpkgs.outPath) \
+     -I nixos-config="/etc/nixos/configuration.nix"
