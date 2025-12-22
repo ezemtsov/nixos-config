@@ -15,11 +15,11 @@
   (delete-selection-mode t) ;; delete on paste
   (electric-pair-mode t) ;; smart parentesis wrapping
 
-  (setq gc-cons-threshold (* 20 1000 1000))
+  (setq gc-cons-threshold (* 100 1000 1000))
   (setq gc-cons-percentage 0.6)
 
   ;; Trim heap fragmentation hourly, glibc is greedy
-  (run-with-timer 3600 3600 (lambda () (malloc-trim 0)))
+  (run-with-timer 0 3600 (lambda () (malloc-trim 0)))
   (midnight-mode t) ;; Offload buffers nightly
 
   (global-auto-revert-mode t)
@@ -30,6 +30,9 @@
 
   ;; Just kill the vterm buffers, don't ask
   (setq kill-buffer-query-functions nil)
+
+  ;; Copy on selection
+  (setq mouse-drag-copy-region t)
 
   (defun split-window-below-focus ()
     (interactive)
@@ -124,14 +127,14 @@ With argument, do this that many times."
           (javascript-mode . js-ts-mode)
           (js-mode . js-ts-mode)
           (css-mode . css-ts-mode)
+          (html-mode . html-ts-mode)
           (yaml-mode . yaml-ts-mode)
           (sh-mode . bash-ts-mode)
           (c-mode . c-ts-mode)
           (c++-mode . c++-ts-mode)
           (cmake-mode . cmake-ts-mode)
           (dockerfile-mode . dockerfile-ts-mode)
-          (toml-mode . toml-ts-mode)
-          (html-mode . html-ts-mode))))
+          (toml-mode . toml-ts-mode))))
 
 (use-package color-theme-sanityinc-tomorrow
   :ensure t
@@ -150,6 +153,7 @@ With argument, do this that many times."
   (set-face-attribute 'default nil
                       :font "IBM Plex Mono Text"
                       :height 120
+                      ;; :height 180
                       :weight 'regular)
 
   ;; Use different weights for emphasis
@@ -215,6 +219,28 @@ With argument, do this that many times."
           :action   #'consult--buffer-action
           :items    (list (buffer-name (current-buffer)))))
 
+  (defvar consult--source-vterm
+    (list :name "Vterm Sessions"
+          :narrow ?v
+          :category 'buffer
+          :face 'consult-buffer
+          :history 'buffer-name-history
+          :state #'consult--buffer-state
+          :action #'consult--buffer-action
+          :items
+          (lambda ()
+            (mapcar #'buffer-name
+                    (seq-filter
+                     (lambda (buf)
+                       (with-current-buffer buf
+                         (eq major-mode 'vterm-mode)))
+                     (buffer-list))))))
+
+  (defun consult-vterm ()
+    "List and switch to vterm sessions only."
+    (interactive)
+    (consult-buffer '(consult--source-vterm)))
+
   :custom
   (consult-buffer-sources
    '(consult--source-current-buffer
@@ -272,10 +298,24 @@ With argument, do this that many times."
 (use-package vterm
   :defer t
   :custom
-  (vterm-max-scrollback 10000)
+  (vterm-max-scrollback 5000)
   (vterm-timer-delay 0.01)
   (vterm-buffer-name-string "vterm %s")
-  (vterm-shell "fish"))
+  (vterm-shell "fish")
+  :config
+  ;; Allow custom commands from shell for dynamic buffer naming
+  (add-to-list 'vterm-eval-cmds
+               '("vterm-rename-buffer-with-command"
+                 (lambda (cmd)
+                   (let ((dir (file-name-nondirectory
+                               (directory-file-name default-directory))))
+                     (rename-buffer (format "vterm %s: %s" dir cmd) t)))))
+  (add-to-list 'vterm-eval-cmds
+               '("vterm-rename-buffer-by-directory"
+                 (lambda ()
+                   (let ((dir (file-name-nondirectory
+                               (directory-file-name default-directory))))
+                     (rename-buffer (format "vterm %s" dir) t))))))
 
 (use-package multiple-cursors
   :ensure t
@@ -299,6 +339,7 @@ With argument, do this that many times."
 (use-package buffer-move :ensure t)
 (use-package rotate :ensure t)
 (use-package rainbow-delimiters :ensure t)
+(use-package markdown-mode :ensure t)
 
 (use-package tab-bar
   :config
@@ -326,6 +367,7 @@ With argument, do this that many times."
 ;; EXWM Configuration
 ;;-----------------------------------------------------------
 (use-package exwm
+  :ensure t
   :config
   (require 'exwm)
   (require 'exwm-randr)
@@ -449,7 +491,8 @@ the back&forth behaviour of i3."
            (, (kbd "s-F") . exwm-layout-toggle-fullscreen)
            (, (kbd "s-Q") . exwm-workspace-delete)
 
-           (, (kbd "s-a") . claude-code-ide-toggle)
+           (, (kbd "s-a") . consult-vterm)
+           (, (kbd "s-g") . gptel-menu)
 
            ;; Start programs
            (, (kbd "s-L") . (lambda () (interactive) (start-process "xsecurelock" nil "xsecurelock")))
@@ -596,11 +639,8 @@ the back&forth behaviour of i3."
     '("R" "Push to gerrit" magit-push-to-gerrit)))
 
 (use-package tsx-ts-mode :mode "\\.tsx\\'")
-
-;; if you use treesitter based typescript-ts-mode (emacs 29+)
 (use-package tide
   :ensure t
-  :after (company flycheck)
   :hook ((typescript-ts-mode . tide-setup)
          (tsx-ts-mode . tide-setup)
          (typescript-ts-mode . tide-hl-identifier-mode)))
@@ -616,7 +656,13 @@ the back&forth behaviour of i3."
   :hook (fsharp-mode . highlight-indentation-mode))
 
 (use-package eglot-fsharp
-  :ensure t)
+  :ensure t
+  ;;   :custom
+  ;;   ;; Use system-installed fsautocomplete from NixOS
+  ;;   (eglot-fsharp-server-path "/run/current-system/sw/bin/")
+  ;;   ;; Disable auto-installation since we're using the NixOS package
+  ;;   (eglot-fsharp-server-install-dir nil))
+  )
 
 (use-package fsharp-mode
   :ensure t
@@ -676,6 +722,7 @@ the back&forth behaviour of i3."
 (use-package telega
   :ensure t
   :config
+  (setq telega-emoji-use-images t)
   (setq telega-use-images t)
   (setq telega-chat-history-limit 50)
   (telega-notifications-mode t))
@@ -683,9 +730,7 @@ the back&forth behaviour of i3."
 (use-package eat
   :ensure t
   :config
-  (eat-eshell-mode t)
-  :bind
-  ("M-<return>" . (lambda () (interactive) (eat "fish" t))))
+  (eat-eshell-mode t))
 
 (use-package claude-code-ide
   :vc (:url "https://github.com/manzaltu/claude-code-ide.el" :rev :newest)
@@ -694,9 +739,6 @@ the back&forth behaviour of i3."
   (setq claude-code-ide-terminal-backend 'eat)
   (setq claude-code-ide-use-ide-diff nil)
   (claude-code-ide-emacs-tools-setup))
-
-(use-package gptel
-  :ensure t)
 
 (use-package envrc
   :ensure t
@@ -723,3 +765,27 @@ the back&forth behaviour of i3."
   :ensure t
   :init
   (apheleia-global-mode t))
+
+(use-package groovy-mode
+  :ensure t)
+
+(use-package kotlin-ts-mode
+  :ensure t
+  :mode "\\.kit\\'"
+  :hook
+  (kotlin-ts-mode . eglot-ensure))
+
+(use-package go-mode
+  :ensure t
+  :custom
+  (go-ts-mode-indent-offset 4))
+
+(use-package gptel
+  :ensure t
+  :init
+  (gptel-make-anthropic
+      "Claude"
+    :stream t
+    :key #'(lambda () (with-temp-buffer
+                        (insert-file-contents "/run/secrets/claude")
+                        (buffer-string)))))
