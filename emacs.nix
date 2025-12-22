@@ -10,9 +10,21 @@ pkgs.emacsWithPackagesFromUsePackage {
     vterm
     jinx
     treesit-grammars.with-all-grammars
-  ];
+  ] ++ (with epkgs.elpaPackages; [
+    exwm
+    xelb
+  ]);
 
   override = self: super: {
+    exwm = super.exwm.overrideDerivation (o: {
+      # https://github.com/ch11ng/exwm/issues/759
+      postInstall = ''
+        cd $out/share/emacs/site-lisp/elpa/exwm-${o.version}
+          sed -i '/(cl-pushnew xcb:Atom:_NET_WM_STATE_HIDDEN exwm--ewmh-state)/d' exwm-layout.el
+          rm exwm-layout.elc
+      '';
+    });
+
     telega = super.telega.overrideAttrs {
       src = pkgs.fetchFromGitHub {
         owner = "zevlg";
