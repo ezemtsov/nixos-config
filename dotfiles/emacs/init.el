@@ -720,7 +720,6 @@ the back&forth behaviour of i3."
   :mode "\\.tf\\'")
 
 (use-package telega
-  :ensure t
   :config
   (setq telega-emoji-use-images t)
   (setq telega-use-images t)

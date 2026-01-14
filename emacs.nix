@@ -13,6 +13,8 @@ pkgs.emacsWithPackagesFromUsePackage {
   ] ++ (with epkgs.elpaPackages; [
     exwm
     xelb
+  ]) ++ (with epkgs.melpaPackages; [
+    telega
   ]);
 
   override = self: super: {
@@ -26,13 +28,17 @@ pkgs.emacsWithPackagesFromUsePackage {
     });
 
     telega = super.telega.overrideAttrs {
-      src = pkgs.fetchFromGitHub {
-        owner = "zevlg";
-        repo = "telega.el";
-        rev = "f5b48d2a605c1383ddb8522ed315b625115f16a6";
-        hash = "sha256-ebaM9Wl9uoBOAVDGwKxYFzpUk8JGtM4DA0ML/vGWBIo=";
-      };
-      buildInputs = [ pkgs.tdlib ];
+      buildInputs = [
+        (pkgs.tdlib.overrideAttrs {
+          version = "1.8.57";
+          src = pkgs.fetchFromGitHub {
+            owner = "tdlib";
+            repo = "td";
+            rev = "6f4ee8703898f7829c442c74c5170beada171962";
+            hash = "sha256-G0wy//IkI/hVDeMRdZey1sagShu0bEM9/m9z/t1K/Co=";
+          };
+        })
+      ];
     };
   };
 }
