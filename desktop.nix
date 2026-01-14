@@ -118,6 +118,7 @@
 
   # Define a user account
   programs.fish.enable = true;
+  programs.fish.generateCompletions = false;
   programs.fish.shellInit = ''
     alias k="kubectl"
     alias e="emacsclient"

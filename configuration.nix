@@ -17,7 +17,7 @@ in {
       "${sources.musnix}"
     ];
 
-  # Fish is fucked up and slows down the system build
+  # Documentation build is extremely slow
   documentation.enable = false;
   documentation.man.generateCaches = false;
 
