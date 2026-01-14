@@ -152,6 +152,21 @@
     wheelNeedsPassword = false;
   };
 
+  # Set the environment variable
+  # Instead, use EnvironmentFile for your user session
+  environment.extraInit = ''
+    export ANTHROPIC_API_KEY="$(cat ${config.age.secrets.claude.path})"
+  '';
+  age.secrets = {
+    claude = {
+      file = ./secrets/claude.age;
+      path = "/run/secrets/claude";
+      owner = "ezemtsov";
+      group = "users";
+      mode = "600";
+    };
+  };
+
   # Setup home-manager to reuse global channel
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = false;
