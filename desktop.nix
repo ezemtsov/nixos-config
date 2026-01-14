@@ -134,13 +134,14 @@
 
   users.extraUsers.ezemtsov = {
     extraGroups = [
-      "wheel" # for sudo
+      "wheel"     # for sudo
       "vboxusers" # for virtualbox
       "networkmanager"
-      "libvirtd" # for kvm
-      "docker" # for containers
-      "video" # for brightness ctrl
-      "audio" # for musnix
+      "libvirtd"  # for kvm
+      "docker"    # for containers
+      "video"     # for brightness ctrl
+      "audio"     # for musnix
+      "adbusers"  # for android
     ];
     description = "Evgeny Zemtsov";
     isNormalUser = true;
