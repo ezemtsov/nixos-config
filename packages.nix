@@ -21,8 +21,6 @@ in {
     };
   };
 
-  # Sideloading APK
-  programs.adb.enable = true;
 
   # ... and declare packages to be installed.
   environment.systemPackages = with pkgs; [
@@ -153,6 +151,10 @@ in {
     # Javascript packages
     nodejs
     nodePackages.typescript-language-server
+
+    # Android development
+    gradle
+    android-tools
 
     # NixOS helpers
     (writeShellScriptBin "nixos-switch" (builtins.readFile ./nixos-switch))
