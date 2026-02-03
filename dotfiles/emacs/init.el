@@ -213,13 +213,13 @@ With argument, do this that many times."
      append lsdir into completions
      finally return (sort completions 'string-lessp)))
 
-  (defvar consult--source-current-buffer
+  (defvar consult-source-current-buffer
     (list :name "Current"
           :category 'buffer
           :action   #'consult--buffer-action
           :items    (list (buffer-name (current-buffer)))))
 
-  (defvar consult--source-vterm
+  (defvar consult-source-vterm
     (list :name "Vterm Sessions"
           :narrow ?v
           :category 'buffer
@@ -243,11 +243,11 @@ With argument, do this that many times."
 
   :custom
   (consult-buffer-sources
-   '(consult--source-current-buffer
-     consult--source-buffer
-     consult--source-hidden-buffer
-     consult--source-modified-buffer
-     consult--source-recent-file
+   '(consult-source-current-buffer
+     consult-source-buffer
+     consult-source-hidden-buffer
+     consult-source-modified-buffer
+     consult-source-recent-file
      (:name "Apps"
             :category app
             :items executable-list
