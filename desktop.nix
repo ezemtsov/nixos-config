@@ -179,27 +179,5 @@
     home.enableNixpkgsReleaseCheck = false;
 
     services.dunst.enable = true;
-
-    services.picom.enable = true;
-    services.picom.vSync = true;
-
-    services.grobi =
-      let external = [ "HDMI-1" ] ++ map (i: "DP-${toString i}") (lib.lists.range 1 9);
-      in {
-        enable = true;
-        rules = map
-          (o: {
-            name = o;
-            outputs_connected = [ o ];
-            configure_single = o;
-            primary = true;
-          })
-          external ++ [{
-            name = "eDP-1";
-            outputs_disconnected = external;
-            configure_single = "eDP-1";
-            primary = true;
-          }];
-      };
   };
 }
