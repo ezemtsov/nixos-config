@@ -89,8 +89,8 @@ With argument, do this that many times."
    'magit-display-buffer-same-window-except-diff-v1)
 
   ;; (mouse-drag-copy-region t) ;; copy mouse selection by default
-  (mouse-autoselect-window t) ;; select buffer with mouse
-  (focus-follows-mouse t)
+  ;; (setq mouse-autoselect-window t) ;; select buffer with mouse
+  ;; (setq focus-follows-mouse t)
 
   ;; Disable creation of lock-files named .#<filename>.
   (setq-default create-lockfiles nil)
@@ -239,7 +239,7 @@ With argument, do this that many times."
   (defun consult-vterm ()
     "List and switch to vterm sessions only."
     (interactive)
-    (consult-buffer '(consult--source-vterm)))
+    (consult-buffer '(consult-source-vterm)))
 
   :custom
   (consult-buffer-sources
@@ -286,7 +286,9 @@ With argument, do this that many times."
   (add-to-list 'completion-at-point-functions #'cape-abbrev)
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
   (add-to-list 'completion-at-point-functions #'cape-dict)
-  (add-to-list 'completion-at-point-functions #'cape-file))
+  (add-to-list 'completion-at-point-functions #'cape-file)
+  :bind
+  ("M-d" . cape-file))
 
 (use-package vundo
   :ensure t
@@ -340,6 +342,7 @@ With argument, do this that many times."
 (use-package rotate :ensure t)
 (use-package rainbow-delimiters :ensure t)
 (use-package markdown-mode :ensure t)
+(use-package pdf-tools :ensure t)
 
 (use-package tab-bar
   :config
@@ -358,43 +361,34 @@ With argument, do this that many times."
   ("C-s-<left>" . (lambda () (interactive) (tab-bar-move-tab -1)))
   ("C-s-<right>" . (lambda () (interactive) (tab-bar-move-tab 1))))
 
-(use-package i3bar
-  :ensure t
-  :config
-  (i3bar-mode t))
-
 ;;-----------------------------------------------------------
-;; EXWM Configuration
+;; EWM Configuration (Wayland replacement for EXWM)
 ;;-----------------------------------------------------------
-(use-package exwm
-  :ensure t
-  :config
-  (require 'exwm)
-  (require 'exwm-randr)
-  (require 'exwm-systemtray)
-  (require 'exwm-xim)
-  (require 'exwm-layout)
 
-  (defun screen-lock ()
+;; Module path is auto-detected from load-path. Override only if needed:
+;; (setenv "EWM_MODULE_PATH" "~/git/ewm/compositor/target/debug/libewm_core.so")
+
+(use-package ewm
+  :load-path "~/git/ewm/lisp"
+  :commands (ewm-start-module ewm-transient)
+  :init
+  ;; Helper function for tab switching (i3-style back-and-forth)
+  (defun tab-bar-select-or-return ()
+    "Select tab by number, or switch to recent if already on that tab."
     (interactive)
-    (start-process "xsecurelock" nil "xsecurelock"))
+    (let* ((key (event-basic-type last-command-event))
+           (tab (if (and (characterp key) (>= key ?1) (<= key ?9))
+                    (- key ?0)
+                  0))
+           (current (1+ (tab-bar--current-tab-index))))
+      (if (eq tab current)
+          (tab-recent)
+        (tab-bar-select-tab tab))))
 
-  (defun volume-mute ()
-    (interactive) (shell-command "pactl set-sink-mute \"alsa_output.pci-0000_00_1f.3.analog-stereo\" toggle")
-    (message "Speakers mute toggled"))
-
-  (defun volume-up ()
-    (interactive) (shell-command "pactl set-sink-volume \"alsa_output.pci-0000_00_1f.3.analog-stereo\" +5%")
-    (message "Speakers volume up"))
-
-  (defun volume-down ()
-    (interactive) (shell-command "pactl set-sink-volume \"alsa_output.pci-0000_00_1f.3.analog-stereo\" -5%")
-    (message "Speakers volume down"))
-
+  ;; Fullscreen toggle with window config restore
   (defvar fullscreen-buffer--state nil)
-
   (defun fullscreen-buffer--toggle ()
-    "Maximize buffer"
+    "Maximize buffer, toggle back to previous layout."
     (interactive)
     (if fullscreen-buffer--state
         (let ((val (get-register (tab-bar--current-tab-index))))
@@ -407,199 +401,47 @@ With argument, do this that many times."
         (setq mode-line-format nil)
         (setq fullscreen-buffer--state t))))
 
-  (defun tab-bar-select-or-return ()
-    "This function behaves like `tab-bar-select-tab', except it calls
-`tab-recent' if asked to jump to the current tab. This simulates
-the back&forth behaviour of i3."
-    (interactive)
-    (let* ((key (event-basic-type last-command-event))
-           (tab (if (and (characterp key) (>= key ?1) (<= key ?9))
-                    (- key ?0)
-                  0))
-           (current (1+ (tab-bar--current-tab-index))))
-      (if (eq tab current)
-          (tab-recent)
-        (tab-bar-select-tab tab))))
+  ;; Switch to tab by s-N (can't use :bind for generated keys)
+  (dotimes (i 9)
+    (global-set-key (kbd (format "s-%d" (1+ i))) 'tab-bar-select-or-return))
 
-  ;;-----------------------------------------------------------
-  ;; Experimental stuff
-  ;;-----------------------------------------------------------
-  ;; Attempt to ensure correct external monitor handling
+  :custom
+  (ewm-output-config '(("DisplayPort-1" :width 2560 :height 1440)))
+  (ewm-xkb-layouts '("us" "ru" "no"))
+  (ewm-xkb-options "grp:caps_toggle")
 
-  (defun my/exwm-ensure-workspaces (num-workspaces)
-    "Ensure there are NUM-WORKSPACES created in EXWM"
-    (let ((current-num-workspaces (length exwm-workspace--list)))
-      (when (< current-num-workspaces num-workspaces)
-        (dotimes (_ (- num-workspaces current-num-workspaces))
-          (exwm-workspace-add))
-        (message "Created %d new workspaces" (- num-workspaces current-num-workspaces)))
-      (when (> current-num-workspaces num-workspaces)
-        (dotimes (i (- current-num-workspaces num-workspaces))
-          (exwm-workspace-delete))
-        (message "Deleted %d workspaces" (- current-num-workspaces num-workspaces)))))
-
-  (defun my/xrandr-list ()
-    "xrandr query to get a list of monitors"
-    (split-string (shell-command-to-string "xrandr --listmonitors | awk '{print $4}'") "\n" t))
-
-  (defun my/exwm-update-workspaces ()
-    "Ensure every connected monitor has a dedicated EXWM workspace"
-    (let* ((monitors (my/xrandr-list))
-           (num-monitors (length monitors)))
-      ;; Ensure enough workspaces exist
-      (my/exwm-ensure-workspaces num-monitors)
-      ;; Clear current RANDR configuration
-      (setq exwm-randr-workspace-monitor-plist nil)
-      (dotimes (i num-monitors)
-        ;; Assign a workspace to each monitor
-        (setq exwm-randr-workspace-monitor-plist
-              (append exwm-randr-workspace-monitor-plist
-                      (list i (nth i monitors)))))
-      (my/exwm-ensure-workspaces num-monitors)
-      (message "Updated workspaces for monitors: %s" monitors)))
-
-  (add-hook 'exwm-randr-refresh-hook #'my/exwm-update-workspaces)
-
-  ;; Expect for browser, it should be named over it's tab
-  (setq exwm-update-title-hook nil)
-  (add-hook 'exwm-update-title-hook
-            (lambda ()
-              (cond ((member exwm-class-name '("firefox"))
-                     (exwm-workspace-rename-buffer (format " %s" exwm-title)))
-                    ((member exwm-class-name '("Beeper"))
-                     (exwm-workspace-rename-buffer (format " %s" exwm-title)))
-                    ((member exwm-class-name '("Slack"))
-                     (exwm-workspace-rename-buffer (format " %s" exwm-title))))))
-
-  ;; This is a nice macro that allows remap global exwm keys without
-  ;; emacs restart. Found here: https://oremacs.com/2015/01/17/setting-up-ediff
-  (defmacro csetq (variable value)
-    `(funcall (or (get ',variable 'custom-set)
-                  'set-default)
-              ',variable ,value))
-
-  ;; Note that using global keys is important to be able to reach
-  ;; shortcuts for some X-based apps that take over keyboard, for
-  ;; example Telegram Desktop.
-  (csetq exwm-input-global-keys
-         `(
-           ;; Core actions
-           (, (kbd "s-d") . consult-buffer)
-           (, (kbd "s-e") . rotate:even-horizontal)
-           (, (kbd "s-v") . rotate:even-vertical)
-           (, (kbd "s-f") . fullscreen-buffer--toggle)
-           (, (kbd "s-F") . exwm-layout-toggle-fullscreen)
-           (, (kbd "s-Q") . exwm-workspace-delete)
-
-           (, (kbd "s-a") . consult-vterm)
-           (, (kbd "s-g") . gptel-menu)
-
-           ;; Start programs
-           (, (kbd "s-L") . (lambda () (interactive) (start-process "xsecurelock" nil "xsecurelock")))
-           (, (kbd "s-<return>") . (lambda () (interactive) (vterm (concat "shell " default-directory))))
-           (, (kbd "s-<print>") . (lambda () (interactive) (shell-command "exec flameshot gui")))
-
-           ;; System keys
-           (, (kbd "<XF86AudioMute>") . (lambda () (interactive) (shell-command-to-string "amixer set Master toggle")))
-           (, (kbd "<XF86AudioLowerVolume>") . (lambda () (interactive) (shell-command-to-string "amixer set Master 10%-")))
-           (, (kbd "<XF86AudioRaiseVolume>") . (lambda () (interactive) (shell-command-to-string "amixer set Master 10%+")))
-           (, (kbd "<XF86MonBrightnessUp>") . (lambda () (interactive) (shell-command "light -A 10")))
-           (, (kbd "<XF86MonBrightnessDown>") . (lambda () (interactive) (shell-command "light -U 10")))
-
-           ;; Move focus
-           (, (kbd "s-<left>") . windmove-left)
-           (, (kbd "s-<right>") . windmove-right)
-           (, (kbd "s-<down>") . windmove-down)
-           (, (kbd "s-<up>") . windmove-up)
-
-           ;; Move buffers
-           (, (kbd "C-s-<left>") . buf-move-left)
-           (, (kbd "C-s-<right>") . buf-move-right)
-           (, (kbd "C-s-<up>") . buf-move-up)
-           (, (kbd "C-s-<down>") . buf-move-down)
-
-           ;; tab shortcuts
-           (, (kbd "s-w") . tab-close)
-           (, (kbd "s-t") . tab-new)
-           (, (kbd "S-s-<right>") . tab-bar-move-tab)
-           (, (kbd "S-s-<left>") . tab-bar-move-tab-backward)
-           (, (kbd "S-s-<down>") . tab-bar-history-back)
-           (, (kbd "S-s-<up>") . tab-bar-history-forward)
-
-           ;; Input switcher
-           ,@(mapcar
-              (lambda (spec)
-                (let ((key (car spec))
-                      (lang (cadr spec))
-                      (method (caddr spec)))
-                  `(,(kbd (format "s-<SPC> %s" key))
-                    . (,lang . (lambda () (interactive) (set-input-method ,method))))))
-              '(("e" "english" nil)
-                ("r" "russian" 'russian-computer)
-                ("n" "norwegian" 'norwegian-keyboard)
-                ("s" "swedish" 'swedish-keyboard)))
-
-           ;; Switch to tab by s-N
-           ,@(mapcar (lambda (i)
-                       `(,(kbd (format "s-%d" i)) .
-                         tab-bar-select-or-return))
-                     (number-sequence 1 9))
-
-           ;; Resize buffers
-           (, (kbd "C-M-<left>") . shrink-window-horizontally)
-           (, (kbd "C-M-<right>") . enlarge-window-horizontally)
-           (, (kbd "C-M-<up>") . shrink-window)
-           (, (kbd "C-M-<down>") . enlarge-window)
-
-           (, (kbd "s-O") . exwm-workspace-move-window)
-           (, (kbd "s-o") . exwm-workspace-switch)
-
-           (, (kbd "C-\\") . toggle-input-method)))
-
-  ;; Force Slack to behave
-  ;; https://github.com/ch11ng/exwm/issues/574#issuecomment-490814569
-  (add-to-list 'exwm-manage-configurations '((equal exwm-class-name "Slack") managed t))
-
-  ;; Show system tray
-  (exwm-systemtray-mode t)
-
-  (setq exwm-floating-setup-hook nil)
-  (add-hook 'exwm-floating-setup-hook #'exwm-layout-show-mode-line)
-
-  ;; Set static name for most of the x classes
-  (add-hook 'exwm-update-class-hook
-            (lambda () (exwm-workspace-rename-buffer exwm-class-name)))
-
-  ;; Line-editing shortcuts
-  (exwm-input-set-simulation-key (kbd "C-r") (kbd "C-r")) ;; refresh page
-  (exwm-input-set-simulation-key (kbd "C-d") (kbd "C-d")) ;; cancel process
-
-  (exwm-input-set-simulation-key (kbd "M-w") (kbd "C-c")) ;; copy text
-  (exwm-input-set-simulation-key (kbd "C-y") (kbd "C-v")) ;; paste text
-
-  ;; Workspace setup
-  (setq exwm-workspace-show-all-buffers t)
-  (setq exwm-layout-show-all-buffers t)
-
-  (add-hook 'exwm-randr-screen-change-hook #'exwm-randr-refresh)
-
-  ;; Enable XIM
-  (exwm-xim-mode t)
-  (setenv "XMODIFIERS" "@im=exwm-xim")
-
-  ;; Enable EXWM
-  (exwm-randr-mode t)
-  (exwm-wm-mode t))
-
-(use-package exwm-modeline
-  :ensure t
-  :config
-  (exwm-modeline-mode))
-
-(use-package exwm-mff
-  :ensure t
-  :config
-  (exwm-mff-mode t))
+  :bind
+  ;; Control panel - use s-c to start/stop/debug
+  ("s-c" . ewm-transient)
+  ;; Core actions - EWM auto-detects super-key bindings from keymap
+  ("s-d" . consult-buffer)
+  ("s-e" . rotate:even-horizontal)
+  ("s-v" . rotate:even-vertical)
+  ("s-f" . fullscreen-buffer--toggle)
+  ("s-a" . consult-vterm)
+  ("s-<return>" . (lambda () (interactive)
+                    (vterm (concat "shell " default-directory))))
+  ;; Window navigation
+  ("s-<left>" . windmove-left)
+  ("s-<right>" . windmove-right)
+  ("s-<down>" . windmove-down)
+  ("s-<up>" . windmove-up)
+  ;; Buffer movement
+  ("C-s-<left>" . buf-move-left)
+  ("C-s-<right>" . buf-move-right)
+  ("C-s-<up>" . buf-move-up)
+  ("C-s-<down>" . buf-move-down)
+  ;; Tab shortcuts
+  ("s-w" . tab-close)
+  ("s-t" . tab-new)
+  ("S-s-<right>" . tab-bar-move-tab)
+  ("S-s-<left>" . tab-bar-move-tab-backward)
+  ("S-s-<down>" . tab-bar-history-back)
+  ("S-s-<up>" . tab-bar-history-forward)
+  ;; Input method switching (s-SPC prefix)
+  ("s-SPC e" . (lambda () (interactive) (set-input-method nil)))
+  ("s-SPC r" . (lambda () (interactive) (set-input-method 'russian-computer)))
+  ("s-SPC n" . (lambda () (interactive) (set-input-method 'norwegian-keyboard))))
 
 (use-package dumb-jump
   :ensure t
@@ -657,12 +499,11 @@ the back&forth behaviour of i3."
 
 (use-package eglot-fsharp
   :ensure t
-  ;;   :custom
-  ;;   ;; Use system-installed fsautocomplete from NixOS
-  ;;   (eglot-fsharp-server-path "/run/current-system/sw/bin/")
-  ;;   ;; Disable auto-installation since we're using the NixOS package
-  ;;   (eglot-fsharp-server-install-dir nil))
-  )
+  :custom
+  ;; Use system-installed fsautocomplete from NixOS
+  (eglot-fsharp-server-path "/run/current-system/sw/bin/")
+  ;; Disable auto-installation since we're using the NixOS package
+  (eglot-fsharp-server-install-dir nil))
 
 (use-package fsharp-mode
   :ensure t
@@ -721,8 +562,11 @@ the back&forth behaviour of i3."
 
 (use-package telega
   :config
-  (setq telega-emoji-use-images t)
+  (setq telega-emoji-use-images nil)
   (setq telega-use-images t)
+  (setq telega-chat-show-avatars t)
+  (setq telega-root-show-avatars t)
+  (setq telega-user-show-avatars t)
   (setq telega-chat-history-limit 50)
   (telega-notifications-mode t))
 
@@ -735,7 +579,7 @@ the back&forth behaviour of i3."
   :vc (:url "https://github.com/manzaltu/claude-code-ide.el" :rev :newest)
   :bind ("C-c C-'" . claude-code-ide-menu)
   :config
-  (setq claude-code-ide-terminal-backend 'eat)
+  (setq claude-code-ide-terminal-backend 'vterm)
   (setq claude-code-ide-use-ide-diff nil)
   (claude-code-ide-emacs-tools-setup))
 
@@ -778,13 +622,3 @@ the back&forth behaviour of i3."
   :ensure t
   :custom
   (go-ts-mode-indent-offset 4))
-
-(use-package gptel
-  :ensure t
-  :init
-  (gptel-make-anthropic
-      "Claude"
-    :stream t
-    :key #'(lambda () (with-temp-buffer
-                        (insert-file-contents "/run/secrets/claude")
-                        (buffer-string)))))
