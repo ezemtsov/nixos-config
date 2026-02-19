@@ -4,12 +4,14 @@ let
   dotnet = with pkgs.dotnetCorePackages; (combinePackages [
     sdk_8_0
     sdk_9_0
+    sdk_10_0
     runtime_8_0
     runtime_9_0
+    runtime_10_0
   ]);
 
 in {
-  # Allow testing .NET compiled executables
+  # Allow testing .NET compiled executables and Android emulator
   programs.nix-ld.enable = true;
 
   # Configure git
