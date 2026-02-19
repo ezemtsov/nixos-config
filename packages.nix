@@ -82,7 +82,7 @@ in {
 
     # Gaming
     lutris
-    wineWowPackages.stable
+    wineWow64Packages.stable
     winetricks
 
     # Audio packages

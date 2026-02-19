@@ -34,7 +34,11 @@ in {
 
   nix = {
     package = pkgs.lix;
-    nixPath = ["nixpkgs=${sources.nixpkgs}:nixos-config=/etc/nixos/configuration.nix"];
+    channel.enable = true;
+    nixPath = [
+      "nixpkgs=${sources.nixpkgs}"
+      "nixos-config=/etc/nixos/configuration.nix"
+    ];
     settings = {
       trusted-users = [ "ezemtsov" ];
       max-jobs = "auto";
@@ -126,7 +130,6 @@ in {
 
   # Audio
   musnix.enable = true;
-
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
