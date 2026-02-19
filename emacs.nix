@@ -8,6 +8,7 @@ pkgs.emacsWithPackagesFromUsePackage {
   # declarations
   extraEmacsPackages = epkgs: with epkgs; [
     treesit-grammars.with-all-grammars
+    config.programs.ewm.ewmPackage
   ] ++ (with epkgs.melpaPackages; [
     vterm
     jinx
