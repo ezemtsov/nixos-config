@@ -1,4 +1,4 @@
-{ lib, pkgs, ... }:
+{ lib, pkgs, config, ... }:
 
 {
   services.xserver.enable = true;
@@ -15,7 +15,7 @@
       EDITOR = "emacsclient";
 
       # force enable wayland
-      # NIXOS_OZONE_WL = 1;
+      NIXOS_OZONE_WL = 1;
 
       NIRI_CONFIG = "/etc/nixos/dotfiles/niri/config.kdl";
 
@@ -36,12 +36,32 @@
 
   gtk.iconCache.enable = true;
 
+  # EWM - Emacs Wayland Manager
+  programs.ewm = {
+    enable = true;
+    emacsPackage = import ./emacs.nix { inherit pkgs; };
+    extraEmacsArgs = "--init-directory /etc/nixos/dotfiles/emacs";
+  };
+
+  programs.dms-shell = {
+    enable = true;
+    package = pkgs.dms-shell.overrideAttrs {
+      vendorHash = "sha256-cVUJXgzYMRSM0od1xzDVkMTdxHu3OIQX2bQ8AJbGQ1Q=";
+      src = pkgs.fetchFromGitHub {
+        owner = "AvengeMedia";
+        repo = "DankMaterialShell";
+        rev = "9723661c80babc97637319d312eeeb2a3e53f8a7";
+        hash = "sha256-3/8DjcoLrqWrJR8QyyzvsFOeej4V5JIq4kMYQF0vccs=";
+      };
+    };
+    systemd.enable = true;
+    systemd.restartIfChanged = true;
+  };
+
   environment.systemPackages = with pkgs; [
     # EXWM packages
     i3status-rust
     flameshot
-    grobi
-    xclip
     xsecurelock
     nemo
   ];
@@ -50,22 +70,6 @@
   services.displayManager.ly.settings = {
     animation = "colormix";
     bgclock = "en";
-  };
-
-  # Configure EXWM
-  services.xserver = {
-    # Give EXWM permission to control the session.
-    displayManager.sessionCommands = "${pkgs.xorg.xhost}/bin/xhost +SI:localuser:$USER";
-    windowManager = {
-      session = lib.singleton {
-        name = "exwm";
-        start = ''
-          /run/current-system/sw/bin/emacs \
-          --init-directory /etc/nixos/dotfiles/emacs \
-          --eval "(server-start)"
-        '';
-      };
-    };
   };
 
   services.libinput = {
@@ -167,17 +171,5 @@
       group = "users";
       mode = "600";
     };
-  };
-
-  # Setup home-manager to reuse global channel
-  home-manager.useGlobalPkgs = true;
-  home-manager.useUserPackages = false;
-  home-manager.backupFileExtension = "backup";
-
-  home-manager.users.ezemtsov = { ... }: {
-    home.stateVersion = "25.05";
-    home.enableNixpkgsReleaseCheck = false;
-
-    services.dunst.enable = true;
   };
 }

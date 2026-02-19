@@ -164,9 +164,9 @@ With argument, do this that many times."
   (set-fontset-font t 'symbol "Noto Color Emoji" nil 'prepend)
   (set-fontset-font t 'unicode "Noto Color Emoji" nil 'append)
 
-  ;; Make mode-line info slightly smaller
-  (set-face-attribute 'mode-line nil :height 0.8)
-  (set-face-attribute 'tab-bar nil :height 0.8)
+  ;; Make mode-line half height
+  (set-face-attribute 'mode-line nil :height 80)
+  (set-face-attribute 'mode-line-inactive nil :height 80)
 
   (menu-bar-mode 0)
   (scroll-bar-mode 0)
@@ -356,7 +356,7 @@ With argument, do this that many times."
   (tab-bar-new-tab-choice
    (lambda () (get-buffer-create "*scratch*")))
   (tab-bar-tab-hints 1)
-  (tab-bar-show t)
+  (tab-bar-show nil)
   :bind
   ("C-s-<left>" . (lambda () (interactive) (tab-bar-move-tab -1)))
   ("C-s-<right>" . (lambda () (interactive) (tab-bar-move-tab 1))))
@@ -369,22 +369,8 @@ With argument, do this that many times."
 ;; (setenv "EWM_MODULE_PATH" "~/git/ewm/compositor/target/debug/libewm_core.so")
 
 (use-package ewm
-  :load-path "~/git/ewm/lisp"
   :commands (ewm-start-module ewm-transient)
   :init
-  ;; Helper function for tab switching (i3-style back-and-forth)
-  (defun tab-bar-select-or-return ()
-    "Select tab by number, or switch to recent if already on that tab."
-    (interactive)
-    (let* ((key (event-basic-type last-command-event))
-           (tab (if (and (characterp key) (>= key ?1) (<= key ?9))
-                    (- key ?0)
-                  0))
-           (current (1+ (tab-bar--current-tab-index))))
-      (if (eq tab current)
-          (tab-recent)
-        (tab-bar-select-tab tab))))
-
   ;; Fullscreen toggle with window config restore
   (defvar fullscreen-buffer--state nil)
   (defun fullscreen-buffer--toggle ()
@@ -401,14 +387,14 @@ With argument, do this that many times."
         (setq mode-line-format nil)
         (setq fullscreen-buffer--state t))))
 
-  ;; Switch to tab by s-N (can't use :bind for generated keys)
-  (dotimes (i 9)
-    (global-set-key (kbd (format "s-%d" (1+ i))) 'tab-bar-select-or-return))
 
   :custom
-  (ewm-output-config '(("DisplayPort-1" :width 2560 :height 1440)))
-  (ewm-xkb-layouts '("us" "ru" "no"))
+  (ewm-output-config
+   '(("DP-1" :width 2560 :height 1440)
+     ("eDP-1" :scale 1.25)))
+  (ewm-xkb-layouts '("us" "ru" "no" "se"))
   (ewm-xkb-options "grp:caps_toggle")
+  (ewm-input-config '((touchpad :natural-scroll t)))
 
   :bind
   ;; Control panel - use s-c to start/stop/debug
@@ -421,19 +407,12 @@ With argument, do this that many times."
   ("s-a" . consult-vterm)
   ("s-<return>" . (lambda () (interactive)
                     (vterm (concat "shell " default-directory))))
-  ;; Window navigation
-  ("s-<left>" . windmove-left)
-  ("s-<right>" . windmove-right)
-  ("s-<down>" . windmove-down)
-  ("s-<up>" . windmove-up)
   ;; Buffer movement
   ("C-s-<left>" . buf-move-left)
   ("C-s-<right>" . buf-move-right)
   ("C-s-<up>" . buf-move-up)
   ("C-s-<down>" . buf-move-down)
   ;; Tab shortcuts
-  ("s-w" . tab-close)
-  ("s-t" . tab-new)
   ("S-s-<right>" . tab-bar-move-tab)
   ("S-s-<left>" . tab-bar-move-tab-backward)
   ("S-s-<down>" . tab-bar-history-back)
@@ -441,7 +420,8 @@ With argument, do this that many times."
   ;; Input method switching (s-SPC prefix)
   ("s-SPC e" . (lambda () (interactive) (set-input-method nil)))
   ("s-SPC r" . (lambda () (interactive) (set-input-method 'russian-computer)))
-  ("s-SPC n" . (lambda () (interactive) (set-input-method 'norwegian-keyboard))))
+  ("s-SPC n" . (lambda () (interactive) (set-input-method 'norwegian-keyboard)))
+  ("s-SPC s" . (lambda () (interactive) (set-input-method 'swedish-keyboard))))
 
 (use-package dumb-jump
   :ensure t

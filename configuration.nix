@@ -12,9 +12,9 @@ in {
       ./networking.nix
       ./desktop.nix
       ./packages.nix
-      "${sources.home-manager}/nixos"
       "${sources.agenix}/modules/age.nix"
       "${sources.musnix}"
+      /home/ezemtsov/git/ewm/nix/service.nix
     ];
 
   # Documentation build is extremely slow
