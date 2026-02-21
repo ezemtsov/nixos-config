@@ -196,23 +196,17 @@ With argument, do this that many times."
 (use-package consult
   :ensure t
   :init
-  ;; Appropriated from tazjin's little functions file
-  ;; https://cs.tvl.fyi/depot/-/blob/users/tazjin/emacs/config/functions.el
-  (defun executable-list ()
-    "Creates a list of all external commands available on $PATH
-     while filtering NixOS wrappers."
-    (cl-loop
-     for dir in (split-string (getenv "PATH") path-separator)
-     when (and (file-exists-p dir) (file-accessible-directory-p dir))
-     for lsdir = (cl-loop for i in (directory-files dir t)
-                          for bn = (file-name-nondirectory i)
-                          when (and (not (cl-search "-wrapped" i))
-                                    (not (member bn completions))
-                                    (not (file-directory-p i))
-                                    (file-executable-p i))
-                          collect bn)
-     append lsdir into completions
-     finally return (sort completions 'string-lessp)))
+  (defvar consult-source-xdg-apps
+    `(:name "Apps"
+            :narrow ?a
+            :category app
+            :items ,(lambda ()
+                      (mapcar #'car (ewm-list-xdg-apps)))
+            :action ,(lambda (name)
+                       (let* ((cmd (cdr (assoc name (ewm-list-xdg-apps))))
+                              (cmd (replace-regexp-in-string "%[uUfFdDnNickvm]" "" cmd))
+                              (cmd (string-trim cmd)))
+                         (start-process-shell-command name nil cmd)))))
 
   (defvar consult-source-current-buffer
     (list :name "Current"
@@ -249,10 +243,7 @@ With argument, do this that many times."
      consult-source-hidden-buffer
      consult-source-modified-buffer
      consult-source-recent-file
-     (:name "Apps"
-            :category app
-            :items executable-list
-            :action (lambda (cand) (start-process cand nil cand)))))
+     consult-source-xdg-apps))
   :bind
   ("C-s" . consult-line)
   ("C-x b" . consult-buffer)
@@ -366,28 +357,12 @@ With argument, do this that many times."
 ;; EWM Configuration (Wayland replacement for EXWM)
 ;;-----------------------------------------------------------
 
-;; Module path is auto-detected from load-path. Override only if needed:
-;; (setenv "EWM_MODULE_PATH" "~/git/ewm/compositor/target/debug/libewm_core.so")
-
 (use-package ewm
   :commands (ewm-start-module ewm-transient)
+  :load-path "/home/ezemtsov/git/ewm/lisp"
   :init
-  ;; Fullscreen toggle with window config restore
-  (defvar fullscreen-buffer--state nil)
-  (defun fullscreen-buffer--toggle ()
-    "Maximize buffer, toggle back to previous layout."
-    (interactive)
-    (if fullscreen-buffer--state
-        (let ((val (get-register (tab-bar--current-tab-index))))
-          (register-val-jump-to val nil)
-          (setq mode-line-format (default-value 'mode-line-format))
-          (setq fullscreen-buffer--state nil))
-      (progn
-        (window-configuration-to-register (tab-bar--current-tab-index))
-        (delete-other-windows)
-        (setq mode-line-format nil)
-        (setq fullscreen-buffer--state t))))
 
+  ;; (add-to-list 'default-frame-alist '(alpha-background . 100))
 
   :custom
   (ewm-output-config
@@ -397,32 +372,28 @@ With argument, do this that many times."
   (ewm-xkb-options "grp:caps_toggle")
   (ewm-input-config '((touchpad :natural-scroll t)))
 
-  :bind
-  ;; Control panel - use s-c to start/stop/debug
-  ("s-c" . ewm-transient)
-  ;; Core actions - EWM auto-detects super-key bindings from keymap
-  ("s-d" . consult-buffer)
-  ("s-e" . rotate:even-horizontal)
-  ("s-v" . rotate:even-vertical)
-  ("s-f" . fullscreen-buffer--toggle)
-  ("s-a" . consult-vterm)
-  ("s-<return>" . (lambda () (interactive)
-                    (vterm (concat "shell " default-directory))))
-  ;; Buffer movement
-  ("C-s-<left>" . buf-move-left)
-  ("C-s-<right>" . buf-move-right)
-  ("C-s-<up>" . buf-move-up)
-  ("C-s-<down>" . buf-move-down)
-  ;; Tab shortcuts
-  ("S-s-<right>" . tab-bar-move-tab)
-  ("S-s-<left>" . tab-bar-move-tab-backward)
-  ("S-s-<down>" . tab-bar-history-back)
-  ("S-s-<up>" . tab-bar-history-forward)
-  ;; Input method switching (s-SPC prefix)
-  ("s-SPC e" . (lambda () (interactive) (set-input-method nil)))
-  ("s-SPC r" . (lambda () (interactive) (set-input-method 'russian-computer)))
-  ("s-SPC n" . (lambda () (interactive) (set-input-method 'norwegian-keyboard)))
-  ("s-SPC s" . (lambda () (interactive) (set-input-method 'swedish-keyboard))))
+  :bind (:map ewm-mode-map
+              ;; Control panel - use s-c to start/stop/debug
+              ("s-c" . ewm-transient)
+              ;; Core actions - EWM auto-detects super-key bindings from keymap
+              ("s-d" . consult-buffer)
+              ("s-e" . rotate:even-horizontal)
+              ("s-v" . rotate:even-vertical)
+              ("s-a" . consult-vterm)
+              ("s-<return>" . (lambda () (interactive)
+                                (vterm (concat "shell " default-directory))))
+
+              ;; Buffer movement
+              ("C-s-<left>" . buf-move-left)
+              ("C-s-<right>" . buf-move-right)
+              ("C-s-<up>" . buf-move-up)
+              ("C-s-<down>" . buf-move-down)
+
+              ;; Input method switching (s-SPC prefix)
+              ("s-SPC e" . (lambda () (interactive) (set-input-method nil)))
+              ("s-SPC r" . (lambda () (interactive) (set-input-method 'russian-computer)))
+              ("s-SPC n" . (lambda () (interactive) (set-input-method 'norwegian-keyboard)))
+              ("s-SPC s" . (lambda () (interactive) (set-input-method 'swedish-keyboard)))))
 
 (use-package dumb-jump
   :ensure t

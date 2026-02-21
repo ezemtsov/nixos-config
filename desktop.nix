@@ -14,9 +14,6 @@
 
       EDITOR = "emacsclient";
 
-      # force enable wayland
-      NIXOS_OZONE_WL = 1;
-
       NIRI_CONFIG = "/etc/nixos/dotfiles/niri/config.kdl";
 
       # Setting this to compile rust-openssl
@@ -39,8 +36,21 @@
   # EWM - Emacs Wayland Manager
   programs.ewm = {
     enable = true;
-    emacsPackage = import ./emacs.nix { inherit pkgs; };
-    extraEmacsArgs = "--init-directory /etc/nixos/dotfiles/emacs";
+    extraEmacsArgs = ''
+      --init-directory /etc/nixos/dotfiles/emacs
+    '';
+    emacsPackage = pkgs.emacsWithPackagesFromUsePackage {
+      package = pkgs.emacs-pgtk;
+      config = ./dotfiles/emacs/init.el;
+      extraEmacsPackages = epkgs: with epkgs; [
+        config.programs.ewm.ewmPackage
+        treesit-grammars.with-all-grammars
+      ] ++ (with epkgs.melpaPackages; [
+        vterm
+        jinx
+        telega
+      ]);
+    };
   };
 
   programs.dms-shell = {
@@ -59,6 +69,8 @@
   };
 
   environment.systemPackages = with pkgs; [
+    # EWM Emacs (same package the compositor uses, for dev/debug)
+    config.programs.ewm.emacsPackage
     # EXWM packages
     i3status-rust
     flameshot

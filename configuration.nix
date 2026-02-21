@@ -83,13 +83,6 @@ in {
     };
   };
 
-  # Emacs
-  services.emacs = {
-    enable = false;
-    install = true;
-    package = import ./emacs.nix { inherit pkgs; };
-  };
-
   # Set location and time zone
   location.latitude = 59.91;
   location.longitude = 10.75;
