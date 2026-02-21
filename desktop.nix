@@ -114,12 +114,10 @@
       };
     };
     fontDir.enable = true;
+    enableDefaultPackages = true;
     packages = with pkgs; [
-      corefonts
       ibm-plex
       font-awesome_6
-      noto-fonts-color-emoji
-      dejavu_fonts  # Fallback
     ];
   };
 
