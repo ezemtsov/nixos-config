@@ -57,7 +57,9 @@ in {
     kernelPackages = pkgs.linuxPackages_latest;
 
     # Enable full preemptive (for real-time audio)
-    kernelParams = [ "preempt=full" ];
+    # Disable AMD PSR — triggers display freeze with continuous-commit clients
+    # like dms-shell. See docs/DISPLAY_FREEZE_INVESTIGATION.md
+    kernelParams = [ "preempt=full" "amdgpu.dcdebugmask=0x10" ];
 
     # Make booting nicer
     plymouth.enable = true;
