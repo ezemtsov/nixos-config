@@ -59,8 +59,9 @@
   ;; avoid unnecessary window resizing
   (setq even-window-sizes nil)
 
-  ;; Enable auto completion globally
-  (global-completion-preview-mode t)
+  ;; Completion is triggered manually via M-/ (corfu)
+  ;; completion-preview-mode is too expensive with cape backends
+  ;; (global-completion-preview-mode t)
 
   ;; Setup emoji
   (setf use-default-font-for-symbols nil)
