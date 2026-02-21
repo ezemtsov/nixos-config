@@ -171,11 +171,6 @@
     wheelNeedsPassword = false;
   };
 
-  # Set the environment variable
-  # Instead, use EnvironmentFile for your user session
-  environment.extraInit = ''
-    export ANTHROPIC_API_KEY="$(cat ${config.age.secrets.claude.path})"
-  '';
   age.secrets = {
     claude = {
       file = ./secrets/claude.age;
