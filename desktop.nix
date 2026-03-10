@@ -118,10 +118,6 @@
   programs.firefox.enable = true;
   programs.dconf.enable = true;
 
-  # Lock laptop after sleeping
-  programs.xss-lock.enable = true;
-  programs.xss-lock.lockerCommand = "${pkgs.xsecurelock}/bin/xsecurelock";
-
   # Don't turn off laptop on close lid when on power
   # services.logind.lidSwitchExternalPower = "ignore";
 
