@@ -9,6 +9,7 @@
   :init
   (setq custom-file "~/.emacs.d/custom.el")
 
+  (cua-mode 1) ;; use normal world copy/paste
   (recentf-mode t) ;; remember previous files
   (blink-cursor-mode 0) ;; stop blinking
   (windmove-default-keybindings) ;; move with arrows
@@ -26,7 +27,7 @@
   (setq global-auto-revert-non-file-buffers t)
 
   (winner-mode t) ;; be able to undo window change
-  (auto-save-mode nil)
+  (auto-save-mode -1)
 
   ;; Just kill the vterm buffers, don't ask
   (setq kill-buffer-query-functions nil)
@@ -78,6 +79,26 @@ With argument, do this that many times."
     (interactive "p")
     (delete-word (- arg)))
 
+  ;; ;; DankBar modeline: push buffer status to DMS via IPC
+  ;; (defvar ewm-dms-status--last nil)
+
+  ;; (defun ewm-dms-status--update ()
+  ;;   "Push current buffer info to DankBar widget via DMS IPC."
+  ;;   (let* ((buf (buffer-name))
+  ;;          (mode (symbol-name major-mode))
+  ;;          (line (number-to-string (line-number-at-pos)))
+  ;;          (col (number-to-string (current-column)))
+  ;;          (modified (if (buffer-modified-p) " *" ""))
+  ;;          (text (format "%s  %s  L%s:%s%s" buf mode line col modified)))
+  ;;     (unless (equal text ewm-dms-status--last)
+  ;;       (setq ewm-dms-status--last text)
+  ;;       (start-process "dms-status" nil "dms" "ipc" "call" "emacsStatus" "set" text))))
+
+  ;; (add-hook 'post-command-hook #'ewm-dms-status--update)
+
+  ;; (setq-default mode-line-format nil)
+  ;; (setq-default header-line-format nil)
+
   :custom
   (use-short-answers t)	;; y or n
   (inhibit-startup-message t) ;; disable startup screen
@@ -116,26 +137,12 @@ With argument, do this that many times."
   ("M->" . flymake-goto-next-error)
   ("M-<" . flymake-goto-prev-error))
 
-;; Automatically use tree-sitter modes when available
-(use-package treesit
+;; Automatically prefer tree-sitter modes when grammars are available
+(use-package treesit-auto
+  :ensure t
   :config
-  (setq major-mode-remap-alist
-        '((python-mode . python-ts-mode)
-          (rust-mode . rust-ts-mode)
-          (json-mode . json-ts-mode)
-          (go-mode . go-ts-mode)
-          (typescript-mode . typescript-ts-mode)
-          (javascript-mode . js-ts-mode)
-          (js-mode . js-ts-mode)
-          (css-mode . css-ts-mode)
-          (html-mode . html-ts-mode)
-          (yaml-mode . yaml-ts-mode)
-          (sh-mode . bash-ts-mode)
-          (c-mode . c-ts-mode)
-          (c++-mode . c++-ts-mode)
-          (cmake-mode . cmake-ts-mode)
-          (dockerfile-mode . dockerfile-ts-mode)
-          (toml-mode . toml-ts-mode))))
+  (treesit-auto-add-to-auto-mode-alist 'all)
+  (global-treesit-auto-mode))
 
 (use-package color-theme-sanityinc-tomorrow
   :ensure t
@@ -179,6 +186,11 @@ With argument, do this that many times."
   :init
   (vertico-mode))
 
+;; (use-package vertico-posframe
+;;   :ensure t
+;;   :init
+;;   (vertico-posframe-mode t))
+
 (use-package savehist
   :init
   (defvar savehist-additional-variables)
@@ -191,7 +203,19 @@ With argument, do this that many times."
               (add-to-list 'savehist-additional-variables 'project-compile)))
   :config
   (setq project-switch-commands #'project-find-file)
-  (setq project-vc-extra-root-markers '(".gitignore")))
+  (setq project-vc-extra-root-markers '("go.mod" "Cargo.toml" ".gitignore"))
+
+  (defun project-claude ()
+    "Launch claude in alacritty at the current project root."
+    (interactive)
+    (let ((dir (expand-file-name (project-root (project-current t)))))
+      (start-process "claude" nil
+                     "alacritty" "--working-directory" dir
+                     "-e" "claude")))
+
+  :bind-keymap ("C-x p" . project-prefix-map)
+  :bind (:map project-prefix-map
+              ("c" . project-claude)))
 
 (use-package consult
   :ensure t
@@ -202,11 +226,7 @@ With argument, do this that many times."
             :category app
             :items ,(lambda ()
                       (mapcar #'car (ewm-list-xdg-apps)))
-            :action ,(lambda (name)
-                       (let* ((cmd (cdr (assoc name (ewm-list-xdg-apps))))
-                              (cmd (replace-regexp-in-string "%[uUfFdDnNickvm]" "" cmd))
-                              (cmd (string-trim cmd)))
-                         (start-process-shell-command name nil cmd)))))
+            :action ,#'ewm-launch-xdg-command))
 
   (defvar consult-source-current-buffer
     (list :name "Current"
@@ -280,7 +300,7 @@ With argument, do this that many times."
   (add-to-list 'completion-at-point-functions #'cape-dict)
   (add-to-list 'completion-at-point-functions #'cape-file)
   :bind
-  ("M-d" . cape-file))
+  ("M-C-d" . cape-file))
 
 (use-package vundo
   :ensure t
@@ -298,12 +318,6 @@ With argument, do this that many times."
   (vterm-shell "fish")
   :config
   ;; Allow custom commands from shell for dynamic buffer naming
-  (add-to-list 'vterm-eval-cmds
-               '("vterm-rename-buffer-with-command"
-                 (lambda (cmd)
-                   (let ((dir (file-name-nondirectory
-                               (directory-file-name default-directory))))
-                     (rename-buffer (format "vterm %s: %s" dir cmd) t)))))
   (add-to-list 'vterm-eval-cmds
                '("vterm-rename-buffer-by-directory"
                  (lambda ()
@@ -338,20 +352,12 @@ With argument, do this that many times."
 
 (use-package tab-bar
   :config
-  (setq tab-bar-tab-name-function 'tab-bar-tab-name-all)
-  (setq tab-bar-separator "")
-  (setq tab-bar-close-button-show nil) ;; Hide annoying close buttom
-  (setq tab-bar-format '(tab-bar-format-tabs tab-bar-format-align-right tab-bar-format-global))
   (tab-bar-mode 1)
   (tab-bar-history-mode t)
   :custom
   (tab-bar-new-tab-choice
    (lambda () (get-buffer-create "*scratch*")))
-  (tab-bar-tab-hints 1)
-  (tab-bar-show nil)
-  :bind
-  ("C-s-<left>" . (lambda () (interactive) (tab-bar-move-tab -1)))
-  ("C-s-<right>" . (lambda () (interactive) (tab-bar-move-tab 1))))
+  (tab-bar-show nil))
 
 ;;-----------------------------------------------------------
 ;; EWM Configuration (Wayland replacement for EXWM)
@@ -361,27 +367,27 @@ With argument, do this that many times."
   :commands (ewm-start-module ewm-transient)
   :load-path "/home/ezemtsov/git/ewm/lisp"
   :init
-
-  ;; (add-to-list 'default-frame-alist '(alpha-background . 100))
+  (add-to-list 'default-frame-alist '(alpha-background . 80))
+  ;; (ewm-text-input-auto-mode-enable)
 
   :custom
   (ewm-output-config
-   '(("DP-1" :width 2560 :height 1440)
+   '(("DP-2" :refresh 100)
+     ("DP-1" :width 2560 :height 1440 :scale 1.0)
      ("eDP-1" :scale 1.25)))
-  (ewm-xkb-layouts '("us" "ru" "no" "se"))
-  (ewm-xkb-options "grp:caps_toggle")
   (ewm-input-config '((touchpad :natural-scroll t)))
+  (ewm-idle 300)
 
   :bind (:map ewm-mode-map
-              ;; Control panel - use s-c to start/stop/debug
-              ("s-c" . ewm-transient)
               ;; Core actions - EWM auto-detects super-key bindings from keymap
               ("s-d" . consult-buffer)
-              ("s-e" . rotate:even-horizontal)
-              ("s-v" . rotate:even-vertical)
-              ("s-a" . consult-vterm)
+              ;; ("s-e" . rotate:even-horizontal)
+              ;; ("s-v" . rotate:even-vertical)
+              ;; ("s-a" . consult-vterm)
               ("s-<return>" . (lambda () (interactive)
-                                (vterm (concat "shell " default-directory))))
+                                (start-process "alacritty" nil "alacritty")))
+
+              ("<print>" . ewm-transient)
 
               ;; Buffer movement
               ("C-s-<left>" . buf-move-left)
@@ -473,7 +479,7 @@ With argument, do this that many times."
   (setenv "PYTHONENCODING" "utf-8")
   (setq python-indent-offset 4)
   :hook
-  (python-mode . eglot-ensure))
+  (python-ts-mode . eglot-ensure))
 
 (use-package typescript-mode
   :defer t
@@ -487,21 +493,23 @@ With argument, do this that many times."
   :ensure t
   :mode "\\.rs\\'"
   :hook
-  (rust-mode . eglot-ensure))
+  (rust-ts-mode . eglot-ensure))
 
 (use-package json-mode
   :ensure t
   :mode "\\.json\\'"
   :hook
-  (json-mode . eglot-ensure))
+  (json-ts-mode . eglot-ensure))
 
 (use-package go-mode
   :ensure t
   :mode "\\.go\\'"
+  :custom
+  (go-ts-mode-indent-offset 4)
   :config
   (setq-default tab-width 4)
   :hook
-  (go-mode . eglot-ensure))
+  (go-ts-mode . eglot-ensure))
 
 (use-package jupyter
   :ensure t
@@ -531,7 +539,7 @@ With argument, do this that many times."
   :vc (:url "https://github.com/manzaltu/claude-code-ide.el" :rev :newest)
   :bind ("C-c C-'" . claude-code-ide-menu)
   :config
-  (setq claude-code-ide-terminal-backend 'vterm)
+  (setq claude-code-ide-terminal-backend 'eat)
   (setq claude-code-ide-use-ide-diff nil)
   (claude-code-ide-emacs-tools-setup))
 
@@ -570,7 +578,4 @@ With argument, do this that many times."
   :hook
   (kotlin-ts-mode . eglot-ensure))
 
-(use-package go-mode
-  :ensure t
-  :custom
-  (go-ts-mode-indent-offset 4))
+(use-package mermaid-mode)
