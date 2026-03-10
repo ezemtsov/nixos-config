@@ -27,6 +27,7 @@
   };
 
   gtk.iconCache.enable = true;
+  services.displayManager.gdm.enable = true;
 
   # EWM - Emacs Wayland Manager
   programs.ewm = {
@@ -67,12 +68,6 @@
     xsecurelock
     nemo
   ];
-
-  services.displayManager.ly.enable = true;
-  services.displayManager.ly.settings = {
-    animation = "colormix";
-    bgclock = "en";
-  };
 
   services.libinput = {
     enable = true;
