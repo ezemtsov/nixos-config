@@ -1,8 +1,6 @@
 { lib, pkgs, config, ... }:
 
 {
-  services.xserver.enable = true;
-
   environment = {
     variables = {
       MONITOR_PRIMARY = "eDP-1";
@@ -19,10 +17,6 @@
 
       # Setting this to compile rust-openssl
       PKG_CONFIG_PATH="${pkgs.openssl.dev}/lib/pkgconfig";
-
-      # Use Emacs XIM for input methods
-      GTK_IM_MODULE = "xim";
-      QT_IM_MODULE = "xim";
     };
   };
 
@@ -38,11 +32,11 @@
   programs.ewm = {
     enable = true;
     extraEmacsArgs = ''
-      --init-directory /etc/nixos/dotfiles/emacs
+      --init-directory /etc/nixos/emacs
     '';
     emacsPackage = pkgs.emacsWithPackagesFromUsePackage {
       package = pkgs.emacs-pgtk;
-      config = ./dotfiles/emacs/init.el;
+      config = ./emacs/init.el;
       extraEmacsPackages = epkgs: with epkgs; [
         config.programs.ewm.ewmPackage
         treesit-grammars.with-all-grammars
