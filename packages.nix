@@ -23,6 +23,11 @@ in {
     };
   };
 
+  programs._1password.enable = true;
+  programs._1password-gui = {
+    enable = true;
+    polkitPolicyOwners = [ "ezemtsov" ];
+  };
 
   # ... and declare packages to be installed.
   environment.systemPackages = with pkgs; [
