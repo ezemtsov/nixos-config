@@ -202,19 +202,7 @@ With argument, do this that many times."
               (add-to-list 'savehist-additional-variables 'project-compile)))
   :config
   (setq project-switch-commands #'project-find-file)
-  (setq project-vc-extra-root-markers '("go.mod" "Cargo.toml" ".gitignore"))
-
-  (defun project-claude ()
-    "Launch claude in alacritty at the current project root."
-    (interactive)
-    (let ((dir (expand-file-name (project-root (project-current t)))))
-      (start-process "claude" nil
-                     "alacritty" "--working-directory" dir
-                     "-e" "claude")))
-
-  :bind-keymap ("C-x p" . project-prefix-map)
-  :bind (:map project-prefix-map
-              ("c" . project-claude)))
+  (setq project-vc-extra-root-markers '("go.mod" "Cargo.toml" ".gitignore")))
 
 (use-package consult
   :ensure t
