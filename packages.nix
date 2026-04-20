@@ -165,7 +165,7 @@ in {
 
     # Javascript packages
     nodejs
-    nodePackages.typescript-language-server
+    typescript-language-server
 
     # Android development
     gradle
