@@ -108,9 +108,6 @@
   programs.firefox.enable = true;
   programs.dconf.enable = true;
 
-  # Don't turn off laptop on close lid when on power
-  # services.logind.lidSwitchExternalPower = "ignore";
-
   # Define a user account
   programs.fish.enable = true;
   programs.fish.generateCompletions = false;
