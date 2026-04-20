@@ -73,6 +73,8 @@ in {
     zstd
     unixtools.netstat
 
+    firecracker
+
     libreoffice
     nuspell
     hunspellDicts.en-us
