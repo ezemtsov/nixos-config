@@ -19,17 +19,16 @@ in {
 
   # Documentation build is extremely slow
   documentation.enable = false;
-  documentation.man.generateCaches = false;
+  documentation.man.cache.enable = true;
 
-  # Configure the Nix package manager
-  nixpkgs = {
-    overlays = [
-      (import sources.emacs-overlay)
-    ];
+  # Configure the emacs overlay
+  nixpkgs.overlays = [
+    (import sources.emacs-overlay)
+  ];
 
-    pkgs = import sources.nixpkgs {
-      config.allowUnfree = true;
-    };
+  # Configure overlays
+  nixpkgs.pkgs = import sources.nixpkgs {
+    config.allowUnfree = true;
   };
 
   nix = {
