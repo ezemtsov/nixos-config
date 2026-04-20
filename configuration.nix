@@ -104,6 +104,9 @@ in {
 
   # Enable docker
   virtualisation.docker.enable = true;
+  virtualisation.docker.daemon.settings = {
+    runtimes.runsc.path = "${pkgs.gvisor}/bin/runsc";
+  };
 
   # KVM (for nix vmTools)
   boot.kernelModules =  [ "kvm-amd" ];
