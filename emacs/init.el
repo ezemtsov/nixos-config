@@ -568,5 +568,3 @@ With argument, do this that many times."
   :mode "\\.kit\\'"
   :hook
   (kotlin-ts-mode . eglot-ensure))
-
-(use-package mermaid-mode)
