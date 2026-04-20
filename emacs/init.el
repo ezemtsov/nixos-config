@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 (setq comp-deferred-compilation nil)
 
 (require 'package)
