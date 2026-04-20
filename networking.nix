@@ -18,4 +18,7 @@
   # enable the tailscale service
   services.tailscale.enable = true;
   programs.fuse.userAllowOther = true;
+
+  # search engine
+  services.jackett.enable = true;
 }

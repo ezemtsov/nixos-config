@@ -10,7 +10,7 @@
   :init
   (setq custom-file "~/.emacs.d/custom.el")
 
-  (cua-mode 1) ;; use normal world copy/paste
+  (cua-mode 0) ;; use normal world copy/paste
   (recentf-mode t) ;; remember previous files
   (blink-cursor-mode 0) ;; stop blinking
   (windmove-default-keybindings) ;; move with arrows
@@ -312,6 +312,8 @@ With argument, do this that many times."
                                (directory-file-name default-directory))))
                      (rename-buffer (format "vterm %s" dir) t))))))
 
+;; (use-package ghostel :ensure t)
+
 (use-package multiple-cursors
   :ensure t
   :bind
@@ -354,7 +356,7 @@ With argument, do this that many times."
   :commands (ewm-start-module ewm-transient)
   :load-path "/home/ezemtsov/git/ewm/lisp"
   :init
-  (add-to-list 'default-frame-alist '(alpha-background . 80))
+  (add-to-list 'default-frame-alist '(alpha-background . 90))
   ;; (ewm-text-input-auto-mode-enable)
 
   :bind (:map ewm-mode-map
@@ -426,6 +428,29 @@ With argument, do this that many times."
 
   (transient-append-suffix 'magit-push "p"
     '("R" "Push to gerrit" magit-push-to-gerrit)))
+
+(use-package forge
+  :ensure t
+  :after magit
+  :custom
+  (forge-add-pullreq-refspec nil)
+  (forge-owned-accounts '(("ezemtsov")))
+  :config
+  (defun my/forge-insert-my-pullreqs ()
+    "Insert authored and assigned pull requests as separate sections."
+    (let ((forge--buffer-topics-spec
+           (forge--topics-spec :type 'pullreq :state 'open :author "ezemtsov" :limit 20 :order 'newest)))
+      (forge-insert-pullreqs))
+    (let ((forge--buffer-topics-spec
+           (forge--topics-spec :type 'pullreq :state 'open :assignee "ezemtsov" :limit 20 :order 'newest)))
+      (forge-insert-pullreqs))
+    (let ((forge--buffer-topics-spec
+           (forge--topics-spec :type 'pullreq :state 'open :reviewer "ezemtsov" :limit 20 :order 'newest)))
+      (forge-insert-pullreqs)))
+  (remove-hook 'magit-status-sections-hook #'forge-insert-pullreqs)
+  (remove-hook 'magit-status-sections-hook #'forge-insert-issues)
+  (remove-hook 'magit-status-sections-hook #'forge-insert-discussions)
+  (add-hook 'magit-status-sections-hook #'my/forge-insert-my-pullreqs t))
 
 (use-package tsx-ts-mode :mode "\\.tsx\\'")
 (use-package tide

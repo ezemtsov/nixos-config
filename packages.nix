@@ -48,6 +48,7 @@ in {
     gimp
     gitFull
     jq
+    yq-go
     kubectl
     kubelogin
     ntfs3g
@@ -76,7 +77,10 @@ in {
     mermaid-cli
     loupe
 
+    # graphite
     firecracker
+
+    reaper
 
     libreoffice
     nuspell

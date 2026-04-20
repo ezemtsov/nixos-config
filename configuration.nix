@@ -32,7 +32,7 @@ in {
   };
 
   nix = {
-    package = pkgs.lix;
+    # package = pkgs.lix;
     channel.enable = true;
     nixPath = [
       "nixpkgs=${sources.nixpkgs}"
@@ -43,6 +43,8 @@ in {
       trusted-users = [ "ezemtsov" ];
       max-jobs = "auto";
       netrc-file = "/etc/nix/netrc";
+      # timeout = 5;
+      fallback = true;
     };
   };
 
@@ -75,15 +77,15 @@ in {
     supportedFilesystems = [ "exfat" ];
   };
 
-  # Enable power saving
-  powerManagement.enable = true;
-  services.tlp = {
-    enable = true;
-    settings = {
-      CPU_SCALING_GOVERNOR_ON_BAT="powersave";
-      CPU_SCALING_GOVERNOR_ON_AC="performance";
-    };
-  };
+  # # Enable power saving
+  # powerManagement.enable = true;
+  # services.tlp = {
+  #   enable = true;
+  #   settings = {
+  #     CPU_SCALING_GOVERNOR_ON_BAT="powersave";
+  #     CPU_SCALING_GOVERNOR_ON_AC="performance";
+  #   };
+  # };
 
   # Set location and time zone
   location.latitude = 59.91;

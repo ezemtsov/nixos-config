@@ -29,16 +29,29 @@
     enable32Bit = true;
   };
 
+  programs.niri.enable = true;
   services.displayManager.gdm.enable = true;
 
-  # EWM - Emacs Wayland Manager
+  # Emacs Wayland Manager
   programs.ewm = {
     enable = true;
     extraEmacsArgs = ''
       --init-directory /etc/nixos/emacs
     '';
     emacsPackage = pkgs.emacsWithPackagesFromUsePackage {
-      package = pkgs.emacs-pgtk;
+      package = pkgs.emacs-pgtk.overrideAttrs (old: {
+          # src = /home/ezemtsov/git/emacs;
+          # configureFlags = (old.configureFlags or []) ++ [
+          #   "--with-skia"
+          # ];
+          # buildInputs = (old.buildInputs or []) ++ [
+          #   pkgs.skia
+          #   pkgs.libepoxy
+          # ];
+          # postPatch = (old.postPatch or "") + ''
+          #   mkdir -p src/deps/skia
+          # '';
+        });
       config = ./emacs/init.el;
       extraEmacsPackages = epkgs: with epkgs; [
         config.programs.ewm.ewmPackage
@@ -64,11 +77,33 @@
   environment.systemPackages = with pkgs; [
     # EWM Emacs (same package the compositor uses, for dev/debug)
     config.programs.ewm.emacsPackage
-    # EXWM packages
-    i3status-rust
-    flameshot
-    xsecurelock
+    xwayland-satellite
+    maplestory-cursor
+
+    # EWM packages
     nemo
+    bitwarden-cli
+    wl-clipboard
+
+    # Niri packages
+    rofi
+    alacritty
+    brightnessctl
+
+    # development
+    libxkbcommon
+    libGL
+    wayland
+
+    # Wayland debugging utilities
+    grim
+    ffmpeg
+    wf-recorder
+    wlr-randr      # output configuration
+    wayland-utils  # wayland-info
+    wev            # wayland event viewer
+    slurp          # region selection
+    tracy
   ];
 
   services.libinput = {
@@ -96,7 +131,6 @@
         monospace = [ "IBM Plex Mono" ];
         sansSerif = [ "IBM Plex Sans" ];
         serif = [ "IBM Plex Serif" ];
-        emoji = [ "Noto Color Emoji" ];
       };
     };
     fontDir.enable = true;
@@ -119,12 +153,24 @@
     alias e="emacsclient"
     set fish_greeting ""
     source (find '${pkgs.emacsPackages.vterm}' -name 'emacs-vterm.fish')
+    source ${config.programs.ewm.ewmPackage}/etc/emacs-ewm.fish
   '';
 
   programs.direnv.enable = true;
   programs.direnv.nix-direnv.enable = true;
   programs.direnv.enableBashIntegration = true;
   programs.direnv.enableFishIntegration = true;
+
+  services.udev.extraRules = ''
+    # Kinesis keyboard - grant logged-in user access for Clique (WebSerial)
+    SUBSYSTEM=="tty", ATTRS{idVendor}=="29ea", TAG+="uaccess", MODE="0666"
+
+    # Enable wake-on-connect for USB-C root hubs (clamshell mode:
+    # plugging an external monitor wakes the system from suspend).
+    # Matches root hubs under XHCI controllers c5:00.3 and c5:00.4.
+    ACTION=="add", SUBSYSTEM=="usb", DRIVER=="usb", KERNELS=="0000:c5:00.3", ATTR{power/wakeup}="enabled"
+    ACTION=="add", SUBSYSTEM=="usb", DRIVER=="usb", KERNELS=="0000:c5:00.4", ATTR{power/wakeup}="enabled"
+  '';
 
   users.defaultUserShell = pkgs.fish;
 
@@ -153,6 +199,9 @@
     enable = true;
     wheelNeedsPassword = false;
   };
+
+  # Finger scanner experiments
+  services.fprintd.enable = true;
 
   age.secrets = {
     claude = {
