@@ -82,6 +82,8 @@ in {
     # AI Stuff
     claude-code
     claude-monitor
+    playwright
+    playwright-driver.browsers
 
     # cloud SDK
     azure-storage-azcopy

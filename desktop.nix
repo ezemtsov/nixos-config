@@ -11,6 +11,9 @@
         sdk_10_0
       ] + "/share/dotnet";
 
+      PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS="true";
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD="1";
+
       EDITOR = "emacsclient";
 
       NIRI_CONFIG = "/etc/nixos/dotfiles/niri/config.kdl";
