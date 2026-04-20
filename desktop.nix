@@ -29,7 +29,6 @@
     enable32Bit = true;
   };
 
-  gtk.iconCache.enable = true;
   services.displayManager.gdm.enable = true;
 
   # EWM - Emacs Wayland Manager
@@ -108,6 +107,7 @@
     ];
   };
 
+  gtk.iconCache.enable = true;
   programs.firefox.enable = true;
   programs.dconf.enable = true;
 
