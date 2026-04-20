@@ -124,6 +124,7 @@ in {
     # lispPackages.quicklisp
 
     # Rust packages
+    rustup
     rust-analyzer
     pkg-config
 
