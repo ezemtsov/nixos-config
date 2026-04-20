@@ -371,14 +371,6 @@ With argument, do this that many times."
   (add-to-list 'default-frame-alist '(alpha-background . 80))
   ;; (ewm-text-input-auto-mode-enable)
 
-  :custom
-  (ewm-output-config
-   '(("DP-2" :refresh 100)
-     ("DP-1" :width 2560 :height 1440 :scale 1.0)
-     ("eDP-1" :scale 1.25)))
-  (ewm-input-config '((touchpad :natural-scroll t)))
-  (ewm-idle 300)
-
   :bind (:map ewm-mode-map
               ;; Core actions - EWM auto-detects super-key bindings from keymap
               ("s-d" . consult-buffer)
@@ -402,7 +394,17 @@ With argument, do this that many times."
               ("s-SPC e" . (lambda () (interactive) (set-input-method nil)))
               ("s-SPC r" . (lambda () (interactive) (set-input-method 'russian-computer)))
               ("s-SPC n" . (lambda () (interactive) (set-input-method 'norwegian-keyboard)))
-              ("s-SPC s" . (lambda () (interactive) (set-input-method 'swedish-keyboard)))))
+              ("s-SPC s" . (lambda () (interactive) (set-input-method 'swedish-keyboard))))
+
+  :config
+  (ewm-configure-output "eDP-1" :width 1920 :height 1200 :scale 1.25)
+  (ewm-configure-output "Dell Inc. DELL P2725HE 87Z8C84" :width 1920 :height 1080 :scale 1.0 :transform 1)
+  (ewm-configure-output "Dell Inc. DELL P3425WE 9PJNY54" :width 3440 :height 1440 :refresh 60 :x 1440 :scale 1.0)
+
+  :custom
+  (ewm-input-config '((touchpad :natural-scroll t)))
+  (ewm-focus-follows-mouse t)
+  (ewm-idle 300))
 
 (use-package dumb-jump
   :ensure t
