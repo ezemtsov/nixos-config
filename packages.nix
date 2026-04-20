@@ -87,7 +87,11 @@ in {
 
     # cloud SDK
     azure-storage-azcopy
-    google-cloud-sdk
+    (google-cloud-sdk.withExtraComponents
+      (with google-cloud-sdk.components; [
+        gke-gcloud-auth-plugin
+      ]))
+
 
     # Gaming
     lutris
