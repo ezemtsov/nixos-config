@@ -92,6 +92,7 @@ in {
         gke-gcloud-auth-plugin
       ]))
 
+    awscli2
 
     # Gaming
     lutris
