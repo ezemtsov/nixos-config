@@ -389,6 +389,8 @@ With argument, do this that many times."
                                 (start-process "alacritty" nil "alacritty")))
 
               ("<print>" . ewm-transient)
+              ("<print>" . (lambda () (interactive)
+                             (start-process "screenshot" nil "screenshot")))
 
               ;; Buffer movement
               ("C-s-<left>" . buf-move-left)

@@ -165,6 +165,10 @@ in {
 
     # NixOS helpers
     (writeShellScriptBin "nixos-switch" (builtins.readFile ./nixos-switch))
+    (writeShellScriptBin "screenshot" ''
+      ${grim}/bin/grim -g "$(${slurp}/bin/slurp)" - | ${satty}/bin/satty --filename - --fullscreen --early-exit --copy-command ${wl-clipboard}/bin/wl-copy
+    '')
+
     (pkgs.callPackage "${sources.agenix}/pkgs/agenix.nix" {})
   ];
 }
