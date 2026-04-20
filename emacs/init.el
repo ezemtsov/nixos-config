@@ -363,10 +363,8 @@ With argument, do this that many times."
               ;; ("s-e" . rotate:even-horizontal)
               ;; ("s-v" . rotate:even-vertical)
               ;; ("s-a" . consult-vterm)
-              ("s-<return>" . (lambda () (interactive)
-                                (start-process "alacritty" nil "alacritty")))
+              ("s-<return>" . vterm)
 
-              ("<print>" . ewm-transient)
               ("<print>" . (lambda () (interactive)
                              (start-process "screenshot" nil "screenshot")))
 
