@@ -91,7 +91,7 @@ in {
   time.timeZone = "Europe/Oslo";
 
   # Enable backlight control.
-  programs.light.enable = true;
+  hardware.acpilight.enable = true;
 
   # Security
   security.pam.services.gdm.enableGnomeKeyring = true;
