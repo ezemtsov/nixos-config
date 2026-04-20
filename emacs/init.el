@@ -112,8 +112,6 @@ With argument, do this that many times."
    'magit-display-buffer-same-window-except-diff-v1)
 
   ;; (mouse-drag-copy-region t) ;; copy mouse selection by default
-  ;; (setq mouse-autoselect-window t) ;; select buffer with mouse
-  ;; (setq focus-follows-mouse t)
 
   ;; Disable creation of lock-files named .#<filename>.
   (setq-default create-lockfiles nil)
