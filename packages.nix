@@ -89,6 +89,7 @@ in {
     claude-monitor
     playwright
     playwright-driver.browsers
+    ghostty
 
     # cloud SDK
     azure-storage-azcopy
