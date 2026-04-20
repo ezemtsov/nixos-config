@@ -2,6 +2,7 @@
 
 {
   networking = {
+    enableIPv6 = false; # TODO: Figure out why ip6 is so slow
     firewall = {
       enable = false;
       allowPing = true;
