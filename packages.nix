@@ -73,6 +73,9 @@ in {
     zstd
     unixtools.netstat
 
+    mermaid-cli
+    loupe
+
     firecracker
 
     libreoffice
