@@ -5,11 +5,6 @@
     variables = {
       MONITOR_PRIMARY = "eDP-1";
       _JAVA_AWT_WM_NONREPARENTING = "1";
-      DOTNET_ROOT = with pkgs.dotnetCorePackages; combinePackages [
-        sdk_8_0
-        sdk_9_0
-        sdk_10_0
-      ] + "/share/dotnet";
 
       PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS="true";
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD="1";
