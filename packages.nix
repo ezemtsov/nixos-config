@@ -17,6 +17,7 @@ in {
   # Configure git
   programs.git = {
     enable = true;
+    lfs.enable = true;
     config = {
       user.name  = "Evgeny Zemtsov";
       user.email = "eugene.zemtsov@gmail.com";
