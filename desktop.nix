@@ -197,14 +197,4 @@
 
   # Finger scanner experiments
   services.fprintd.enable = true;
-
-  age.secrets = {
-    claude = {
-      file = ./secrets/claude.age;
-      path = "/run/secrets/claude";
-      owner = "ezemtsov";
-      group = "users";
-      mode = "600";
-    };
-  };
 }
