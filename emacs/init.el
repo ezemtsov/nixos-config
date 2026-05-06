@@ -391,15 +391,19 @@ With argument, do this that many times."
               ("s-SPC n" . (lambda () (interactive) (set-input-method 'norwegian-keyboard)))
               ("s-SPC s" . (lambda () (interactive) (set-input-method 'swedish-keyboard))))
 
-  :config
-  (ewm-configure-output "eDP-1" :width 1920 :height 1200 :scale 1.25)
-  (ewm-configure-output "Dell Inc. DELL P2725HE 87Z8C84" :width 1920 :height 1080 :scale 1.0 :transform 1)
-  (ewm-configure-output "Dell Inc. DELL P3425WE 9PJNY54" :width 3440 :height 1440 :refresh 60 :x 1440 :scale 1.0)
-
   :custom
   (ewm-input-config '((touchpad :natural-scroll t)))
+  (ewm-output-config
+   '(("eDP-1" :width 1920 :height 1200 :scale 1.25)
+     ("DP-2" :width 3840 :height 1440 :scale 1.0 :refresh 100)
+     ("DP-6" :width 3840 :height 2160 :scale 1.25 :refresh 120)
+     ("DP-8" :width 3840 :height 2160 :scale 1.5 :refresh 60)
+     ("DP-9" :width 3840 :height 2160 :scale 1.5 :refresh 60)
+     ("Dell Inc. DELL P2725HE 87Z8C84" :width 1920 :height 1080 :scale 1.0 :transform 1)))
   (ewm-focus-follows-mouse t)
-  (ewm-idle 300))
+  (ewm-idle 300)
+  (ewm-cursor-auto-hide 5)
+  (ewm-cursor-hide-when-typing nil))
 
 (use-package dumb-jump
   :ensure t
@@ -600,3 +604,6 @@ With argument, do this that many times."
   :mode "\\.kit\\'"
   :hook
   (kotlin-ts-mode . eglot-ensure))
+
+;; (use-package ghostel
+;;   :ensure t)
