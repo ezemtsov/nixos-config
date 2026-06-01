@@ -1,5 +1,35 @@
 { lib, pkgs, config, ... }:
 
+let
+  emacsSrc = /home/ezemtsov/git/emacs;
+  skiaEmacs = pkgs.emacs-git-pgtk.overrideAttrs (old: {
+    src = lib.fileset.toSource {
+      root = emacsSrc;
+      fileset = lib.fileset.gitTracked emacsSrc;
+    };
+    configureFlags = old.configureFlags ++ [ "--with-skia" ];
+    buildInputs = old.buildInputs ++ (with pkgs; [ skia libepoxy ]);
+    nativeBuildInputs = old.nativeBuildInputs ++ (with pkgs; [
+      autoconf automake
+    ]);
+    preConfigure = (old.preConfigure or "") + ''
+      ./autogen.sh
+    '';
+  });
+
+  emacsPackage = pkgs.emacsWithPackagesFromUsePackage {
+    package = skiaEmacs;
+    config = ./emacs/init.el;
+    extraEmacsPackages = epkgs: with epkgs; [
+      config.programs.ewm.ewmPackage
+      treesit-grammars.with-all-grammars
+    ] ++ (with epkgs.melpaPackages; [
+      vterm
+      jinx
+      telega
+    ]);
+  };
+in
 {
   environment = {
     variables = {
@@ -25,38 +55,22 @@
   };
 
   programs.niri.enable = true;
-  services.displayManager.gdm.enable = true;
+  services.greetd = {
+    enable = true;
+    useTextGreeter = true;
+    settings.default_session = {
+      command = "${lib.getExe pkgs.tuigreet} --time --remember --remember-user-session --asterisks";
+      user = "greeter";
+    };
+  };
 
   # Emacs Wayland Manager
   programs.ewm = {
+    inherit emacsPackage;
     enable = true;
     extraEmacsArgs = ''
       --init-directory /etc/nixos/emacs
     '';
-    emacsPackage = pkgs.emacsWithPackagesFromUsePackage {
-      package = pkgs.emacs-pgtk.overrideAttrs (old: {
-          # src = /home/ezemtsov/git/emacs;
-          # configureFlags = (old.configureFlags or []) ++ [
-          #   "--with-skia"
-          # ];
-          # buildInputs = (old.buildInputs or []) ++ [
-          #   pkgs.skia
-          #   pkgs.libepoxy
-          # ];
-          # postPatch = (old.postPatch or "") + ''
-          #   mkdir -p src/deps/skia
-          # '';
-        });
-      config = ./emacs/init.el;
-      extraEmacsPackages = epkgs: with epkgs; [
-        config.programs.ewm.ewmPackage
-        treesit-grammars.with-all-grammars
-      ] ++ (with epkgs.melpaPackages; [
-        vterm
-        jinx
-        telega
-      ]);
-    };
   };
 
   # DMS requires upower to show battery percentage
@@ -99,6 +113,8 @@
     wev            # wayland event viewer
     slurp          # region selection
     tracy
+
+    emacsPackage
   ];
 
   services.libinput = {
