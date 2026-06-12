@@ -1,5 +1,10 @@
-{ pkgs, sources, ... }:
+{ config, lib, pkgs, sources, ... }:
 
+let
+  falconSensor = pkgs.callPackage ./crowdstrike { };
+  crowdstrikeCidSecret = ./secrets/crowdstrike-cid.age;
+  hasCrowdstrikeCidSecret = builtins.pathExists crowdstrikeCidSecret;
+in
 {
   # Allow testing .NET compiled executables and Android emulator
   programs.nix-ld.enable = true;
@@ -19,6 +24,61 @@
     enable = true;
     polkitPolicyOwners = [ "ezemtsov" ];
   };
+
+  age.secrets.crowdstrike-cid = lib.mkIf hasCrowdstrikeCidSecret {
+    file = crowdstrikeCidSecret;
+    path = "/run/secrets/crowdstrike-cid";
+    owner = "root";
+    group = "root";
+    mode = "0400";
+  };
+
+  systemd.packages = [ falconSensor.unwrapped ];
+
+  systemd.tmpfiles.rules = falconSensor.tmpfilesRules;
+
+  systemd.services.falcon-sensor-configure = lib.mkIf hasCrowdstrikeCidSecret {
+    before = [ "falcon-sensor.service" ];
+    after = [
+      "agenix-install-secrets.service"
+      "systemd-tmpfiles-setup.service"
+    ];
+    requiredBy = [ "falcon-sensor.service" ];
+
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
+
+    script = ''
+      cid="$(${pkgs.coreutils}/bin/tr -d '\n\r ' < ${config.age.secrets.crowdstrike-cid.path})"
+      if [ -z "$cid" ]; then
+        echo "CrowdStrike CID secret is empty" >&2
+        exit 1
+      fi
+
+      /opt/CrowdStrike/falconctl -s --cid="$cid" -f
+    '';
+  };
+
+  systemd.services.falcon-sensor = lib.mkMerge [
+    {
+      wantedBy = [
+        "sysinit.target"
+        "multi-user.target"
+      ];
+      after = [ "systemd-tmpfiles-setup.service" ];
+    }
+
+    (lib.mkIf hasCrowdstrikeCidSecret {
+      after = [ "falcon-sensor-configure.service" ];
+      requires = [ "falcon-sensor-configure.service" ];
+    })
+
+    (lib.mkIf (!hasCrowdstrikeCidSecret) {
+      serviceConfig.ExecCondition = [ "/opt/CrowdStrike/falconctl -g --cid" ];
+    })
+  ];
 
   # ... and declare packages to be installed.
   environment.systemPackages = with pkgs; [
@@ -111,6 +171,9 @@
     nixd
     nix-diff
     nixpkgs-fmt
+
+    # Crowdstrike
+    falconSensor
 
     # Chicken packages
     chicken

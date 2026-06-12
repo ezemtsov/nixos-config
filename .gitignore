@@ -1,0 +1,3 @@
+/crowdstrike/*.deb
+/secrets/*.plain
+/secrets/*.txt
