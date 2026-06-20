@@ -321,7 +321,16 @@ With argument, do this that many times."
                                (directory-file-name default-directory))))
                      (rename-buffer (format "vterm %s" dir) t))))))
 
-;; (use-package ghostel :ensure t)
+(use-package ghostel
+  :ensure t
+  :custom
+  (ghostel-input-coalesce-delay 0)
+  :config
+  (setq ghostel-notification-function
+        (lambda (title body)
+          (when-let* ((window (get-buffer-window (current-buffer) t)))
+            (ignore-errors (ewm-workspace-mark-urgent (window-frame window))))
+          (ghostel-default-notify title body))))
 
 (use-package multiple-cursors
   :ensure t
