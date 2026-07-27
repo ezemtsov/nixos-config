@@ -80,26 +80,6 @@ With argument, do this that many times."
     (interactive "p")
     (delete-word (- arg)))
 
-  ;; ;; DankBar modeline: push buffer status to DMS via IPC
-  ;; (defvar ewm-dms-status--last nil)
-
-  ;; (defun ewm-dms-status--update ()
-  ;;   "Push current buffer info to DankBar widget via DMS IPC."
-  ;;   (let* ((buf (buffer-name))
-  ;;          (mode (symbol-name major-mode))
-  ;;          (line (number-to-string (line-number-at-pos)))
-  ;;          (col (number-to-string (current-column)))
-  ;;          (modified (if (buffer-modified-p) " *" ""))
-  ;;          (text (format "%s  %s  L%s:%s%s" buf mode line col modified)))
-  ;;     (unless (equal text ewm-dms-status--last)
-  ;;       (setq ewm-dms-status--last text)
-  ;;       (start-process "dms-status" nil "dms" "ipc" "call" "emacsStatus" "set" text))))
-
-  ;; (add-hook 'post-command-hook #'ewm-dms-status--update)
-
-  ;; (setq-default mode-line-format nil)
-  ;; (setq-default header-line-format nil)
-
   :custom
   (use-short-answers t)	;; y or n
   (inhibit-startup-message t) ;; disable startup screen
@@ -111,6 +91,9 @@ With argument, do this that many times."
   (magit-display-buffer-function ;; show magit in the same buffer
    'magit-display-buffer-same-window-except-diff-v1)
 
+
+  (pixel-scroll-precision-mode t)
+  (pixel-scroll-precision-use-momentum t)
   ;; (mouse-drag-copy-region t) ;; copy mouse selection by default
 
   ;; Disable creation of lock-files named .#<filename>.
@@ -362,37 +345,30 @@ With argument, do this that many times."
   (tab-bar-mode 1)
   (tab-bar-history-mode t)
   :custom
+  (tab-bar-show nil)
   (tab-bar-new-tab-choice
-   (lambda () (get-buffer-create "*scratch*")))
-  (tab-bar-show nil))
+   (lambda () (get-buffer-create "*scratch*"))))
 
 ;;-----------------------------------------------------------
 ;; EWM Configuration (Wayland replacement for EXWM)
 ;;-----------------------------------------------------------
 
 (use-package ewm
-  :commands (ewm-start-module ewm-transient)
+  :commands (ewm-start-module)
   :load-path "/home/ezemtsov/git/ewm/lisp"
   :init
-  (add-to-list 'default-frame-alist '(alpha-background . 90))
-  ;; (ewm-text-input-auto-mode-enable)
+  (add-to-list 'default-frame-alist '(alpha-background . 100))
+
+  :hook
+  (ewm-mode . (lambda () (interactive (start-process "waybar" nil "/nix/store/wsw8yw6f2500cvxjh84n80xb1v3hdgib-waybar-0.15.0/bin/waybar"))))
 
   :bind (:map ewm-mode-map
               ;; Core actions - EWM auto-detects super-key bindings from keymap
               ("s-d" . consult-buffer)
-              ;; ("s-e" . rotate:even-horizontal)
-              ;; ("s-v" . rotate:even-vertical)
-              ;; ("s-a" . consult-vterm)
-              ("s-<return>" . vterm)
+              ("s-<return>" . (lambda () (interactive) (ghostel '(4))))
 
               ("<print>" . (lambda () (interactive)
                              (start-process "screenshot" nil "screenshot")))
-
-              ;; Buffer movement
-              ("C-s-<left>" . buf-move-left)
-              ("C-s-<right>" . buf-move-right)
-              ("C-s-<up>" . buf-move-up)
-              ("C-s-<down>" . buf-move-down)
 
               ;; Input method switching (s-SPC prefix)
               ("s-SPC e" . (lambda () (interactive) (set-input-method nil)))
@@ -401,17 +377,18 @@ With argument, do this that many times."
               ("s-SPC s" . (lambda () (interactive) (set-input-method 'swedish-keyboard))))
 
   :custom
-  (ewm-input-config '((touchpad :natural-scroll t)))
+  (ewm-input-config '((touchpad :natural-scroll t :dwt nil)))
   (ewm-output-config
-   '(("eDP-1" :width 1920 :height 1200 :scale 1.25)
+   '(
+     ("eDP-1" :width 1920 :height 1200 :scale 1.25)
      ("DP-2" :width 3840 :height 1440 :scale 1.0 :refresh 100)
      ("DP-6" :width 3840 :height 2160 :scale 1.25 :refresh 120)
      ("DP-8" :width 3840 :height 2160 :scale 1.5 :refresh 60)
      ("DP-9" :width 3840 :height 2160 :scale 1.5 :refresh 60)
-     ("Dell Inc. DELL P2725HE 87Z8C84" :width 1920 :height 1080 :scale 1.0 :transform 1)))
+     ("Dell Inc. DELL P2725HE 87Z8C84" :width 1920 :height 1080 :scale 1.0 :transform 1)
+     ("Dell Inc. DELL S2725QC JN0L464" :width 3840 :height 2160 :scale 1.5 :refresh 120)))
   (ewm-focus-follows-mouse t)
   (ewm-idle 300)
-  (ewm-cursor-auto-hide 5)
   (ewm-cursor-hide-when-typing nil))
 
 (use-package dumb-jump
@@ -491,23 +468,23 @@ With argument, do this that many times."
   :ensure t
   :hook (fsharp-mode . highlight-indentation-mode))
 
-(use-package eglot-fsharp
-  :ensure t
-  :custom
-  ;; Use system-installed fsautocomplete from NixOS
-  (eglot-fsharp-server-path "/run/current-system/sw/bin/")
-  ;; Disable auto-installation since we're using the NixOS package
-  (eglot-fsharp-server-install-dir nil))
+;; (use-package eglot-fsharp
+;;   :ensure t
+;;   :custom
+;;   ;; Use system-installed fsautocomplete from NixOS
+;;   (eglot-fsharp-server-path "/run/current-system/sw/bin/")
+;;   ;; Disable auto-installation since we're using the NixOS package
+;;   (eglot-fsharp-server-install-dir nil))
 
-(use-package fsharp-mode
-  :ensure t
-  :defer t
-  :config
-  (add-to-list 'auto-mode-alist '("\\.fsproj\\'" . nxml-mode))
-  (add-to-list 'auto-mode-alist '("\\.csproj\\'" . nxml-mode))
-  (setq fsharp-mode-project-root nil)
-  :hook
-  (fsharp-mode . eglot-ensure))
+;; (use-package fsharp-mode
+;;   :ensure t
+;;   :defer t
+;;   :config
+;;   (add-to-list 'auto-mode-alist '("\\.fsproj\\'" . nxml-mode))
+;;   (add-to-list 'auto-mode-alist '("\\.csproj\\'" . nxml-mode))
+;;   (setq fsharp-mode-project-root nil)
+;;   :hook
+;;   (fsharp-mode . eglot-ensure))
 
 (use-package python-mode
   :ensure t
@@ -557,6 +534,7 @@ With argument, do this that many times."
   :mode "\\.tf\\'")
 
 (use-package telega
+  :ensure t
   :config
   (setq telega-emoji-use-images nil)
   (setq telega-use-images t)
@@ -565,19 +543,6 @@ With argument, do this that many times."
   (setq telega-user-show-avatars t)
   (setq telega-chat-history-limit 50)
   (telega-notifications-mode t))
-
-(use-package eat
-  :ensure t
-  :config
-  (eat-eshell-mode t))
-
-(use-package claude-code-ide
-  :vc (:url "https://github.com/manzaltu/claude-code-ide.el" :rev :newest)
-  :bind ("C-c C-'" . claude-code-ide-menu)
-  :config
-  (setq claude-code-ide-terminal-backend 'eat)
-  (setq claude-code-ide-use-ide-diff nil)
-  (claude-code-ide-emacs-tools-setup))
 
 (use-package envrc
   :ensure t
@@ -613,6 +578,3 @@ With argument, do this that many times."
   :mode "\\.kit\\'"
   :hook
   (kotlin-ts-mode . eglot-ensure))
-
-;; (use-package ghostel
-;;   :ensure t)

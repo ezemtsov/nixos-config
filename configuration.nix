@@ -24,6 +24,17 @@ in {
   # Configure the emacs overlay
   nixpkgs.overlays = [
     (import sources.emacs-overlay)
+    # (self: super: {
+    #   tdlib = super.tdlib.overrideAttrs {
+    #     version = "1.8.64";
+    #     src = pkgs.fetchFromGitHub {
+    #       owner = "tdlib";
+    #       repo = "td";
+    #       rev = "7f163d850abbebecf749e99fb412271cc1f4e805";
+    #       hash = "sha256-f571bmS/o6lySNl45g455cxC8CS4hrgPrjZbXDYJfvQ=";
+    #     };
+    #   };
+    # })
   ];
 
   # Configure overlays
@@ -56,12 +67,14 @@ in {
 
   boot = {
     # Pick latest kernel
-    kernelPackages = pkgs.linuxPackages_latest;
+    # kernelPackages = pkgs.linuxPackages_latest;
 
     # Enable full preemptive (for real-time audio)
     # Disable AMD PSR — triggers display freeze with continuous-commit clients
     # like dms-shell. See docs/DISPLAY_FREEZE_INVESTIGATION.md
-    kernelParams = [ "preempt=full" "amdgpu.dcdebugmask=0x10" ];
+    # usbcore.autosuspend=-1 works around MT7925 BT firmware bug that breaks the
+    # chip's HW/FW state machine on autosuspend remote-wakeup (RH bz#2372880)
+    kernelParams = [ "preempt=full" "amdgpu.dcdebugmask=0x10" "usbcore.autosuspend=-1" ];
 
     # Make booting nicer
     plymouth.enable = true;
@@ -96,7 +109,6 @@ in {
   hardware.acpilight.enable = true;
 
   # Security
-  security.pam.services.gdm.enableGnomeKeyring = true;
   services.gnome.gnome-keyring.enable = true;
   services.openssh.enable = true;
   programs.gnupg.agent = {
@@ -113,17 +125,10 @@ in {
   # KVM (for nix vmTools)
   boot.kernelModules =  [ "kvm-amd" ];
 
-  # virtualisation.libvirtd = {
-  #   enable = true;
-  #   qemu.ovmf = {
-  #     enable = true;
-  #     packages = [ (pkgs.OVMF.override {
-  #       secureBoot = true;
-  #       tpmSupport = true;
-  #     }).fd];
-  #   };
-  #   qemu.vhostUserPackages = with pkgs; [ virtiofsd ];
-  # };
+  virtualisation.libvirtd = {
+    enable = true;
+    qemu.vhostUserPackages = with pkgs; [ virtiofsd ];
+  };
 
   # Enable USB automount
   services.gvfs.enable = true;

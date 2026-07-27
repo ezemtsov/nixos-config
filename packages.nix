@@ -25,6 +25,8 @@ in
     polkitPolicyOwners = [ "ezemtsov" ];
   };
 
+  services.flatpak.enable = true;
+
   age.secrets.crowdstrike-cid = lib.mkIf hasCrowdstrikeCidSecret {
     file = crowdstrikeCidSecret;
     path = "/run/secrets/crowdstrike-cid";
@@ -122,6 +124,7 @@ in
     vlc
     wget
     which
+    fractal
     zstd
     unixtools.netstat
 
@@ -142,9 +145,11 @@ in
     # AI Stuff
     claude-code
     claude-monitor
+    codex
     playwright
     playwright-driver.browsers
     ghostty
+    graphite-cli
 
     # cloud SDK
     azure-storage-azcopy
@@ -156,7 +161,6 @@ in
     awscli2
 
     # Gaming
-    lutris
     wineWow64Packages.stable
     winetricks
 
@@ -223,8 +227,7 @@ in
     vscode-langservers-extracted
 
     # Javascript packages
-    nodejs
-    typescript-language-server
+    bun
 
     # Android development
     gradle

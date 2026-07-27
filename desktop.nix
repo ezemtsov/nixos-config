@@ -1,16 +1,52 @@
 { lib, pkgs, config, ... }:
 
 let
-  emacsSrc = /home/ezemtsov/git/emacs;
-  skiaEmacs = pkgs.emacs-git-pgtk.overrideAttrs (old: {
-    src = lib.fileset.toSource {
-      root = emacsSrc;
-      fileset = lib.fileset.gitTracked emacsSrc;
-    };
-    configureFlags = old.configureFlags ++ [ "--with-skia" ];
-    buildInputs = old.buildInputs ++ (with pkgs; [ skia libepoxy ]);
+  skiaEmacsBase = pkgs.emacs-git.override {
+    withX = false;
+    withCairo = false;
+    withGTK3 = false;
+    withPgtk = false;
+    withXwidgets = false;
+    withToolkitScrollBars = false;
+  };
+
+  skiaEmacs = skiaEmacsBase.overrideAttrs (old: {
+    src = /home/ezemtsov/git/emacs;
+    configureFlags = (lib.filter
+      (flag:
+        !(lib.elem flag [
+          "--without-gif"
+          "--without-jpeg"
+          "--without-png"
+          "--without-tiff"
+        ]))
+      (old.configureFlags or [])) ++ [
+      "--with-rsvg"
+      "--with-pwayl"
+      "--with-skia"
+      "--with-gif"
+      "--with-jpeg"
+      "--with-png"
+      "--with-tiff"
+    ];
+    buildInputs = old.buildInputs ++ (with pkgs; [
+      fontconfig
+      freetype
+      giflib
+      libjpeg
+      libpng
+      libtiff
+      librsvg
+      skia
+      libepoxy
+      wayland
+      wayland-protocols
+      libxkbcommon
+    ]);
     nativeBuildInputs = old.nativeBuildInputs ++ (with pkgs; [
-      autoconf automake
+      autoconf
+      automake
+      wayland-scanner
     ]);
     preConfigure = (old.preConfigure or "") + ''
       ./autogen.sh
@@ -26,8 +62,17 @@ let
     ] ++ (with epkgs.melpaPackages; [
       vterm
       jinx
-      telega
     ]);
+    override = final: prev: {
+      telega = prev.melpaPackages.telega.overrideAttrs(old: {
+        src = pkgs.fetchFromGitHub {
+          owner = "zevlg";
+          repo = "telega.el";
+          rev = "6c82622dbd98ac8ea024f56490607151d9bd1032";
+          hash = "sha256-WE4WhuJHQdPGWHrZDqxgdktHgJgBt0iUBAplQi3fX7w=";
+        };
+      });
+    };
   };
 in
 {
@@ -87,7 +132,7 @@ in
     # EWM Emacs (same package the compositor uses, for dev/debug)
     config.programs.ewm.emacsPackage
     xwayland-satellite
-    maplestory-cursor
+    adwaita-icon-theme
 
     # EWM packages
     nemo
@@ -211,6 +256,31 @@ in
     wheelNeedsPassword = false;
   };
 
-  # Finger scanner experiments
+  # Finger scanner and yubikey
   services.fprintd.enable = true;
+  services.pcscd.enable = true;
+
+  security.pam.services = {
+    polkit-1.fprintAuth = true; # Required for browser prompts
+    greetd.fprintAuth = true;
+    greetd.enableGnomeKeyring = true;
+    login.enableGnomeKeyring = true;
+  };
+
+  # Cursor theme
+  xdg.icons.fallbackCursorThemes = [ "Adwaita" ];
+  environment.sessionVariables = {
+    # TEMP: remove once the Wayland-Skia display disconnect is diagnosed.
+    WL_SKIA_TRACE = "1";
+    XCURSOR_THEME = "Adwaita";
+    XCURSOR_SIZE = "24";
+  };
+  programs.dconf.profiles.user.databases = [
+    {
+      settings."org/gnome/desktop/interface" = {
+        cursor-theme = "Adwaita";
+        cursor-size = lib.gvariant.mkInt32 24;
+      };
+    }
+  ];
 }
