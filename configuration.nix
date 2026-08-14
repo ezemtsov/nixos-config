@@ -24,6 +24,7 @@ in {
   # Configure the emacs overlay
   nixpkgs.overlays = [
     (import sources.emacs-overlay)
+    (import /home/ezemtsov/git/ewm/nix/overlay.nix)
     # (self: super: {
     #   tdlib = super.tdlib.overrideAttrs {
     #     version = "1.8.64";
@@ -145,4 +146,13 @@ in {
 
   # Bluetooth
   hardware.bluetooth.enable = true;
+
+  # Hibernate on low power
+  boot.initrd.systemd.enable = true;
+  services.upower.enable = true;
+  services.upower.criticalPowerAction = "Hibernate";
+  swapDevices = [{ device = "/swapfile"; size = 64 * 1024; }];
+  systemd.tmpfiles.rules = [
+    "w /sys/power/image_size - - - - ${toString (8 * 1024 * 1024 * 1024)}"  # 8 GiB
+  ];
 }

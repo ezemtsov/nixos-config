@@ -1,60 +1,8 @@
 { lib, pkgs, config, ... }:
 
 let
-  skiaEmacsBase = pkgs.emacs-git.override {
-    withX = false;
-    withCairo = false;
-    withGTK3 = false;
-    withPgtk = false;
-    withXwidgets = false;
-    withToolkitScrollBars = false;
-  };
-
-  skiaEmacs = skiaEmacsBase.overrideAttrs (old: {
-    src = /home/ezemtsov/git/emacs;
-    configureFlags = (lib.filter
-      (flag:
-        !(lib.elem flag [
-          "--without-gif"
-          "--without-jpeg"
-          "--without-png"
-          "--without-tiff"
-        ]))
-      (old.configureFlags or [])) ++ [
-      "--with-rsvg"
-      "--with-pwayl"
-      "--with-skia"
-      "--with-gif"
-      "--with-jpeg"
-      "--with-png"
-      "--with-tiff"
-    ];
-    buildInputs = old.buildInputs ++ (with pkgs; [
-      fontconfig
-      freetype
-      giflib
-      libjpeg
-      libpng
-      libtiff
-      librsvg
-      skia
-      libepoxy
-      wayland
-      wayland-protocols
-      libxkbcommon
-    ]);
-    nativeBuildInputs = old.nativeBuildInputs ++ (with pkgs; [
-      autoconf
-      automake
-      wayland-scanner
-    ]);
-    preConfigure = (old.preConfigure or "") + ''
-      ./autogen.sh
-    '';
-  });
-
   emacsPackage = pkgs.emacsWithPackagesFromUsePackage {
-    package = skiaEmacs;
+    package = pkgs.emacs31-pwayl;
     config = ./emacs/init.el;
     extraEmacsPackages = epkgs: with epkgs; [
       config.programs.ewm.ewmPackage
@@ -72,6 +20,16 @@ let
           hash = "sha256-WE4WhuJHQdPGWHrZDqxgdktHgJgBt0iUBAplQi3fX7w=";
         };
       });
+
+      # Temporary until https://github.com/doomemacs/themes/pull/892 merges.
+      doom-themes = prev.melpaPackages.doom-themes.overrideAttrs {
+        postPatch = ''
+          substituteInPlace doom-themes-base.el \
+            --replace-fail \
+              "(gnus-group-news-low-empty   :inherit 'gnus-group-news-low :weight 'normal)" \
+              "(gnus-group-news-low-empty   :inherit 'gnus-group-mail-1-empty :weight 'normal)"
+        '';
+      };
     };
   };
 in
@@ -117,9 +75,6 @@ in
       --init-directory /etc/nixos/emacs
     '';
   };
-
-  # DMS requires upower to show battery percentage
-  services.upower.enable = true;
 
   # DMS is a nice looking top level shell
   programs.dms-shell = {
@@ -194,6 +149,7 @@ in
     packages = with pkgs; [
       ibm-plex
       font-awesome_6
+      nerd-fonts.symbols-only
     ];
   };
 
