@@ -315,6 +315,10 @@ With argument, do this that many times."
             (ignore-errors (ewm-workspace-mark-urgent (window-frame window))))
           (ghostel-default-notify title body))))
 
+(use-package rio
+  :load-path "/home/ezemtsov/git/el-rio"
+  :commands (rio))
+
 (use-package multiple-cursors
   :ensure t
   :bind
@@ -365,7 +369,7 @@ With argument, do this that many times."
   :bind (:map ewm-mode-map
               ;; Core actions - EWM auto-detects super-key bindings from keymap
               ("s-d" . consult-buffer)
-              ("s-<return>" . (lambda () (interactive) (ghostel '(4))))
+              ("s-<return>" . (lambda () (interactive) (rio)))
 
               ("<print>" . (lambda () (interactive)
                              (start-process "screenshot" nil "screenshot")))
