@@ -17,6 +17,9 @@
   (delete-selection-mode t) ;; delete on paste
   (electric-pair-mode t) ;; smart parentesis wrapping
 
+  ;; Keep minibuffer local to the current frame
+  (setq minibuffer-follows-selected-frame nil)
+
   (setq gc-cons-threshold (* 100 1000 1000))
   (setq gc-cons-percentage 0.6)
 
