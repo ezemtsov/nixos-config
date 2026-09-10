@@ -386,7 +386,7 @@ With argument, do this that many times."
   (ewm-input-config '((touchpad :natural-scroll t :dwt nil)))
   (ewm-output-config
    '(
-     ("eDP-1" :width 1920 :height 1200 :scale 1.25)
+     ("eDP-1" :width 1920 :height 1200 :scale 1.0)
      ("DP-2" :width 3840 :height 1440 :scale 1.0 :refresh 100)
      ("DP-6" :width 3840 :height 2160 :scale 1.25 :refresh 120)
      ("DP-8" :width 3840 :height 2160 :scale 1.5 :refresh 60)
