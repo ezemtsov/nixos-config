@@ -239,4 +239,9 @@ in
       };
     }
   ];
+
+  # Bound the Go build cache (Go has no size limit): trim entries untouched for 3 days.
+  systemd.tmpfiles.rules = [
+    "e /home/ezemtsov/.cache/go-build - - - 3d"
+  ];
 }
