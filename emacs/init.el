@@ -215,28 +215,6 @@ With argument, do this that many times."
           :action   #'consult--buffer-action
           :items    (list (buffer-name (current-buffer)))))
 
-  (defvar consult-source-vterm
-    (list :name "Vterm Sessions"
-          :narrow ?v
-          :category 'buffer
-          :face 'consult-buffer
-          :history 'buffer-name-history
-          :state #'consult--buffer-state
-          :action #'consult--buffer-action
-          :items
-          (lambda ()
-            (mapcar #'buffer-name
-                    (seq-filter
-                     (lambda (buf)
-                       (with-current-buffer buf
-                         (eq major-mode 'vterm-mode)))
-                     (buffer-list))))))
-
-  (defun consult-vterm ()
-    "List and switch to vterm sessions only."
-    (interactive)
-    (consult-buffer '(consult-source-vterm)))
-
   :custom
   (consult-buffer-sources
    '(consult-source-current-buffer
@@ -288,34 +266,6 @@ With argument, do this that many times."
   :init
   (setq vundo-compact-display t)
   (setq vundo-popup-timeout 0.7))
-
-;; Use fish for vterm
-(use-package vterm
-  :defer t
-  :custom
-  (vterm-max-scrollback 5000)
-  (vterm-timer-delay 0.01)
-  (vterm-buffer-name-string "vterm %s")
-  (vterm-shell "fish")
-  :config
-  ;; Allow custom commands from shell for dynamic buffer naming
-  (add-to-list 'vterm-eval-cmds
-               '("vterm-rename-buffer-by-directory"
-                 (lambda ()
-                   (let ((dir (file-name-nondirectory
-                               (directory-file-name default-directory))))
-                     (rename-buffer (format "vterm %s" dir) t))))))
-
-(use-package ghostel
-  :ensure t
-  :custom
-  (ghostel-input-coalesce-delay 0)
-  :config
-  (setq ghostel-notification-function
-        (lambda (title body)
-          (when-let* ((window (get-buffer-window (current-buffer) t)))
-            (ignore-errors (ewm-workspace-mark-urgent (window-frame window))))
-          (ghostel-default-notify title body))))
 
 (use-package rio
   :load-path "/home/ezemtsov/git/el-rio"
