@@ -20,16 +20,6 @@ let
           hash = "sha256-WE4WhuJHQdPGWHrZDqxgdktHgJgBt0iUBAplQi3fX7w=";
         };
       });
-
-      # Temporary until https://github.com/doomemacs/themes/pull/892 merges.
-      doom-themes = prev.melpaPackages.doom-themes.overrideAttrs {
-        postPatch = ''
-          substituteInPlace doom-themes-base.el \
-            --replace-fail \
-              "(gnus-group-news-low-empty   :inherit 'gnus-group-news-low :weight 'normal)" \
-              "(gnus-group-news-low-empty   :inherit 'gnus-group-mail-1-empty :weight 'normal)"
-        '';
-      };
     };
   };
 in

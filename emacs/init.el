@@ -126,10 +126,12 @@ With argument, do this that many times."
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
 
-(use-package color-theme-sanityinc-tomorrow
+(use-package doom-themes
   :ensure t
   :init
-  (load-theme 'sanityinc-tomorrow-night t)
+  (setq doom-themes-enable-bold t
+        doom-themes-enable-italic t)
+  (load-theme 'doom-molokai t)
   :config
   ;; Better font rendering on Linux
   (setq x-use-underline-position-properties t)
@@ -154,23 +156,23 @@ With argument, do this that many times."
   (set-fontset-font t 'symbol "Noto Color Emoji" nil 'prepend)
   (set-fontset-font t 'unicode "Noto Color Emoji" nil 'append)
 
-  ;; Half-height mode-line; color-only focus cue (no overline/box to avoid
-  ;; resizing the mode-line height, which would reflow Wayland clients).
-  (set-face-attribute 'mode-line nil
-                      :height 80
-                      :background "#2c3e50"
-                      :foreground "#eaeaea"
-                      :box nil)
-  (set-face-attribute 'mode-line-inactive nil
-                      :height 80
-                      :background "#1f2125"
-                      :foreground "#5c6370"
-                      :box nil)
+  (defun compact-mode-line (&rest _)
+    "Shrink the mode-line and drop its box."
+    (set-face-attribute 'mode-line nil :height 80 :box nil)
+    (set-face-attribute 'mode-line-inactive nil :height 80 :box nil))
+  (add-hook 'enable-theme-functions #'compact-mode-line)
+  (compact-mode-line)
 
   (menu-bar-mode 0)
   (scroll-bar-mode 0)
   (tool-bar-mode 0)
-  (fringe-mode 0))
+  (fringe-mode 0)
+  (doom-themes-org-config))
+
+(use-package doom-modeline
+  :ensure t
+  :init
+  (doom-modeline-mode 1))
 
 (use-package vertico
   :ensure t
