@@ -332,6 +332,9 @@ With argument, do this that many times."
               ("<print>" . (lambda () (interactive)
                              (start-process "screenshot" nil "screenshot")))
 
+              ("s-C-<left>" . winner-undo)
+              ("s-C-<right>" . winner-redo)
+
               ;; Input method switching (s-SPC prefix)
               ("s-SPC e" . (lambda () (interactive) (set-input-method nil)))
               ("s-SPC r" . (lambda () (interactive) (set-input-method 'russian-computer)))
