@@ -140,6 +140,7 @@ in
       ibm-plex
       font-awesome_6
       nerd-fonts.symbols-only
+      maple-mono.truetype
     ];
   };
 
