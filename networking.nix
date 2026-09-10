@@ -27,6 +27,8 @@
 
   # enable the tailscale service
   services.tailscale.enable = true;
+  services.resolved.enable = true;
+
   programs.fuse.userAllowOther = true;
 
   # search engine
