@@ -25,6 +25,11 @@ in {
   nixpkgs.overlays = [
     (import sources.emacs-overlay)
     (import /home/ezemtsov/git/ewm/nix/overlay.nix)
+    (final: prev: {
+      emacs31-pwayl = prev.emacs31-pwayl.overrideAttrs (_: {
+        src = final.lib.cleanSource /home/ezemtsov/git/emacs;
+      });
+    })
     # (self: super: {
     #   tdlib = super.tdlib.overrideAttrs {
     #     version = "1.8.64";

@@ -363,6 +363,9 @@ With argument, do this that many times."
   :commands (ewm-start-module)
   :load-path "/home/ezemtsov/git/ewm/lisp"
   :init
+  ;; Never prefer a stale .elc over a newer .el; this repo rebases often
+  ;; and outdated byte-code surfaces as spurious void-variable errors.
+  (setq load-prefer-newer t)
   (add-to-list 'default-frame-alist '(alpha-background . 100))
 
   :hook
