@@ -27,6 +27,10 @@ let
       });
     };
   };
+  ferroide = import (builtins.fetchGit {
+    url = /home/ezemtsov/git/ferroide;
+    ref = "main";
+  }) { inherit pkgs; };
 in
 {
   environment = {
@@ -76,6 +80,18 @@ in
     enable = true;
     systemd.enable = true;
     systemd.restartIfChanged = true;
+  };
+
+  # Manoloide's paintings as the wallpaper; the DMS lock screen reads the dump
+  systemd.user.services.ferroide = {
+    description = "ferroide wallpaper";
+    partOf = [ "graphical-session.target" ];
+    after = [ "graphical-session.target" ];
+    wantedBy = [ "graphical-session.target" ];
+    serviceConfig = {
+      ExecStart = "${ferroide}/bin/ferroide --every 1h --dump %t/ferroide.bmp";
+      Restart = "on-failure";
+    };
   };
 
   environment.systemPackages = with pkgs; [
@@ -209,10 +225,12 @@ in
 
   security.pam.services = {
     polkit-1.fprintAuth = true; # Required for browser prompts
-    greetd.fprintAuth = true;
+    greetd.fprintAuth = false;
     greetd.enableGnomeKeyring = true;
     login.enableGnomeKeyring = true;
   };
+
+  xdg.mime.defaultApplications."video/mp4" = "mpv.desktop";
 
   # Cursor theme
   xdg.icons.fallbackCursorThemes = [ "Adwaita" ];

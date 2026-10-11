@@ -7,6 +7,7 @@ let
 in
 {
   # Allow testing .NET compiled executables and Android emulator
+  services.envfs.enable = true;
   programs.nix-ld.enable = true;
 
   # Configure git
@@ -82,6 +83,8 @@ in
     })
   ];
 
+  programs.steam.enable = true;
+
   # ... and declare packages to be installed.
   environment.systemPackages = with pkgs; [
     (btop.override { rocmSupport = true; })
@@ -121,7 +124,7 @@ in
     tree
     unzip
     virt-manager
-    vlc
+    mpv
     wget
     which
     fractal

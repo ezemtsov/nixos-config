@@ -38,6 +38,8 @@
 
   ;; Copy on selection
   (setq mouse-drag-copy-region t)
+  (setq mouse-drag-and-drop-region t)
+  (setq mouse-drag-and-drop-region-cross-program t)
 
   (defun split-window-below-focus ()
     (interactive)
@@ -272,7 +274,8 @@ With argument, do this that many times."
 
 (use-package rio
   :load-path "/home/ezemtsov/git/el-rio"
-  :commands (rio))
+  :commands (rio)
+  :config (add-hook 'rio-bell-functions #'ewm-workspace-mark-urgent))   ; BEL = workspace urgent
 
 (use-package multiple-cursors
   :ensure t
@@ -309,7 +312,7 @@ With argument, do this that many times."
    (lambda () (get-buffer-create "*scratch*"))))
 
 ;;-----------------------------------------------------------
-;; EWM Configuration (Wayland replacement for EXWM)
+;; EWM Configuration
 ;;-----------------------------------------------------------
 
 (use-package ewm
@@ -319,10 +322,8 @@ With argument, do this that many times."
   ;; Never prefer a stale .elc over a newer .el; this repo rebases often
   ;; and outdated byte-code surfaces as spurious void-variable errors.
   (setq load-prefer-newer t)
-  (add-to-list 'default-frame-alist '(alpha-background . 100))
-
-  :hook
-  (ewm-mode . (lambda () (interactive (start-process "waybar" nil "/nix/store/wsw8yw6f2500cvxjh84n80xb1v3hdgib-waybar-0.15.0/bin/waybar"))))
+  (add-to-list 'default-frame-alist '(alpha-background . 95))
+  (add-to-list 'default-frame-alist '(blur-background . t))
 
   :bind (:map ewm-mode-map
               ;; Core actions - EWM auto-detects super-key bindings from keymap
@@ -354,7 +355,15 @@ With argument, do this that many times."
      ("Dell Inc. DELL S2725QC JN0L464" :width 3840 :height 2160 :scale 1.5 :refresh 120)))
   (ewm-focus-follows-mouse t)
   (ewm-idle 300)
-  (ewm-cursor-hide-when-typing nil))
+  (ewm-cursor-hide-when-typing nil)
+
+  :config
+  (add-hook 'ewm-update-app-hook
+            (lambda ()
+              (when (equal ewm-surface-app "firefox")
+                (setq-local ewm-surface-emulate-keys
+                            '(("M-w" . "C-c")
+                              ("C-y" . "C-v")))))))
 
 (use-package dumb-jump
   :ensure t
