@@ -2,12 +2,14 @@
 
 let
   emacsPackage = pkgs.emacsWithPackagesFromUsePackage {
-    package = pkgs.emacs31-pwayl.overrideAttrs {
-      src = builtins.fetchGit {
-        url = /home/ezemtsov/git/emacs;
-        ref = "HEAD";
-      };
-    };
+    package = pkgs.emacs31-pwayl.overrideAttrs (
+      let ewmPath = /home/ezemtsov/git/emacs;
+      in lib.mkIf (builtins.pathExists ewmPath) {
+        src = builtins.fetchGit {
+          url = ewmPath;
+          ref = "HEAD";
+        };
+      });
     config = ./emacs/init.el;
     extraEmacsPackages = epkgs: with epkgs; [
       config.programs.ewm.ewmPackage
