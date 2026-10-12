@@ -96,15 +96,7 @@ in {
     supportedFilesystems = [ "exfat" ];
   };
 
-  # # Enable power saving
-  # powerManagement.enable = true;
-  # services.tlp = {
-  #   enable = true;
-  #   settings = {
-  #     CPU_SCALING_GOVERNOR_ON_BAT="powersave";
-  #     CPU_SCALING_GOVERNOR_ON_AC="performance";
-  #   };
-  # };
+  services.power-profiles-daemon.enable = true;
 
   # Set location and time zone
   location.latitude = 59.91;
