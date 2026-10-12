@@ -177,7 +177,10 @@ With argument, do this that many times."
 (use-package doom-modeline
   :ensure t
   :init
-  (doom-modeline-mode 1))
+  (doom-modeline-mode 1)
+  :config
+  ;; Keep the selected window on focus-out, otherwise ewm looks weird
+  (advice-add 'doom-modeline-focus-change :override #'doom-modeline-set-selected-window))
 
 (use-package vertico
   :ensure t
@@ -326,7 +329,6 @@ With argument, do this that many times."
   (add-to-list 'default-frame-alist '(blur-background . t))
 
   :bind (:map ewm-mode-map
-              ;; Core actions - EWM auto-detects super-key bindings from keymap
               ("s-d" . consult-buffer)
               ("s-<return>" . (lambda () (interactive) (rio)))
 
