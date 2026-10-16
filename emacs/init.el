@@ -1,6 +1,4 @@
 ;; -*- lexical-binding: t; -*-
-(setq comp-deferred-compilation nil)
-
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize) ;; Initialize nix packages
@@ -8,9 +6,10 @@
 ;; Global configuration
 (use-package emacs
   :init
-  (setq custom-file "~/.emacs.d/custom.el")
+  ;; Keep Customize output beside this file
+  (setq custom-file (locate-user-emacs-file "custom.el"))
+  (load custom-file t)
 
-  (cua-mode 0) ;; use normal world copy/paste
   (recentf-mode t) ;; remember previous files
   (blink-cursor-mode 0) ;; stop blinking
   (windmove-default-keybindings) ;; move with arrows
@@ -31,7 +30,6 @@
   (setq global-auto-revert-non-file-buffers t)
 
   (winner-mode t) ;; be able to undo window change
-  (auto-save-mode -1)
 
   ;; Just kill the vterm buffers, don't ask
   (setq kill-buffer-query-functions nil)
@@ -95,19 +93,11 @@ With argument, do this that many times."
   (backup-directory-alist '((".*" . "/tmp/"))) ;; keep trash away from source
   (magit-display-buffer-function ;; show magit in the same buffer
    'magit-display-buffer-same-window-except-diff-v1)
-
-
-  (pixel-scroll-precision-mode t)
-  (pixel-scroll-precision-use-momentum t)
-  ;; (mouse-drag-copy-region t) ;; copy mouse selection by default
-
-  ;; Disable creation of lock-files named .#<filename>.
-  (setq-default create-lockfiles nil)
+  (create-lockfiles nil) ;; no .#<filename> lock files
 
   :hook
   (prog-mode . hl-line-mode)
   (prog-mode . display-line-numbers-mode)
-  (prog-mode . show-paren-mode)
   (before-save . whitespace-cleanup)
 
   :bind
@@ -134,14 +124,8 @@ With argument, do this that many times."
 (use-package doom-themes
   :ensure t
   :init
-  (setq doom-themes-enable-bold t
-        doom-themes-enable-italic t)
   (load-theme 'doom-molokai t)
   :config
-  ;; Better font rendering on Linux
-  (setq x-use-underline-position-properties t)
-  (setq underline-minimum-offset 1)
-
   ;; Pixel-precise font rendering
   (setq frame-resize-pixelwise t)
   (setq window-resize-pixelwise t)
@@ -186,11 +170,6 @@ With argument, do this that many times."
   :ensure t
   :init
   (vertico-mode))
-
-;; (use-package vertico-posframe
-;;   :ensure t
-;;   :init
-;;   (vertico-posframe-mode t))
 
 (use-package savehist
   :custom
@@ -245,13 +224,11 @@ With argument, do this that many times."
 
 (use-package corfu
   :ensure t
-  :config
-  (setq corfu-auto nil)
-  (setq corfu-auto-delay 0.5)
-  (setq corfu-echo-mode t)
-  (setq corfu-popupinfo-mode t)
   :init
   (global-corfu-mode)
+  :config
+  (corfu-echo-mode 1)
+  (corfu-popupinfo-mode 1)
   :bind
   ("M-/" . completion-at-point))
 
@@ -296,11 +273,11 @@ With argument, do this that many times."
   :config
   (ultra-scroll-mode t))
 
-(use-package buffer-move :ensure t)
-(use-package rotate :ensure t)
-(use-package rainbow-delimiters :ensure t)
 (use-package markdown-mode :ensure t)
-(use-package pdf-tools :ensure t)
+(use-package pdf-tools
+  :ensure t
+  :defer t
+  :init (pdf-loader-install))
 
 (use-package tab-bar
   :config
@@ -349,8 +326,6 @@ With argument, do this that many times."
      ("eDP-1" :width 1920 :height 1200 :scale 1.0)
      ("DP-2" :width 3840 :height 1440 :scale 1.0 :refresh 100)
      ("DP-6" :width 3840 :height 2160 :scale 1.25 :refresh 120)
-     ("DP-8" :width 3840 :height 2160 :scale 1.5 :refresh 60)
-     ("DP-9" :width 3840 :height 2160 :scale 1.5 :refresh 60)
      ("Dell Inc. DELL P2725HE 87Z8C84" :width 1920 :height 1080 :scale 1.0 :transform 1)
      ("Dell Inc. DELL S2725QC JN0L464" :width 3840 :height 2160 :scale 1.5 :refresh 120)))
   (ewm-focus-follows-mouse t)
@@ -373,18 +348,17 @@ With argument, do this that many times."
 (use-package eglot
   :custom
   ;; shutdown eglot servers after buffer is closed
-  (eglot-autoshutdown t))
+  (eglot-autoshutdown t)
+  :hook
+  ((python-ts-mode rust-ts-mode json-ts-mode go-ts-mode) . eglot-ensure))
 
 (use-package eldoc-box
   :ensure t
-  :bind
   :bind ("C-." . eldoc-box-help-at-point))
 
 (use-package nix-ts-mode
   :ensure t
   :mode "\\.nix\\'"
-  :custom
-  (nix-nixfmt-bin "nixpkgs-fmt")
   :hook
   (nix-ts-mode . eglot-ensure))
 
@@ -425,78 +399,16 @@ With argument, do this that many times."
   (remove-hook 'magit-status-sections-hook #'forge-insert-discussions)
   (add-hook 'magit-status-sections-hook #'my/forge-insert-my-pullreqs t))
 
-(use-package tsx-ts-mode :mode "\\.tsx\\'")
 (use-package tide
   :ensure t
   :hook ((typescript-ts-mode . tide-setup)
          (tsx-ts-mode . tide-setup)
          (typescript-ts-mode . tide-hl-identifier-mode)))
 
-(use-package web-mode
-  :ensure t
+(use-package go-ts-mode
   :defer t
-  :config
-  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
-
-(use-package highlight-indentation
-  :ensure t
-  :hook (fsharp-mode . highlight-indentation-mode))
-
-;; (use-package eglot-fsharp
-;;   :ensure t
-;;   :custom
-;;   ;; Use system-installed fsautocomplete from NixOS
-;;   (eglot-fsharp-server-path "/run/current-system/sw/bin/")
-;;   ;; Disable auto-installation since we're using the NixOS package
-;;   (eglot-fsharp-server-install-dir nil))
-
-;; (use-package fsharp-mode
-;;   :ensure t
-;;   :defer t
-;;   :config
-;;   (add-to-list 'auto-mode-alist '("\\.fsproj\\'" . nxml-mode))
-;;   (add-to-list 'auto-mode-alist '("\\.csproj\\'" . nxml-mode))
-;;   (setq fsharp-mode-project-root nil)
-;;   :hook
-;;   (fsharp-mode . eglot-ensure))
-
-(use-package python-mode
-  :ensure t
-  :config
-  (setenv "PYTHONENCODING" "utf-8")
-  (setq python-indent-offset 4)
-  :hook
-  (python-ts-mode . eglot-ensure))
-
-(use-package typescript-mode
-  :defer t
-  :ensure t
   :custom
-  (typescript-mode-indent-offset 4)
-  :hook
-  (typescript-mode . setup-tide-mode))
-
-(use-package rust-mode
-  :ensure t
-  :mode "\\.rs\\'"
-  :hook
-  (rust-ts-mode . eglot-ensure))
-
-(use-package json-mode
-  :ensure t
-  :mode "\\.json\\'"
-  :hook
-  (json-ts-mode . eglot-ensure))
-
-(use-package go-mode
-  :ensure t
-  :mode "\\.go\\'"
-  :custom
-  (go-ts-mode-indent-offset 4)
-  :config
-  (setq-default tab-width 4)
-  :hook
-  (go-ts-mode . eglot-ensure))
+  (go-ts-mode-indent-offset 4))
 
 (use-package jupyter
   :ensure t
@@ -510,11 +422,7 @@ With argument, do this that many times."
 (use-package telega
   :ensure t
   :config
-  (setq telega-emoji-use-images nil)
   (setq telega-use-images t)
-  (setq telega-chat-show-avatars t)
-  (setq telega-root-show-avatars t)
-  (setq telega-user-show-avatars t)
   (setq telega-chat-history-limit 50)
   (telega-notifications-mode t))
 
@@ -549,6 +457,5 @@ With argument, do this that many times."
 
 (use-package kotlin-ts-mode
   :ensure t
-  :mode "\\.kit\\'"
   :hook
   (kotlin-ts-mode . eglot-ensure))
