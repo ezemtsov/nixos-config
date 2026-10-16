@@ -193,15 +193,12 @@ With argument, do this that many times."
 ;;   (vertico-posframe-mode t))
 
 (use-package savehist
+  :custom
+  (savehist-ignored-variables '(command-history))
   :init
-  (defvar savehist-additional-variables)
   (savehist-mode 1))
 
 (use-package project
-  :init
-  (add-hook 'savehist-mode-hook
-            (lambda nil
-              (add-to-list 'savehist-additional-variables 'project-compile)))
   :config
   (setq project-switch-commands #'project-find-file)
   (setq project-vc-extra-root-markers '("go.mod" "Cargo.toml" ".gitignore")))
