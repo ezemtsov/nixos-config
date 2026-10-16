@@ -422,7 +422,11 @@ With argument, do this that many times."
 (use-package telega
   :ensure t
   :config
+  (setq telega-emoji-use-images nil)
   (setq telega-use-images t)
+  (setq telega-chat-show-avatars t)
+  (setq telega-root-show-avatars t)
+  (setq telega-user-show-avatars t)
   (setq telega-chat-history-limit 50)
   (telega-notifications-mode t))
 
