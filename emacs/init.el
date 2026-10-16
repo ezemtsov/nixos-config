@@ -120,7 +120,7 @@ With argument, do this that many times."
   ("M-<backspace>" . backward-delete-word)
   ("C-x k" . kill-current-buffer)
   ("M-!" . async-shell-command)
-  ("C-q" . kill-buffer-and-its-windows)
+  ("C-q" . kill-buffer-and-window)
   ("M->" . flymake-goto-next-error)
   ("M-<" . flymake-goto-prev-error))
 
@@ -329,6 +329,7 @@ With argument, do this that many times."
   (add-to-list 'default-frame-alist '(blur-background . t))
 
   :bind (:map ewm-mode-map
+              ("s-q" . kill-buffer-and-window)
               ("s-d" . consult-buffer)
               ("s-<return>" . (lambda () (interactive) (rio)))
 
