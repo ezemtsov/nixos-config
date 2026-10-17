@@ -12,6 +12,7 @@ in {
       ./networking.nix
       ./desktop.nix
       ./packages.nix
+      ./crowdstrike/module.nix
       "${sources.agenix}/modules/age.nix"
       "${sources.musnix}"
       /home/ezemtsov/git/ewm/nix/service.nix
