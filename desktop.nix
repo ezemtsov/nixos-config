@@ -33,6 +33,18 @@ let
     url = /home/ezemtsov/git/ferroide;
     ref = "main";
   }) { inherit pkgs; };
+  # Master needs Go 1.27, and vendorHash follows its go.sum
+  dmsPackage =
+    (pkgs.dms-shell.override { buildGoModule = pkgs.buildGo127Module; }).overrideAttrs {
+      src = pkgs.fetchFromGitHub {
+        owner = "AvengeMedia";
+        repo = "DankMaterialShell";
+        rev = "bb3e3adaab7b24c79697cb12a27ae76f699a0564";
+        fetchSubmodules = true;
+        hash = "sha256-Q8O0IseTcC4lO4gAXLRx/JA5vrT3f4G2ON5pXcDt3OU=";
+      };
+      vendorHash = "sha256-mWKs32BqASlTmA2fazNd83wj53mU6A7WQu/EgJfz3+4=";
+    };
 in
 {
   environment = {
@@ -80,6 +92,7 @@ in
   # DMS is a nice looking top level shell
   programs.dms-shell = {
     enable = true;
+    package = dmsPackage;
     systemd.enable = true;
     systemd.restartIfChanged = true;
   };
