@@ -308,7 +308,7 @@ With argument, do this that many times."
               ("s-<return>" . (lambda () (interactive) (rio)))
 
               ("<print>" . (lambda () (interactive)
-                             (start-process "screenshot" nil "screenshot")))
+                             (start-process "screenshot" nil "dms" "screenshot")))
 
               ("s-C-<left>" . winner-undo)
               ("s-C-<right>" . winner-redo)
