@@ -74,14 +74,10 @@ in {
 
   boot = {
     # Pick latest kernel
-    # kernelPackages = pkgs.linuxPackages_latest;
+    kernelPackages = pkgs.linuxPackages_latest;
 
     # Enable full preemptive (for real-time audio)
-    # Disable AMD PSR — triggers display freeze with continuous-commit clients
-    # like dms-shell. See docs/DISPLAY_FREEZE_INVESTIGATION.md
-    # usbcore.autosuspend=-1 works around MT7925 BT firmware bug that breaks the
-    # chip's HW/FW state machine on autosuspend remote-wakeup (RH bz#2372880)
-    kernelParams = [ "preempt=full" "amdgpu.dcdebugmask=0x10" "usbcore.autosuspend=-1" ];
+    kernelParams = [ "preempt=full" ];
 
     # Make booting nicer
     plymouth.enable = true;
