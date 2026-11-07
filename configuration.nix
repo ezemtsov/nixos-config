@@ -77,7 +77,7 @@ in {
     kernelPackages = pkgs.linuxPackages_latest;
 
     # Enable full preemptive (for real-time audio)
-    kernelParams = [ "preempt=full" ];
+    # kernelParams = [ "preempt=full" ];
 
     # Make booting nicer
     plymouth.enable = true;
@@ -145,6 +145,7 @@ in {
   boot.initrd.systemd.enable = true;
   services.upower.enable = true;
   services.upower.criticalPowerAction = "Hibernate";
+  services.upower.percentageAction = 5;
   swapDevices = [{ device = "/swapfile"; size = 64 * 1024; }];
   systemd.tmpfiles.rules = [
     "w /sys/power/image_size - - - - ${toString (8 * 1024 * 1024 * 1024)}"  # 8 GiB

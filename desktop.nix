@@ -20,19 +20,19 @@ let
     ]);
     override = final: prev: {
       telega = prev.melpaPackages.telega.overrideAttrs(old: {
-        src = pkgs.fetchFromGitHub {
-          owner = "zevlg";
-          repo = "telega.el";
-          rev = "6c82622dbd98ac8ea024f56490607151d9bd1032";
-          hash = "sha256-WE4WhuJHQdPGWHrZDqxgdktHgJgBt0iUBAplQi3fX7w=";
+        src = builtins.fetchGit {
+          url = /home/ezemtsov/git/telega;
+          ref = "fractional-slices";
         };
       });
     };
   };
+
   ferroide = import (builtins.fetchGit {
     url = /home/ezemtsov/git/ferroide;
     ref = "main";
   }) { inherit pkgs; };
+
   # Master needs Go 1.27, and vendorHash follows its go.sum
   dmsPackage =
     (pkgs.dms-shell.override { buildGoModule = pkgs.buildGo127Module; }).overrideAttrs {
@@ -45,6 +45,7 @@ let
       };
       vendorHash = "sha256-mWKs32BqASlTmA2fazNd83wj53mU6A7WQu/EgJfz3+4=";
     };
+
 in
 {
   environment = {
@@ -103,9 +104,12 @@ in
     partOf = [ "graphical-session.target" ];
     after = [ "graphical-session.target" ];
     wantedBy = [ "graphical-session.target" ];
+    # A compositor restart drops the connection, retry until the new one listens
+    unitConfig.StartLimitIntervalSec = 0;
     serviceConfig = {
       ExecStart = "${ferroide}/bin/ferroide --every 1h --dump %t/ferroide.bmp";
       Restart = "on-failure";
+      RestartSec = 1;
     };
   };
 
@@ -119,6 +123,7 @@ in
     nemo
     bitwarden-cli
     wl-clipboard
+    dtach
 
     # Niri packages
     rofi
@@ -264,8 +269,14 @@ in
     }
   ];
 
-  # Bound the Go build cache (Go has no size limit): trim entries untouched for 3 days.
+  # Collect old nix store generations daily.
+  nix.gc = {
+    automatic = true;
+    dates = "daily";
+    options = "--delete-older-than 3d";
+  };
+  # Trim the Go build cache (lives outside the nix store, has no size limit of its own).
   systemd.tmpfiles.rules = [
-    "e /home/ezemtsov/.cache/go-build - - - 3d"
+    "e /home/ezemtsov/.cache/go-build - - - 1d"
   ];
 }

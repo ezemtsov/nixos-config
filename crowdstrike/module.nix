@@ -4,6 +4,11 @@ let
   falconSensor = pkgs.callPackage ./. { };
   cidSecret = ../secrets/crowdstrike-cid.age;
   hasCidSecret = builtins.pathExists cidSecret;
+
+  # Work-hours window — drives both the timer boundaries and the script's gate.
+  workDays = "Mon..Fri";
+  workStart = 8; # inclusive
+  workEnd = 18; # exclusive
 in
 {
   age.secrets.crowdstrike-cid = lib.mkIf hasCidSecret {
@@ -66,14 +71,14 @@ in
     wantedBy = [ "multi-user.target" ];
     after = [ "time-sync.target" ];
     startAt = [
-      "Mon..Fri 08:00"
-      "Mon..Fri 18:00"
+      "${workDays} ${toString workStart}:00"
+      "${workDays} ${toString workEnd}:00"
     ];
     serviceConfig.Type = "oneshot";
     script = ''
       read -r day hour < <(date '+%u %H')
       action=stop
-      if [ "$day" -le 5 ] && [ $((10#$hour)) -ge 8 ] && [ $((10#$hour)) -lt 18 ]; then
+      if [ "$day" -le 5 ] && [ $((10#$hour)) -ge ${toString workStart} ] && [ $((10#$hour)) -lt ${toString workEnd} ]; then
         action=start
       fi
       systemctl "$action" --no-block falcon-sensor.service

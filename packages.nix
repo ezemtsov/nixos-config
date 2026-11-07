@@ -111,7 +111,7 @@
     bluetuith
     alsa-utils
     pavucontrol
-    audacity
+    # audacity
 
     # Nix packages
     npins
