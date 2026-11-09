@@ -22,9 +22,9 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "1c943e86dcb4e8e4971b0b3db15e2067fe4454b7",
-      "url": "https://github.com/nix-community/emacs-overlay/archive/1c943e86dcb4e8e4971b0b3db15e2067fe4454b7.tar.gz",
-      "hash": "sha256-G9mIKKECDAZRzbBWtV8UgcVePr9A6/njVj2VQT02DhE="
+      "revision": "5f5556287b8d5e54bdba481cedfa7088c579f72e",
+      "url": "https://github.com/nix-community/emacs-overlay/archive/5f5556287b8d5e54bdba481cedfa7088c579f72e.tar.gz",
+      "hash": "sha256-hyILHkiuhA31aRflA+lKaXpa7dLRh4KG/ySQU57sZLg="
     },
     "musnix": {
       "type": "Git",
@@ -35,9 +35,9 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "6e86730c235db14e8cac6605dfc33f300ce9105e",
-      "url": "https://github.com/musnix/musnix/archive/6e86730c235db14e8cac6605dfc33f300ce9105e.tar.gz",
-      "hash": "sha256-A4dB6Yv1Q3ygHgYWefX2DLdbELN//mB+PbCxRMdjTeg="
+      "revision": "2a830cdf3af81326770a3d18ac7c71976744eb8d",
+      "url": "https://github.com/musnix/musnix/archive/2a830cdf3af81326770a3d18ac7c71976744eb8d.tar.gz",
+      "hash": "sha256-tKyoZKrtruqH8EfgKd4tf/HGZDiaKBCr94oGYPn0MLk="
     },
     "nix-index-database": {
       "type": "Git",
@@ -48,9 +48,9 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "1b4d1758fa6053c5d6284254a793134fa602fbff",
-      "url": "https://github.com/nix-community/nix-index-database/archive/1b4d1758fa6053c5d6284254a793134fa602fbff.tar.gz",
-      "hash": "sha256-2DAEMk8YkV8OF6N2uw9jQ016cYoNkcgnq50AShwWxNw="
+      "revision": "af9249ca33bc2efaae5d071e4c67ddef19dcb681",
+      "url": "https://github.com/nix-community/nix-index-database/archive/af9249ca33bc2efaae5d071e4c67ddef19dcb681.tar.gz",
+      "hash": "sha256-iGNtQnUZsi+v6/4NbtYr+dsmASa6GkzXtUcTpE8F3mE="
     },
     "nixpkgs": {
       "type": "Git",
@@ -61,9 +61,9 @@
       },
       "branch": "nixos-unstable",
       "submodules": false,
-      "revision": "02c087f3fe673c9e317f206a627cb6b910336dbe",
-      "url": "https://github.com/NixOS/nixpkgs/archive/02c087f3fe673c9e317f206a627cb6b910336dbe.tar.gz",
-      "hash": "sha256-IoNisKcGbUjdd45qCqywGMCYmZ5EnkxezvLII0FWwNA="
+      "revision": "f4a03c008967841f2a0b3cb7c436fc6fc31671f6",
+      "url": "https://github.com/NixOS/nixpkgs/archive/f4a03c008967841f2a0b3cb7c436fc6fc31671f6.tar.gz",
+      "hash": "sha256-ziZn2PvCJE5JEEpqTdxXwJpPB+L3YqoCpTAMCzyaP3U="
     }
   },
   "version": 8

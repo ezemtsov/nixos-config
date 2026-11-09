@@ -142,7 +142,6 @@ in {
   hardware.bluetooth.enable = true;
 
   # Hibernate on low power
-  boot.initrd.systemd.enable = true;
   services.upower.enable = true;
   services.upower.criticalPowerAction = "Hibernate";
   services.upower.percentageAction = 5;

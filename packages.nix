@@ -52,7 +52,6 @@
     openssl
     pandoc
     postgresql
-    pqrs
     ripgrep
     ryzenadj
     slack
@@ -88,7 +87,7 @@
     # AI Stuff
     claude-code
     claude-monitor
-    codex
+    # codex
     playwright
     playwright-driver.browsers
     ghostty

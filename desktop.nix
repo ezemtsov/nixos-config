@@ -33,33 +33,15 @@ let
     ref = "main";
   }) { inherit pkgs; };
 
-  # Master needs Go 1.27, and vendorHash follows its go.sum
-  dmsPackage =
-    (pkgs.dms-shell.override { buildGoModule = pkgs.buildGo127Module; }).overrideAttrs {
-      src = pkgs.fetchFromGitHub {
-        owner = "AvengeMedia";
-        repo = "DankMaterialShell";
-        rev = "bb3e3adaab7b24c79697cb12a27ae76f699a0564";
-        fetchSubmodules = true;
-        hash = "sha256-Q8O0IseTcC4lO4gAXLRx/JA5vrT3f4G2ON5pXcDt3OU=";
-      };
-      vendorHash = "sha256-mWKs32BqASlTmA2fazNd83wj53mU6A7WQu/EgJfz3+4=";
-    };
-
 in
 {
   environment = {
     variables = {
       MONITOR_PRIMARY = "eDP-1";
       _JAVA_AWT_WM_NONREPARENTING = "1";
-
       PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS="true";
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD="1";
-
       EDITOR = "emacsclient";
-
-      NIRI_CONFIG = "/etc/nixos/dotfiles/niri/config.kdl";
-
       # Setting this to compile rust-openssl
       PKG_CONFIG_PATH="${pkgs.openssl.dev}/lib/pkgconfig";
     };
@@ -81,7 +63,7 @@ in
     };
   };
 
-  # Emacs Wayland Manager
+  # emacs as wayland desktop
   programs.ewm = {
     inherit emacsPackage;
     enable = true;
@@ -90,10 +72,9 @@ in
     '';
   };
 
-  # DMS is a nice looking top level shell
-  programs.dms-shell = {
+  # quickshell
+  programs.dux-shell = {
     enable = true;
-    package = dmsPackage;
     systemd.enable = true;
     systemd.restartIfChanged = true;
   };
@@ -114,9 +95,8 @@ in
   };
 
   environment.systemPackages = with pkgs; [
-    # EWM Emacs (same package the compositor uses, for dev/debug)
-    config.programs.ewm.emacsPackage
-    xwayland-satellite
+    config.programs.ewm.emacsPackage # ewm emacs, for testing
+    xwayland-satellite # X11 compat
     adwaita-icon-theme
 
     # EWM packages
