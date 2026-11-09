@@ -310,6 +310,9 @@ With argument, do this that many times."
               ("s-C-<left>" . winner-undo)
               ("s-C-<right>" . winner-redo)
 
+              ("s-S-C-<left>" . ewm-frame-move-left)
+              ("s-S-C-<right>" . ewm-frame-move-right)
+
               ("s-<double-wheel-right>" . ewm-focus-right)
               ("s-<double-wheel-left>" . ewm-focus-left)
               ("s-<double-wheel-down>" . ewm-focus-down)
